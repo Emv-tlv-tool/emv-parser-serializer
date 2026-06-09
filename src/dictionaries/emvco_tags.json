@@ -1,0 +1,191 @@
+{
+  "4F": {
+    "name": "Application Identifier (AID)",
+    "description": "Application Identifier identifying the payment application",
+    "source": "EMVCo",
+    "format": "binary",
+    "minLength": 0,
+    "maxLength": 16,
+    "constructed": false
+  },
+  "50": {
+    "name": "Application Label",
+    "description": "Mnemonic label associated with the application",
+    "source": "EMVCo",
+    "format": "ans",
+    "minLength": 0,
+    "maxLength": 16,
+    "constructed": false
+  },
+  "5A": {
+    "name": "PAN",
+    "description": "Primary Account Number (card number)",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 1,
+    "maxLength": 10,
+    "constructed": false
+  },
+  "5F20": {
+    "name": "Cardholder Name",
+    "description": "Cardholder name as printed on card",
+    "source": "EMVCo",
+    "format": "ans",
+    "minLength": 2,
+    "maxLength": 26,
+    "constructed": false
+  },
+  "5F24": {
+    "name": "Application Expiry Date",
+    "description": "Expiry date in YYMM format",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 2,
+    "maxLength": 2,
+    "constructed": false
+  },
+  "5F28": {
+    "name": "Issuer Country Code",
+    "description": "Country code of the issuer",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 2,
+    "maxLength": 2,
+    "constructed": false
+  },
+  "6F": {
+    "name": "FCI Template",
+    "description": "File Control Information Template",
+    "source": "EMVCo",
+    "format": "constructed",
+    "minLength": 0,
+    "maxLength": 252,
+    "constructed": true
+  },
+  "82": {
+    "name": "Application Interchange Profile (AIP)",
+    "description": "Indicates card capabilities",
+    "source": "EMVCo",
+    "format": "bitmask",
+    "minLength": 2,
+    "maxLength": 2,
+    "constructed": false
+  },
+  "84": {
+    "name": "DF Name",
+    "description": "Dedicated File Name (AID)",
+    "source": "EMVCo",
+    "format": "binary",
+    "minLength": 5,
+    "maxLength": 16,
+    "constructed": false
+  },
+  "95": {
+    "name": "Terminal Verification Results (TVR)",
+    "description": "Indicates terminal offline verification results",
+    "source": "EMVCo",
+    "format": "bitmask",
+    "minLength": 5,
+    "maxLength": 5,
+    "constructed": false
+  },
+  "9A": {
+    "name": "Transaction Date",
+    "description": "Transaction date in YYMMDD format",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 3,
+    "maxLength": 3,
+    "constructed": false
+  },
+  "9F02": {
+    "name": "Amount Authorized (Numeric)",
+    "description": "Authorized amount in cents",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 6,
+    "maxLength": 6,
+    "constructed": false
+  },
+  "9F03": {
+    "name": "Amount Other (Numeric)",
+    "description": "Other amount in cents",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 6,
+    "maxLength": 6,
+    "constructed": false
+  },
+  "9F1A": {
+    "name": "Terminal Country Code",
+    "description": "Country code of the terminal",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 2,
+    "maxLength": 2,
+    "constructed": false
+  },
+  "9F27": {
+    "name": "Cryptogram Information Data",
+    "description": "Cryptogram type indicator",
+    "source": "EMVCo",
+    "format": "binary",
+    "minLength": 1,
+    "maxLength": 1,
+    "constructed": false
+  },
+  "9F33": {
+    "name": "Terminal Capabilities",
+    "description": "Terminal feature support flags",
+    "source": "EMVCo",
+    "format": "bitmask",
+    "minLength": 3,
+    "maxLength": 3,
+    "constructed": false
+  },
+  "9F34": {
+    "name": "Cardholder Verification Method (CVM) Results",
+    "description": "CVM performed and result",
+    "source": "EMVCo",
+    "format": "binary",
+    "minLength": 3,
+    "maxLength": 3,
+    "constructed": false
+  },
+  "9F35": {
+    "name": "Terminal Type",
+    "description": "Type of terminal",
+    "source": "EMVCo",
+    "format": "binary",
+    "minLength": 1,
+    "maxLength": 1,
+    "constructed": false
+  },
+  "49": {
+    "name": "Transaction Currency Code",
+    "description": "ISO 4217 currency code",
+    "source": "EMVCo",
+    "format": "bcd",
+    "minLength": 2,
+    "maxLength": 2,
+    "constructed": false
+  },
+  "A5": {
+    "name": "FCI Proprietary Template",
+    "description": "FCI Issuer Discretionary Data Template",
+    "source": "EMVCo",
+    "format": "constructed",
+    "minLength": 0,
+    "maxLength": 252,
+    "constructed": true
+  },
+  "BF0C": {
+    "name": "FCI Issuer Discretionary Data",
+    "description": "Issuer discretionary data in FCI",
+    "source": "EMVCo",
+    "format": "constructed",
+    "minLength": 0,
+    "maxLength": 252,
+    "constructed": true
+  }
+}

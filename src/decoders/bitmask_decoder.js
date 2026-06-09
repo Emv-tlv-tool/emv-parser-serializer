@@ -1,0 +1,305 @@
+/**
+ * BitmaskDecoder - Bit-level decoding for EMV bitmask tags
+ * 
+ * Decodes tags where each bit represents a specific flag or option:
+ * - TVR (95): Terminal Verification Results
+ * - Terminal Capabilities (9F33): Terminal feature support
+ * - Additional Terminal Capabilities (9F40): Extended terminal features
+ * - TAC tags (DF11, DF12, DF13): Terminal Action Codes
+ * 
+ * Returns array of { byte, mask, name, set } objects.
+ */
+
+/**
+ * TVR (Terminal Verification Results) - Tag 95
+ * 5 bytes, each bit indicates a specific verification result.
+ */
+const TVR_BITS = [
+  // Byte 1 - Offline data authentication results
+  [
+    { mask: 0x80, name: 'Offline data authentication was not performed' },
+    { mask: 0x40, name: 'SDA failed' },
+    { mask: 0x20, name: 'ICC data missing' },
+    { mask: 0x10, name: 'Card appears on terminal exception file' },
+    { mask: 0x08, name: 'DDA failed' },
+    { mask: 0x04, name: 'CDA failed' },
+    { mask: 0x02, name: 'SDA selected but not supported' },
+    { mask: 0x01, name: 'CDA selected but not supported' },
+  ],
+  // Byte 2 - Cardholder verification results
+  [
+    { mask: 0x80, name: 'Cardholder verification was not successful' },
+    { mask: 0x40, name: 'Unrecognised CVM' },
+    { mask: 0x20, name: 'PIN Try Limit exceeded' },
+    { mask: 0x10, name: 'PIN entry required and PIN pad not present or not working' },
+    { mask: 0x08, name: 'PIN entry required, PIN pad present, but PIN was not entered' },
+    { mask: 0x04, name: 'Online PIN entered' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 3 - Transaction risk management
+  [
+    { mask: 0x80, name: 'Transaction exceeds floor limit' },
+    { mask: 0x40, name: 'Lower consecutive offline limit exceeded' },
+    { mask: 0x20, name: 'Upper consecutive offline limit exceeded' },
+    { mask: 0x10, name: 'Transaction selected randomly for online processing' },
+    { mask: 0x08, name: 'Merchant forced transaction online' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 4 - Issuer authentication results
+  [
+    { mask: 0x80, name: 'Default TDOL rejected' },
+    { mask: 0x40, name: 'Issuer authentication failed' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Transaction not permitted on card' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 5 - Relay resistance/terminal actions
+  [
+    { mask: 0x80, name: 'Relay resistance threshold exceeded' },
+    { mask: 0x40, name: 'Relay resistance time limits exceeded' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+];
+
+/**
+ * Terminal Capabilities - Tag 9F33
+ * 3 bytes defining terminal features.
+ */
+const TERMINAL_CAPABILITIES_BITS = [
+  // Byte 1 - Card data input capability
+  [
+    { mask: 0x80, name: 'Reserved for use by EMVCo' },
+    { mask: 0x40, name: 'Manual key entry' },
+    { mask: 0x20, name: 'Magnetic stripe' },
+    { mask: 0x10, name: 'IC with contacts' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 2 - CVM capability
+  [
+    { mask: 0x80, name: 'Plaintext PIN for ICC verification' },
+    { mask: 0x40, name: 'Enciphered PIN for online verification' },
+    { mask: 0x20, name: 'Signature (paper)' },
+    { mask: 0x10, name: 'Enciphered PIN for offline verification' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 3 - Security capability
+  [
+    { mask: 0x80, name: 'SDA' },
+    { mask: 0x40, name: 'DDA' },
+    { mask: 0x20, name: 'Card capture' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'CDA' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+];
+
+/**
+ * Additional Terminal Capabilities - Tag 9F40
+ * 5 bytes defining extended terminal features.
+ */
+const ADDITIONAL_TERMINAL_CAPABILITIES_BITS = [
+  // Byte 1 - Transaction type capability
+  [
+    { mask: 0x80, name: 'Goods and services' },
+    { mask: 0x40, name: 'Cash' },
+    { mask: 0x20, name: 'Cashback' },
+    { mask: 0x10, name: 'Inquiry' },
+    { mask: 0x08, name: 'Transfer' },
+    { mask: 0x04, name: 'Payment' },
+    { mask: 0x02, name: 'Administrative' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 2
+  [
+    { mask: 0x80, name: 'Reserved for use by EMVCo' },
+    { mask: 0x40, name: 'Reserved for use by EMVCo' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 3
+  [
+    { mask: 0x80, name: 'Reserved for use by EMVCo' },
+    { mask: 0x40, name: 'Reserved for use by EMVCo' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 4
+  [
+    { mask: 0x80, name: 'Reserved for use by EMVCo' },
+    { mask: 0x40, name: 'Reserved for use by EMVCo' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 5
+  [
+    { mask: 0x80, name: 'Reserved for use by EMVCo' },
+    { mask: 0x40, name: 'Reserved for use by EMVCo' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+];
+
+/**
+ * TAC (Terminal Action Code) - Tags DF11, DF12, DF13
+ * 5 bytes, each bit corresponds to an action condition.
+ */
+const TAC_BITS = [
+  // Byte 1 - Offline authentication results
+  [
+    { mask: 0x80, name: 'Offline PIN try limit exceeded' },
+    { mask: 0x40, name: 'Offline PIN entered' },
+    { mask: 0x20, name: 'PIN try limit exceeded' },
+    { mask: 0x10, name: 'Offline PIN not supported' },
+    { mask: 0x08, name: 'Offline PIN entered successfully' },
+    { mask: 0x04, name: 'Cardholder verification not successful' },
+    { mask: 0x02, name: 'Unrecognised CVM' },
+    { mask: 0x01, name: 'PIN try limit exceeded (No CVM)' },
+  ],
+  // Byte 2 - Card risk management
+  [
+    { mask: 0x80, name: 'Card is on exception file' },
+    { mask: 0x40, name: 'New card' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 3 - Transaction risk management
+  [
+    { mask: 0x80, name: 'Transaction exceeds floor limit' },
+    { mask: 0x40, name: 'Lower consecutive offline limit exceeded' },
+    { mask: 0x20, name: 'Upper consecutive offline limit exceeded' },
+    { mask: 0x10, name: 'Transaction selected randomly for online processing' },
+    { mask: 0x08, name: 'Merchant forced transaction online' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 4 - Issuer authentication and script
+  [
+    { mask: 0x80, name: 'Issuer authentication failed' },
+    { mask: 0x40, name: 'Script processing failed' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Transaction not permitted on card' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+  // Byte 5 - Relay resistance and other
+  [
+    { mask: 0x80, name: 'Relay resistance threshold exceeded' },
+    { mask: 0x40, name: 'Relay resistance time limits exceeded' },
+    { mask: 0x20, name: 'Reserved for use by EMVCo' },
+    { mask: 0x10, name: 'Reserved for use by EMVCo' },
+    { mask: 0x08, name: 'Reserved for use by EMVCo' },
+    { mask: 0x04, name: 'Reserved for use by EMVCo' },
+    { mask: 0x02, name: 'Reserved for use by EMVCo' },
+    { mask: 0x01, name: 'Reserved for use by EMVCo' },
+  ],
+];
+
+// Map tags to their bit definitions
+const BITMASK_DEFINITIONS = {
+  '95': TVR_BITS,
+  '9F33': TERMINAL_CAPABILITIES_BITS,
+  '9F40': ADDITIONAL_TERMINAL_CAPABILITIES_BITS,
+  'DF11': TAC_BITS,
+  'DF12': TAC_BITS,
+  'DF13': TAC_BITS,
+};
+
+class BitmaskDecoder {
+  /**
+   * Decode a bitmask tag value
+   * 
+   * @param {string} tag - Tag identifier in uppercase hex
+   * @param {Buffer} value - Raw value bytes
+   * @returns {Array} Array of { byte, mask, name, set } objects
+   */
+  static decodeBitmask(tag, value) {
+    const definitions = BITMASK_DEFINITIONS[tag];
+    
+    if (!definitions) {
+      return [];
+    }
+
+    const results = [];
+
+    for (let byteIndex = 0; byteIndex < definitions.length; byteIndex++) {
+      const byteValue = byteIndex < value.length ? value[byteIndex] : 0;
+      const byteBits = definitions[byteIndex];
+
+      for (const bitDef of byteBits) {
+        results.push({
+          byte: byteIndex,
+          mask: bitDef.mask,
+          name: bitDef.name,
+          set: (byteValue & bitDef.mask) !== 0,
+        });
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Get only set bits from a bitmask
+   * 
+   * @param {string} tag - Tag identifier
+   * @param {Buffer} value - Raw value bytes
+   * @returns {Array} Array of { byte, mask, name } for set bits only
+   */
+  static getSetBits(tag, value) {
+    return this.decodeBitmask(tag, value).filter(b => b.set);
+  }
+
+  /**
+   * Get bitmask definition for a tag
+   * 
+   * @param {string} tag - Tag identifier
+   * @returns {Array|null} Bit definitions or null if unknown
+   */
+  static getDefinition(tag) {
+    return BITMASK_DEFINITIONS[tag] || null;
+  }
+}
+
+module.exports = BitmaskDecoder;

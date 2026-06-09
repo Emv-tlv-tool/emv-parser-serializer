@@ -1,0 +1,16 @@
+{
+  "name": "emv-tlv-parser",
+  "version": "1.0.0",
+  "description": "EMV TLV parser and serializer for German payment terminals",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": ["emv", "tlv", "zvt", "payment", "terminal"],
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

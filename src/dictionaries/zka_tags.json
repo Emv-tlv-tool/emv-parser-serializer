@@ -1,0 +1,110 @@
+{
+  "E0": {
+    "name": "Terminal Configuration",
+    "description": "Terminal configuration template",
+    "source": "ZKA",
+    "format": "constructed",
+    "minLength": 0,
+    "maxLength": 252,
+    "constructed": true
+  },
+  "E1": {
+    "name": "CA Public Key",
+    "description": "Certificate Authority Public Key template",
+    "source": "ZKA",
+    "format": "constructed",
+    "minLength": 0,
+    "maxLength": 252,
+    "constructed": true
+  },
+  "E2": {
+    "name": "Application Configuration",
+    "description": "Application configuration template",
+    "source": "ZKA",
+    "format": "constructed",
+    "minLength": 0,
+    "maxLength": 252,
+    "constructed": true
+  },
+  "DF01": {
+    "name": "RID",
+    "description": "Registered Application Provider Identifier",
+    "source": "ZKA",
+    "format": "binary",
+    "minLength": 5,
+    "maxLength": 5,
+    "constructed": false
+  },
+  "DF02": {
+    "name": "CA Public Key Index",
+    "description": "Index of the CAPK",
+    "source": "ZKA",
+    "format": "binary",
+    "minLength": 1,
+    "maxLength": 1,
+    "constructed": false
+  },
+  "DF04": {
+    "name": "Application Label",
+    "description": "Display label for the application",
+    "source": "ZKA",
+    "format": "ans",
+    "minLength": 0,
+    "maxLength": 16,
+    "constructed": false
+  },
+  "DF05": {
+    "name": "Floor Limit",
+    "description": "Offline transaction floor limit",
+    "source": "ZKA",
+    "format": "bcd",
+    "minLength": 4,
+    "maxLength": 4,
+    "constructed": false
+  },
+  "DF11": {
+    "name": "TAC Default",
+    "description": "Terminal Action Code - Default",
+    "source": "ZKA",
+    "format": "bitmask",
+    "minLength": 5,
+    "maxLength": 5,
+    "constructed": false
+  },
+  "DF12": {
+    "name": "TAC Denial",
+    "description": "Terminal Action Code - Denial",
+    "source": "ZKA",
+    "format": "bitmask",
+    "minLength": 5,
+    "maxLength": 5,
+    "constructed": false
+  },
+  "DF13": {
+    "name": "TAC Online",
+    "description": "Terminal Action Code - Online",
+    "source": "ZKA",
+    "format": "bitmask",
+    "minLength": 5,
+    "maxLength": 5,
+    "constructed": false
+  },
+  "E6": {
+    "name": "CA Public Key Modulus",
+    "description": "CAPK modulus value",
+    "source": "ZKA",
+    "format": "binary",
+    "minLength": 1,
+    "maxLength": 248,
+    "constructed": false
+  },
+  "E7": {
+    "name": "CA Public Key Exponent",
+    "description": "CAPK exponent value",
+    "source": "ZKA",
+    "format": "binary",
+    "minLength": 1,
+    "maxLength": 3,
+    "constructed": false
+  }
+}

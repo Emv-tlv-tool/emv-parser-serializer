@@ -1,10 +1,10 @@
-# EMV TLV Parser & Serializer
+# EMV TLV Parser & Serializer 
 
-A JavaScript library for parsing, decoding, and serializing EMV TLV (Tag-Length-Value) data, with first-class support for German payment terminal protocols: **ZVT** transaction messages and **Poseidon** terminal configuration blobs.
+A Python library for parsing, decoding, and serializing EMV TLV (Tag-Length-Value) data, with first-class support for German payment terminal protocols: **ZVT** transaction messages and **Poseidon** terminal configuration blobs.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-LTS-green.svg)](https://nodejs.org)
-[![Tests](https://img.shields.io/badge/Tests-Jest-blue.svg)](https://jestjs.io)
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://python.org)
+[![Tests](https://img.shields.io/badge/Tests-pytest-green.svg)](https://docs.pytest.org)
 
 ---
 
@@ -18,7 +18,6 @@ A JavaScript library for parsing, decoding, and serializing EMV TLV (Tag-Length-
 - [Project Structure](#project-structure)
 - [Tag Dictionaries](#tag-dictionaries)
 - [Value & Bitmask Decoding](#value--bitmask-decoding)
-- [Examples](#examples)
 - [Running Tests](#running-tests)
 - [Specification Compliance](#specification-compliance)
 - [License](#license)
@@ -48,8 +47,9 @@ git clone https://github.com/chameauu/emv-tool.git
 
 cd emv-tool
 
-# Install dev dependencies (Jest)
-npm install
+# Install with uv (recommended)
+uv sync
+
 ```
 
 No runtime dependencies — the library is self-contained.
@@ -58,50 +58,58 @@ No runtime dependencies — the library is self-contained.
 
 ## Quick Start
 
-```javascript
-const EMVTLV = require('emv-tlv');
+```python
+from emv_tlv import parse, serialize, find_tag, find_all_tags, to_json
 
-// 1. Parse raw EMV TLV from a hex string
-const tree = EMVTLV.parse('9A03210315', 'raw');
-console.log(tree[0]);
-// {
-//   tag: '9A',
-//   name: 'Transaction Date',
-//   length: 3,
-//   value: '210315',
-//   decoded: '2021-03-15',
-//   isConstructed: false
-// }
+# 1. Parse raw EMV TLV from a hex string
+tree = parse('9A03210315', 'raw')
+print(tree[0])
+# {
+#   'tag': '9A',
+#   'name': 'Transaction Date',
+#   'length': 3,
+#   'value': '210315',
+#   'decoded': '2021-03-15',
+#   'is_constructed': False
+# }
 
-// 2. Parse a ZVT transaction message from a Buffer
-const zvt = EMVTLV.parse(buffer, 'zvt');
-console.log(zvt.ctrlName);  // e.g. 'Authorisation'
-console.log(zvt.tlv);       // EMV TLV extracted from BMP fields
+# 2. Parse a ZVT transaction message from bytes
+zvt = parse(data, 'zvt')
+print(zvt['ctrl_name'])  # e.g. 'Authorisation'
+print(zvt['tlv'])        # EMV TLV extracted from BMP fields
 
-// 3. Parse a Poseidon terminal config blob
-const config = EMVTLV.parse(buffer, 'config');
-console.log(config.applicationConfigs);  // AID, label, TAC, floor limit, ...
-console.log(config.caKeys);               // RID, index, modulus, exponent, ...
+# 3. Parse a Poseidon terminal config blob
+config = parse(data, 'config')
+print(config.application_configs)  # AID, label, TAC, floor limit, ...
+print(config.ca_keys)              # RID, index, modulus, exponent, ...
 
-// 4. Serialize a TLV tree back to hex
-const hex = EMVTLV.serialize(tree);
-console.log(hex);  // '9A03210315'
+# 4. Serialize a TLV tree back to hex
+hex_str = serialize(tree)
+print(hex_str)  # '9A03210315'
+
+# 5. Find a tag by hex value
+aid = find_tag(tree, '84')
+print(aid)  # {'tag': '84', 'name': 'DF Name', ...}
 ```
 
 ---
 
 ## API Reference
 
-### `parse(input, type)`
+### `parse(data, type='raw')`
 
 Parses input data based on the specified type.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `input` | `Buffer` \| `string` | Raw bytes or hex-encoded string |
-| `type` | `string` | One of `'raw'`, `'zvt'`, or `'config'` (default: `'raw'`) |
+| `data` | `bytes` \| `str` | Raw bytes or hex-encoded string |
+| `type` | `str` | One of `'raw'`, `'zvt'`, or `'config'` (default: `'raw'`) |
 
-**Returns:** `Object` \| `Object[]` — an enhanced TLV tree with metadata, decoded values, and (for bitmask tags) bit-level breakdown.
+**Returns:** `list[dict]` — an enhanced TLV tree with metadata, decoded values, and (for bitmask tags) bit-level breakdown.
+
+**Config mode returns** a list-like object with extra attributes:
+- `result.application_configs` — list of app config dicts
+- `result.ca_keys` — list of CA key dicts
 
 ### `serialize(nodes)`
 
@@ -109,31 +117,31 @@ Serializes one or more TLV nodes back into a hex string.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `nodes` | `Object` \| `Object[]` | A single enhanced node or an array of nodes |
+| `nodes` | `dict` \| `list[dict]` | A single enhanced node or a list of nodes |
 
-**Returns:** `string` — concatenated hex representation of the TLV tree(s).
+**Returns:** `str` — concatenated hex representation of the TLV tree(s).
 
-### `findTag(tree, tagHex)`
+### `find_tag(tree, tag_hex)`
 
-Depth-first search returning the first node matching `tagHex`.
+Depth-first search returning the first node matching `tag_hex`.
 
-```javascript
-const aid = EMVTLV.findTag(tree, '84');
+```python
+aid = find_tag(tree, '84')
 ```
 
-### `findAllTags(tree, tagHex)`
+### `find_all_tags(tree, tag_hex)`
 
-Depth-first search returning all nodes matching `tagHex`.
+Depth-first search returning all nodes matching `tag_hex`.
 
-```javascript
-const allAmounts = EMVTLV.findAllTags(tree, '9F02');
+```python
+all_amounts = find_all_tags(tree, '9F02')
 ```
 
-### `decodeNode(node)`
+### `decode_node(node)`
 
 Re-decodes a node's value (e.g. after manual modification).
 
-### `toJSON(tree)`
+### `to_json(tree)`
 
 Strips a TLV tree down to a clean JSON-friendly shape (tag, name, length, value, decoded, bitmask, children).
 
@@ -141,13 +149,13 @@ Strips a TLV tree down to a clean JSON-friendly shape (tag, name, length, value,
 
 For advanced use, the core components are also exported:
 
-```javascript
-const {
-  TLVParser, TLVSerializer, TLVNode,
-  ValueDecoder, BitmaskDecoder,
-  ZVTAdapter, ConfigAdapter,
-  Dictionary,
-} = require('emv-tlv');
+```python
+from emv_tlv import (
+    TLVParser, TLVSerializer, TLVNode,
+    ValueDecoder, BitmaskDecoder,
+    ZVTAdapter, ConfigAdapter,
+    Dictionary,
+)
 ```
 
 ---
@@ -193,26 +201,34 @@ Pure TLV used to configure Poseidon terminals. Two key templates are recognized:
 ## Project Structure
 
 ```
-stage/
+emv-tool-python/
 ├── src/
-│   ├── core/
-│   │   ├── tlv_node.js          # TLV node class with tree traversal
-│   │   ├── tlv_parser.js        # Recursive BER-TLV parser
-│   │   ├── tlv_serializer.js    # Recursive serializer
-│   │   └── tlv_utils.js         # Hex/buffer helpers, validation
-│   ├── dictionaries/
-│   │   ├── emvco_tags.json      # EMVCo tag reference data
-│   │   ├── zka_tags.json        # ZKA (German) tag reference data
-│   │   └── index.js             # Merged dictionary + lookup API
-│   ├── adapters/
-│   │   ├── zvt_adapter.js       # ZVT protocol parser
-│   │   └── config_adapter.js    # Poseidon config blob parser
-│   └── decoders/
-│       ├── value_decoder.js     # Human-readable value decoding
-│       └── bitmask_decoder.js   # EMV bitmask spec decoding
-├── index.js                     # Public API entry point
-├── package.json
-└── jest.config.js
+│   ├── emv_tlv/
+│   │   ├── __init__.py              # Public API entry point
+│   │   ├── core/
+│   │   │   ├── tlv_node.py          # TLV node class with tree traversal
+│   │   │   ├── tlv_parser.py        # Recursive BER-TLV parser
+│   │   │   └── tlv_serializer.py    # Recursive serializer
+│   │   ├── dictionaries/
+│   │   │   ├── emvco_tags.json      # EMVCo tag reference data
+│   │   │   ├── zka_tags.json        # ZKA (German) tag reference data
+│   │   │   └── __init__.py          # Merged dictionary + lookup API
+│   │   ├── adapters/
+│   │   │   ├── zvt_adapter.py       # ZVT protocol parser
+│   │   │   └── config_adapter.py    # Poseidon config blob parser
+│   │   └── decoders/
+│   │       ├── value_decoder.py     # Human-readable value decoding
+│   │       └── bitmask_decoder.py   # EMV bitmask spec decoding
+│   └── ... (package metadata)
+├── tests/
+│   ├── test_tlv_node.py             # Node & parser tests
+│   ├── test_serializer.py           # Serializer & round-trip tests
+│   ├── test_decoder.py              # Value & bitmask decoder tests
+│   ├── test_zvt.py                  # ZVT adapter tests
+│   ├── test_config.py               # Config adapter tests
+│   └── test_api.py                  # Public API integration tests
+├── pyproject.toml
+└── README.md
 ```
 
 ---
@@ -232,11 +248,11 @@ The library ships with reference data for **EMVCo** (Book 3, Book 4) and **ZKA**
 
 **Lookup API:**
 
-```javascript
-const Dictionary = require('emv-tlv/src/dictionaries');
+```python
+from emv_tlv.dictionaries import Dictionary
 
-Dictionary.lookupByTag('9A');   // { name: 'Transaction Date', ... }
-Dictionary.lookupByName('PAN');  // [{ tag: '5A', ... }]
+Dictionary.lookup_by_tag('9A')   # {'name': 'Transaction Date', ...}
+Dictionary.lookup_by_name('PAN') # {'tag': '5A', ...}
 ```
 
 ---
@@ -271,59 +287,14 @@ The `BitmaskDecoder` provides EMV-spec-compliant decoding for tags whose `format
 - `9F40` — Additional Terminal Capabilities
 - `DF11`, `DF12`, `DF13` — TAC Online / Default / Denial
 
-Each bit is returned as `{ byte, mask, name, set }`:
+Each bit is returned as `{byte, mask, name, set}`:
 
-```javascript
+```python
 {
-  byte: 1,
-  mask: 0x80,
-  name: 'Offline data authentication was not performed',
-  set: true
-}
-```
-
----
-
-## Examples
-
-### Round-trip parse/serialize
-
-```javascript
-const original = '6F258407A0000000031010A50F500C56495341204352454449548701015F2D02656E9F1101019F120C564953412052554442454E';
-const tree = EMVTLV.parse(original, 'raw');
-const hex = EMVTLV.serialize(tree);
-
-console.assert(hex === original);  // byte-identical
-```
-
-### Inspect a Poseidon config blob
-
-```javascript
-const config = EMVTLV.parse(configBlob, 'config');
-
-for (const app of config.applicationConfigs) {
-  console.log(`AID: ${app.aid}, Label: ${app.label}`);
-  console.log(`  TAC Online:   ${app.tacOnline}`);
-  console.log(`  TAC Default:  ${app.tacDefault}`);
-  console.log(`  TAC Denial:   ${app.tacDenial}`);
-  console.log(`  Floor limit:  ${app.floorLimit}`);
-}
-
-for (const ca of config.caKeys) {
-  console.log(`RID: ${ca.rid}, Index: ${ca.keyIndex}`);
-  console.log(`  Modulus: ${ca.modulus.length} bytes`);
-}
-```
-
-### Decode a ZVT authorisation request
-
-```javascript
-const zvt = EMVTLV.parse(zvtBuffer, 'zvt');
-console.log(`${zvt.ctrlName} (${zvt.ctrl})`);
-console.log(`Length: ${zvt.length}, BMP fields: ${zvt.bmpFields.length}`);
-
-for (const node of zvt.tlv) {
-  console.log(`  ${node.tag} ${node.name}: ${node.decoded || node.value}`);
+    'byte': 1,
+    'mask': 0x80,
+    'name': 'Offline data authentication was not performed',
+    'set': True
 }
 ```
 
@@ -333,13 +304,19 @@ for (const node of zvt.tlv) {
 
 ```bash
 # Run all tests
-npm test
+uv run pytest
 
-# Watch mode
-npm run test:watch
+# Verbose output
+uv run pytest -v
 
-# Coverage report
-npm run test:coverage
+# Quick mode
+uv run pytest -q
+
+# Run specific test file
+uv run pytest tests/test_tlv_node.py
+
+# Run specific test class
+uv run pytest tests/test_tlv_node.py::TestTLVParserPadding
 ```
 
 The test suite covers:
@@ -364,6 +341,6 @@ The test suite covers:
 
 ## License
 
-[MIT](https://opensource.org/licenses/MIT) — see [`package.json`](./package.json).
+[MIT](https://opensource.org/licenses/MIT) — see [`pyproject.toml`](./pyproject.toml).
 
-Originally developed as part of [emv-tools](https://github.com/lumag/emv-tools).
+Originally developed as part of [emv-tools](https://github.com/lumag/emv-tools). Python port from the JavaScript version.

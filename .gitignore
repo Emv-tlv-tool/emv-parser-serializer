@@ -1,134 +1,39 @@
-# ===== Node.js / npm =====
-# Dependencies
-node_modules/
-jspm_packages/
-
-# Build output
-build/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
 dist/
-out/
-*.tsbuildinfo
+build/
+*.egg
 
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Virtual environment
+.venv/
+env/
+venv/
+.env/
 
-# Runtime / process data
-pids
-*.pid
-*.seed
-*.pid.lock
+# uv
+uv.lock
 
-# Coverage and test output
+# Testing
+.pytest_cache/
 coverage/
-*.lcov
-.nyc_output/
+htmlcov/
+.coverage
+*.cover
 
-# Dependency directories (legacy / alt package managers)
-.bower-cache/
-.bower-registry/
-.bower-tmp/
-
-# Cache directories
-.npm/
-.eslintcache
-.cache/
-.parcel-cache/
-.stylelintcache
-
-# ===== Environment / Secrets =====
-.env
-.env.local
-.env.*.local
-.env.development
-.env.production
-.env.test
-*.pem
-*.key
-*.crt
-
-# ===== IDEs / Editors =====
-# VS Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-
-# IntelliJ / JetBrains
+# IDE
+.vscode/
 .idea/
-*.iml
-*.iws
-*.ipr
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim / Emacs
 *.swp
 *.swo
 *~
-.\#*
-\#*\#
-.\#*
 
-# ===== OS files =====
-# macOS
+# OS
 .DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msm
-*.msp
-*.lnk
 
-# Linux
-*~
-.directory
-.Trash-*
-
-# ===== Project specific =====
-# Local test outputs
-test/
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.bak
-*.swp
-*.orig
-*.rej
-
-# Coverage and test artifacts
-*.lcov
-junit.xml
-test-results/
-jest-cache/
-
-# Build artifacts
-*.tgz
-*.tar.gz
+# Project specific
+*.log

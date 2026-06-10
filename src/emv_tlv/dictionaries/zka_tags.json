@@ -1,110 +1,302 @@
 {
-  "E0": {
-    "name": "Terminal Configuration",
-    "description": "Terminal configuration template",
-    "source": "ZKA",
-    "format": "constructed",
-    "minLength": 0,
-    "maxLength": 252,
-    "constructed": true
-  },
-  "E1": {
-    "name": "CA Public Key",
-    "description": "Certificate Authority Public Key template",
-    "source": "ZKA",
-    "format": "constructed",
-    "minLength": 0,
-    "maxLength": 252,
-    "constructed": true
-  },
-  "E2": {
-    "name": "Application Configuration",
-    "description": "Application configuration template",
-    "source": "ZKA",
-    "format": "constructed",
-    "minLength": 0,
-    "maxLength": 252,
-    "constructed": true
-  },
-  "DF01": {
-    "name": "RID",
-    "description": "Registered Application Provider Identifier",
-    "source": "ZKA",
+  "DF06": {
+    "name": "Mid",
+    "description": "ZKA_TM_MID",
     "format": "binary",
-    "minLength": 5,
-    "maxLength": 5,
     "constructed": false
   },
-  "DF02": {
-    "name": "CA Public Key Index",
-    "description": "Index of the CAPK",
-    "source": "ZKA",
-    "format": "binary",
-    "minLength": 1,
-    "maxLength": 1,
-    "constructed": false
-  },
-  "DF04": {
+  "DF0A": {
     "name": "Application Label",
-    "description": "Display label for the application",
-    "source": "ZKA",
+    "description": "ZKA_TM_APPLICATION_LABEL",
     "format": "ans",
-    "minLength": 0,
-    "maxLength": 16,
     "constructed": false
   },
-  "DF05": {
-    "name": "Floor Limit",
-    "description": "Offline transaction floor limit",
-    "source": "ZKA",
-    "format": "bcd",
-    "minLength": 4,
-    "maxLength": 4,
+  "DF0B": {
+    "name": "Application Selection Indicator Asi",
+    "description": "ZKA_TM_APPLICATION_SELECTION_INDICATOR_ASI",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF0C": {
+    "name": "Default Ddol",
+    "description": "ZKA_TM_DEFAULT_DDOL",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF0D": {
+    "name": "Default Tdol",
+    "description": "ZKA_TM_DEFAULT_TDOL",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF0E": {
+    "name": "Sw",
+    "description": "SW",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF0F": {
+    "name": "M",
+    "description": "M",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF10": {
+    "name": "Zp",
+    "description": "ZP",
+    "format": "binary",
     "constructed": false
   },
   "DF11": {
-    "name": "TAC Default",
-    "description": "Terminal Action Code - Default",
-    "source": "ZKA",
-    "format": "bitmask",
-    "minLength": 5,
-    "maxLength": 5,
+    "name": "Tac Denial",
+    "description": "ZKA_TM_TAC_DENIAL",
+    "format": "binary",
     "constructed": false
   },
   "DF12": {
-    "name": "TAC Denial",
-    "description": "Terminal Action Code - Denial",
-    "source": "ZKA",
-    "format": "bitmask",
-    "minLength": 5,
-    "maxLength": 5,
+    "name": "Tac Online",
+    "description": "ZKA_TM_TAC_ONLINE",
+    "format": "binary",
     "constructed": false
   },
   "DF13": {
-    "name": "TAC Online",
-    "description": "Terminal Action Code - Online",
-    "source": "ZKA",
-    "format": "bitmask",
-    "minLength": 5,
-    "maxLength": 5,
+    "name": "Tac Default",
+    "description": "ZKA_TM_TAC_DEFAULT",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF14": {
+    "name": "Floor Limit For Mag Stripe",
+    "description": "ZKA_TM_FLOOR_LIMIT_FOR_MAG_STRIPE",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF15": {
+    "name": "Merchant Identifier",
+    "description": "ZKA_TM_MERCHANT_IDENTIFIER",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF18": {
+    "name": "Fallback Parameter",
+    "description": "ZKA_TM_FALLBACK_PARAMETER",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF19": {
+    "name": "Needed Objects",
+    "description": "ZKA_TM_NEEDED_DATA_OBJECTS",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF1B": {
+    "name": "Terminal Currency",
+    "description": "ZKA_TM_TERMINAL_CURRENCY",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF1C": {
+    "name": "Terminal Currency Exponent",
+    "description": "ZKA_TM_TERMINAL_CURRENCY_EXPONENT",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF22": {
+    "name": "Transaction Restrictions",
+    "description": "ZKA_TM_TRANSACTION_RESTRICTIONS",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF23": {
+    "name": "Offline Counter",
+    "description": "ZKA_TM_OFFLINE_COUNTER",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF25": {
+    "name": "Ticket Parameter",
+    "description": "ZKA_TM_TICKET_PARAMETER",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF26": {
+    "name": "Floor Limit",
+    "description": "ZKA_TM_EMV_FLOOR_LIMIT",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF27": {
+    "name": "Restricted Terminal Capabilities",
+    "description": "ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF28": {
+    "name": "Restricted Additional Terminal Capabilities",
+    "description": "ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF2A": {
+    "name": "Product Display Config",
+    "description": "ZKA_TM_PRODUCT_DISPLAY_CONFIG",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF2F": {
+    "name": "Early Pin Configuration",
+    "description": "ZKA_TM_EARLY_PIN_CONFIGURATION",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF34": {
+    "name": "Rid",
+    "description": "ZKA_TM_RID",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF35": {
+    "name": "Application Specific Country Code",
+    "description": "ZKA_TM_APPLICATION_SPECIFIC_COUNTRY_CODE",
+    "format": "bcd",
+    "constructed": false
+  },
+  "DF39": {
+    "name": "Journal Dol",
+    "description": "ZKA_TM_JOURNAL_DOL",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF40": {
+    "name": "Receipt Dol Merchant Online",
+    "description": "ZKA_TM_RECEIPT_DOL_MERCHANT_ONLINE",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF41": {
+    "name": "Receipt Dol Merchant Offline Accepted",
+    "description": "ZKA_TM_RECEIPT_DOL_MERCHANT_OFFLINE_ACCEPTED",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF42": {
+    "name": "Receipt Dol Merchant Offline Declined",
+    "description": "ZKA_TM_RECEIPT_DOL_MERCHANT_OFFLINE_DECLINED",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF46": {
+    "name": "Mag Stripe Needed Tracks",
+    "description": "ZKA_TM_MAG_STRIPE_NEEDED_TRACKS",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF47": {
+    "name": "Retry Parameter",
+    "description": "ZKA_TM_RETRY_PARAMETER",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF53": {
+    "name": "Version",
+    "description": "VERSION",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF54": {
+    "name": "Creation",
+    "description": "CREATION",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF55": {
+    "name": "Ref",
+    "description": "REF",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF56": {
+    "name": "Crc",
+    "description": "CRC",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF57": {
+    "name": "Crc",
+    "description": "CRC",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF58": {
+    "name": "P",
+    "description": "P",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF59": {
+    "name": "K",
+    "description": "K",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF5A": {
+    "name": "K",
+    "description": "K",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF5B": {
+    "name": "H",
+    "description": "H",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF60": {
+    "name": "Card Id",
+    "description": "POSEIDON_EMV_CARD_ID",
+    "format": "binary",
+    "constructed": false
+  },
+  "DF71": {
+    "name": "Configuration Version",
+    "description": "POSEIDON_EMV_CONFIGURATION_VERSION",
+    "format": "binary",
     "constructed": false
   },
   "E6": {
-    "name": "CA Public Key Modulus",
-    "description": "CAPK modulus value",
-    "source": "ZKA",
-    "format": "binary",
-    "minLength": 1,
-    "maxLength": 248,
-    "constructed": false
+    "name": "Ca Key 3",
+    "description": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_3",
+    "format": "constructed",
+    "constructed": true
   },
   "E7": {
-    "name": "CA Public Key Exponent",
-    "description": "CAPK exponent value",
-    "source": "ZKA",
+    "name": "Ca Key 4",
+    "description": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_4",
+    "format": "constructed",
+    "constructed": true
+  },
+  "F0": {
+    "name": "Vorranganwendungen",
+    "description": "ZKA_TM_VORRANGANWENDUNGEN",
     "format": "binary",
-    "minLength": 1,
-    "maxLength": 3,
+    "constructed": false
+  },
+  "F1": {
+    "name": "Identifying Mag Stripe",
+    "description": "ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA",
+    "format": "binary",
+    "constructed": false
+  },
+  "F8": {
+    "name": "Associated Mag Stripe",
+    "description": "ZKA_TM_ASSOCIATED_MAG_STRIPE",
+    "format": "binary",
+    "constructed": false
+  },
+  "FB": {
+    "name": "P",
+    "description": "P",
+    "format": "binary",
     "constructed": false
   }
 }

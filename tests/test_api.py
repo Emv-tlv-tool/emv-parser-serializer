@@ -10,30 +10,30 @@ from emv_tlv import (
 class TestParseRawTLV:
     def test_parse_raw_tlv_data(self):
         """Parse raw TLV from bytes."""
-        data = bytes([0x9A, 0x03, 0x21, 0x03, 0x15])
+        data = bytes([0x9F, 0x1A, 0x02, 0x28, 0x00])
         result = parse(data, "raw")
         assert len(result) == 1
-        assert result[0]["tag"] == "9A"
-        assert result[0]["name"] == "Transaction Date"
+        assert result[0]["tag"] == "9F1A"
+        assert result[0]["name"] == "Terminal Country Code"
 
     def test_parse_hex_string(self):
         """Parse hex string input."""
-        result = parse("9A03210315", "raw")
+        result = parse("9F1A022800", "raw")
         assert len(result) == 1
-        assert result[0]["tag"] == "9A"
+        assert result[0]["tag"] == "9F1A"
 
     def test_parse_with_decoded_values(self):
         """Parse with decoded values."""
-        result = parse("9A03210315", "raw")
-        assert result[0]["decoded"] == "2021-03-15"
+        result = parse("9F1A022800", "raw")
+        assert result[0]["decoded"] == "Germany (280)"
 
     def test_parse_constructed_tag(self):
         """Parse constructed tag with children."""
-        result = parse("6F088402A000A5025000", "raw")
-        assert result[0]["tag"] == "6F"
-        assert result[0]["name"] == "FCI Template"
+        result = parse("E0099F1A0228009F350122", "raw")
+        assert result[0]["tag"] == "E0"
+        assert result[0]["name"] == "Zka Tm Terminal Config Data Template"
         assert len(result[0]["children"]) == 2
-        assert result[0]["children"][0]["name"] == "DF Name"
+        assert result[0]["children"][0]["name"] == "Terminal Country Code"
 
     def test_parse_empty_input(self):
         """Parse empty input."""
@@ -74,7 +74,7 @@ class TestParseConfig:
         result = parse(data, "config")
         assert len(result) == 1
         assert result[0]["tag"] == "E0"
-        assert result[0]["name"] == "Terminal Configuration"
+        assert result[0]["name"] == "Zka Tm Terminal Config Data Template"
 
     def test_get_application_configs(self):
         """Get application configs from parsed config."""
@@ -196,7 +196,7 @@ class TestDecodeNode:
 
     def test_decode_tvr_bitmask(self):
         """Decode TVR bitmask."""
-        result = parse("95050000000000", "raw")
+        result = parse("9F3303000000", "raw")
         decoded = decode_node(result[0])
         assert "bitmask" in decoded
         assert len(decoded["bitmask"]) > 0
@@ -206,11 +206,11 @@ class TestDecodeNode:
 class TestToJSON:
     def test_convert_tree_to_json(self):
         """Convert tree to JSON format."""
-        result = parse("6F088402A000A5025000", "raw")
+        result = parse("E0099F1A0228009F350122", "raw")
         json_data = to_json(result)
         assert isinstance(json_data, list)
-        assert json_data[0]["tag"] == "6F"
-        assert json_data[0]["name"] == "FCI Template"
+        assert json_data[0]["tag"] == "E0"
+        assert json_data[0]["name"] == "Zka Tm Terminal Config Data Template"
         assert "children" in json_data[0]
 
     def test_json_includes_decoded(self):
@@ -283,8 +283,8 @@ class TestIntegration:
     def test_dictionary_lookup(self):
         """Test dictionary lookup."""
         from emv_tlv.dictionaries import Dictionary
-        assert Dictionary.lookup_by_tag("9A") is not None
-        assert Dictionary.lookup_by_tag("9A")["name"] == "Transaction Date"
-        assert Dictionary.lookup_by_name("PAN") is not None
-        assert Dictionary.has_tag("9A") is True
+        assert Dictionary.lookup_by_tag("9F1A") is not None
+        assert Dictionary.lookup_by_tag("9F1A")["name"] == "Terminal Country Code"
+        assert Dictionary.lookup_by_name("Terminal Country Code") is not None
+        assert Dictionary.has_tag("9F1A") is True
         assert Dictionary.has_tag("ZZ") is False

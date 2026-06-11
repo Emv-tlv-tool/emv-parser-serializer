@@ -61,7 +61,7 @@
   "9F33": {
     "name": "Terminal Capabilities",
     "description": "EMVCO_TERMINAL_CAPABILITIES",
-    "format": "binary",
+    "format": "bitmask",
     "constructed": false,
     "parent_tags": [
       "DF40",

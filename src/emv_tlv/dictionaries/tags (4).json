@@ -1,0 +1,4097 @@
+[
+  {
+    "id": 100,
+    "poseidon_tag": "9F35",
+    "tai_tag": "9F35",
+    "name": "Terminal Type",
+    "group": "Terminal Data",
+    "tech_name": "EMVCO_TERMINAL_TYPE",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 101,
+    "poseidon_tag": "9F33",
+    "tai_tag": "9F33",
+    "name": "Terminal Capabilities",
+    "group": "Terminal Data",
+    "tech_name": "EMVCO_TERMINAL_CAPABILITIES",
+    "typical_length": "0x03",
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "E0",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Manual key entry",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Magnetic stripe",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "IC with contacts",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "F8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Plaintext PIN for ICC verification",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Enciphered PIN for online verification",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Signature (paper)",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Enciphered PIN for offline verification",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "No CVM required",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "C8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "SDA",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "DDA",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "CDA",
+            "set": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "poseidon_tag": "9F40",
+    "tai_tag": "9F40",
+    "name": "Additional Terminal Capabilities",
+    "group": "Terminal Data",
+    "tech_name": "EMVCO_ADDITIONAL_TERMINAL_CAPABILITIES",
+    "typical_length": "0x05",
+    "parent_tags": [
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "60",
+        "label": "Transaction Type Capability",
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Goods",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Services",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "00",
+        "label": "Transaction Type Capability",
+        "bits": []
+      },
+      {
+        "index": 3,
+        "hex_value": "F0",
+        "label": "Terminal Data Input Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Numeric keys",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Alphabetic and special characters keys",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Command keys",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Function keys",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "hex_value": "F0",
+        "label": "Term. Data Output Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Print, attendant",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Print, cardholder",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Display, attendant",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Display, cardholder",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "hex_value": "01",
+        "label": "Term. Data Output Capability",
+        "bits": [
+          {
+            "bit": 1,
+            "label": "Code table 1",
+            "set": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "poseidon_tag": "9F1A",
+    "tai_tag": "9F1A",
+    "name": "Terminal Country Code",
+    "group": "Terminal Data",
+    "tech_name": "EMVCO_TERMINAL_COUNTRY_CODE",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "numeric"
+  },
+  {
+    "id": 104,
+    "poseidon_tag": "DF47",
+    "tai_tag": "DF47",
+    "name": "Retry Parameter",
+    "group": "Terminal Data",
+    "tech_name": "ZKA_TM_RETRY_PARAMETER",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 105,
+    "poseidon_tag": "DF39",
+    "tai_tag": "DF39",
+    "name": "Transaction Log",
+    "group": "Terminal Data",
+    "tech_name": "ZKA_TM_JOURNAL_DOL",
+    "typical_length": "0x07",
+    "parent_tags": [
+      "DF40",
+      "E0"
+    ],
+    "child_tags": [
+      "95",
+      "9B",
+      "9F34",
+      "DF02"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "DF02",
+        "tech_name": "ZKA_TM_ERROR_IDENTIFICATION",
+        "length": 15
+      },
+      {
+        "tag": "95",
+        "tech_name": "EMVCO_TERMINAL_VERIFICATION_RESULTS__TVR",
+        "length": 5
+      },
+      {
+        "tag": "9B",
+        "tech_name": "EMVCO_TRANSACTION_STATUS_INFORMATION__TSI",
+        "length": 2
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "poseidon_tag": "DF1B",
+    "tai_tag": "DF1B",
+    "name": "Terminal Currency",
+    "group": "Terminal Data",
+    "tech_name": "ZKA_TM_TERMINAL_CURRENCY",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "numeric"
+  },
+  {
+    "id": 107,
+    "poseidon_tag": "DF1C",
+    "tai_tag": "DF1C",
+    "name": "Currency Exponent",
+    "group": "Terminal Data",
+    "tech_name": "ZKA_TM_TERMINAL_CURRENCY_EXPONENT",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 108,
+    "poseidon_tag": "9F1E",
+    "tai_tag": "9F1E",
+    "name": "IFD Serial Number",
+    "group": "Terminal Data",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "DF40",
+      "DF43"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 109,
+    "poseidon_tag": "9F41",
+    "tai_tag": "9F41",
+    "name": "Transaction Counter",
+    "group": "Terminal Data",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "DF40",
+      "DF43"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 110,
+    "poseidon_tag": "DF48",
+    "tai_tag": "DF48",
+    "name": "Terminal Language",
+    "group": "Terminal Data",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 111,
+    "poseidon_tag": "DF49",
+    "tai_tag": "DF49",
+    "name": "Specific Terminal Capabilities",
+    "group": "Terminal Data",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E0"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 113,
+    "poseidon_tag": "FF52",
+    "tai_tag": "FF52",
+    "name": "Ingenico Private",
+    "group": "Terminal Data",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+	  "E0"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 200,
+    "poseidon_tag": "9F06",
+    "tai_tag": "9F06",
+    "name": "Application Identifier",
+    "group": "Chip Application",
+    "tech_name": "EMVCO_AID",
+    "typical_length": "0x07",
+    "parent_tags": [
+      "E2",
+      "F0"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 203,
+    "poseidon_tag": "DF0B",
+    "tai_tag": "DF0B",
+    "name": "Application Selection Identifier",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_APPLICATION_SELECTION_INDICATOR_ASI",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 204,
+    "poseidon_tag": "F0",
+    "tai_tag": "F0",
+    "name": "Override Applications",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_VORRANGANWENDUNGEN",
+    "typical_length": "0x0D",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "9F06"
+    ],
+    "value_format": "binary"
+  },
+  {
+    "id": 205,
+    "poseidon_tag": "DF0C",
+    "tai_tag": "DF0C",
+    "name": "Default DDOL",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_DEFAULT_DDOL",
+    "typical_length": "0x03",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "9F37"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "9F37",
+        "tech_name": "EMVCO_UNPREDICTABLE_NUMBER",
+        "length": 4
+      }
+    ]
+  },
+  {
+    "id": 206,
+    "poseidon_tag": "DF0D",
+    "tai_tag": "DF0D",
+    "name": "Default TDOL",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_DEFAULT_TDOL",
+    "typical_length": "0x00",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "5F2A",
+      "95",
+      "9A",
+      "9C",
+      "9F02",
+      "9F37"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "9F02",
+        "tech_name": "EMVCO_AMOUNT_AUTHORISED_NUMERIC",
+        "length": 6
+      },
+      {
+        "tag": "5F2A",
+        "tech_name": "EMVCO_TRANSACTION_CURRENCY_CODE",
+        "length": 2
+      },
+      {
+        "tag": "9A",
+        "tech_name": "EMVCO_TRANSACTION_DATE",
+        "length": 3
+      },
+      {
+        "tag": "9C",
+        "tech_name": "EMVCO_TRANSACTION_TYPE",
+        "length": 1
+      },
+      {
+        "tag": "95",
+        "tech_name": "EMVCO_TERMINAL_VERIFICATION_RESULTS__TVR",
+        "length": 5
+      },
+      {
+        "tag": "9F37",
+        "tech_name": "EMVCO_UNPREDICTABLE_NUMBER",
+        "length": 4
+      }
+    ]
+  },
+  {
+    "id": 208,
+    "poseidon_tag": "9F15",
+    "tai_tag": "9F15",
+    "name": "Merchant industry key",
+    "group": "Chip Application",
+    "tech_name": "EMVCO_MERCHANT_INDUSTRY_KEY",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "string"
+  },
+  {
+    "id": 209,
+    "poseidon_tag": "9F53",
+    "tai_tag": "9F53",
+    "name": "Transaction category code",
+    "group": "Chip Application",
+    "tech_name": "EMVCO_TRANSACTION_CATEGORY_CODE",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 210,
+    "poseidon_tag": "9F16",
+    "tai_tag": "9F16",
+    "name": "Merchant Identifier",
+    "group": "Chip Application",
+    "tech_name": "EMVCO_MERCHANT_IDENTIFIER",
+    "typical_length": "0x0F",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "string"
+  },
+  {
+    "id": 211,
+    "poseidon_tag": "9F01",
+    "tai_tag": "9F01",
+    "name": "Acquirer Identifier",
+    "group": "Chip Application",
+    "tech_name": "EMVCO_AQUIRER_IDENTIFIER",
+    "typical_length": "0x06",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "string"
+  },
+  {
+    "id": 218,
+    "poseidon_tag": "DF23",
+    "tai_tag": "DF23",
+    "name": "Maximum number of offline transactions",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_OFFLINE_COUNTER",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 225,
+    "poseidon_tag": "DF1A",
+    "tai_tag": "DF1A",
+    "name": "No CVM Option",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_NO_CVM_PARAMETER",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 226,
+    "poseidon_tag": "DF19",
+    "tai_tag": "DF19",
+    "name": "Needed data objects of the card",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_NEEDED_DATA_OBJECTS",
+    "typical_length": "0x03",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 229,
+    "poseidon_tag": "DF40",
+    "tai_tag": "DF40",
+    "name": "Merchant ticket copy for online transactions",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_RECEIPT_DOL_MERCHANT_ONLINE",
+    "typical_length": "0x2B",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "5A",
+      "5F24",
+      "5F34",
+      "82",
+      "84",
+      "95",
+      "9B",
+      "9C",
+      "9F09",
+      "9F1A",
+      "9F1C",
+      "9F1E",
+      "9F33",
+      "9F34",
+      "9F35",
+      "9F36",
+      "9F41",
+      "9F53",
+      "DF01",
+      "DF02",
+      "DF39"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "95",
+        "tech_name": "EMVCO_TERMINAL_VERIFICATION_RESULTS__TVR",
+        "length": 5
+      },
+      {
+        "tag": "9B",
+        "tech_name": "EMVCO_TRANSACTION_STATUS_INFORMATION__TSI",
+        "length": 2
+      },
+      {
+        "tag": "82",
+        "tech_name": "EMVCO_APP_INTERCHANGE_PROFILE__AIP",
+        "length": 2
+      },
+      {
+        "tag": "9F36",
+        "tech_name": "EMVCO_APPLICATION_TRANSACTION_COUNTER__ATC",
+        "length": 2
+      },
+      {
+        "tag": "9C",
+        "tech_name": "EMVCO_TRANSACTION_TYPE",
+        "length": 1
+      },
+      {
+        "tag": "9F1A",
+        "tech_name": "EMVCO_TERMINAL_COUNTRY_CODE",
+        "length": 2
+      },
+      {
+        "tag": "9F33",
+        "tech_name": "EMVCO_TERMINAL_CAPABILITIES",
+        "length": 3
+      },
+      {
+        "tag": "9F34",
+        "tech_name": "EMVCO_CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS",
+        "length": 3
+      },
+      {
+        "tag": "9F35",
+        "tech_name": "EMVCO_TERMINAL_TYPE",
+        "length": 1
+      },
+      {
+        "tag": "9F53",
+        "tech_name": "EMVCO_TRANSACTION_CATEGORY_CODE",
+        "length": 1
+      },
+      {
+        "tag": "9F1E",
+        "tech_name": "EMVCO_IFD_SERIAL_NUMBER",
+        "length": 4
+      },
+      {
+        "tag": "9F41",
+        "tech_name": "EMVCO_TRANSACTION_SEQUENCE_NUMBER",
+        "length": 4
+      },
+      {
+        "tag": "5A",
+        "tech_name": "EMVCO_PAN",
+        "length": 10
+      },
+      {
+        "tag": "5F24",
+        "tech_name": "EMVCO_APPLICATION_EXPIRATION_DATE",
+        "length": 3
+      },
+      {
+        "tag": "5F34",
+        "tech_name": "EMVCO_PSEQ",
+        "length": 1
+      },
+      {
+        "tag": "9F1C",
+        "tech_name": "EMVCO_TERMINAL_IDENTIFICATION",
+        "length": 4
+      }
+    ]
+  },
+  {
+    "id": 230,
+    "poseidon_tag": "DF41",
+    "tai_tag": "DF41",
+    "name": "Merchant ticket copy for successful offline transactions",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_RECEIPT_DOL_MERCHANT_OFFLINE_ACCEPTED",
+    "typical_length": "0x0F",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "84",
+      "95",
+      "9B",
+      "9F34",
+      "9F36",
+      "DF01",
+      "DF02"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "DF02",
+        "tech_name": "ZKA_TM_ERROR_IDENTIFICATION",
+        "length": 15
+      },
+      {
+        "tag": "95",
+        "tech_name": "EMVCO_TERMINAL_VERIFICATION_RESULTS__TVR",
+        "length": 5
+      },
+      {
+        "tag": "9B",
+        "tech_name": "EMVCO_TRANSACTION_STATUS_INFORMATION__TSI",
+        "length": 2
+      },
+      {
+        "tag": "84",
+        "tech_name": "EMVCO_DF_NAME",
+        "length": 5
+      },
+      {
+        "tag": "9F34",
+        "tech_name": "EMVCO_CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS",
+        "length": 10
+      },
+      {
+        "tag": "DF01",
+        "tech_name": "ZKA_TM_ISSUER_SCRIPT_RESULTS",
+        "length": 15
+      }
+    ]
+  },
+  {
+    "id": 231,
+    "poseidon_tag": "DF42",
+    "tai_tag": "DF42",
+    "name": "Merchant ticket copy for unsuccessful offline transactions",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_RECEIPT_DOL_MERCHANT_OFFLINE_DECLINED",
+    "typical_length": "0x0F",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "5F34",
+      "84",
+      "8A",
+      "95",
+      "9B",
+      "9F34",
+      "DF01",
+      "DF02"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "DF02",
+        "tech_name": "ZKA_TM_ERROR_IDENTIFICATION",
+        "length": 15
+      },
+      {
+        "tag": "95",
+        "tech_name": "EMVCO_TERMINAL_VERIFICATION_RESULTS__TVR",
+        "length": 5
+      },
+      {
+        "tag": "9B",
+        "tech_name": "EMVCO_TRANSACTION_STATUS_INFORMATION__TSI",
+        "length": 2
+      },
+      {
+        "tag": "84",
+        "tech_name": "EMVCO_DF_NAME",
+        "length": 5
+      },
+      {
+        "tag": "9F34",
+        "tech_name": "EMVCO_CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS",
+        "length": 10
+      },
+      {
+        "tag": "DF01",
+        "tech_name": "ZKA_TM_ISSUER_SCRIPT_RESULTS",
+        "length": 15
+      }
+    ]
+  },
+  {
+    "id": 232,
+    "poseidon_tag": "DF43",
+    "tai_tag": "DF43",
+    "name": "Customer ticket copy for online transactions",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_RECEIPT_DOL_CUSTOMER_ONLINE",
+    "typical_length": "0x0D",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "5A",
+      "5F24",
+      "5F34",
+      "82",
+      "84",
+      "95",
+      "9A",
+      "9B",
+      "9C",
+      "9F09",
+      "9F1A",
+      "9F1C",
+      "9F1E",
+      "9F33",
+      "9F34",
+      "9F35",
+      "9F36",
+      "9F41",
+      "9F53",
+      "DF01",
+      "DF02"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "9A",
+        "tech_name": "EMVCO_TRANSACTION_DATE",
+        "length": 2
+      },
+      {
+        "tag": "5A",
+        "tech_name": "EMVCO_PAN",
+        "length": 10
+      },
+      {
+        "tag": "5F24",
+        "tech_name": "EMVCO_APPLICATION_EXPIRATION_DATE",
+        "length": 3
+      },
+      {
+        "tag": "5F34",
+        "tech_name": "EMVCO_PSEQ",
+        "length": 1
+      },
+      {
+        "tag": "9F1C",
+        "tech_name": "EMVCO_TERMINAL_IDENTIFICATION",
+        "length": 4
+      }
+    ]
+  },
+  {
+    "id": 233,
+    "poseidon_tag": "DF44",
+    "tai_tag": "DF44",
+    "name": "Customer ticket copy for successful offline transactions",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_RECEIPT_DOL_CUSTOMER_OFFLINE_ACCEPTED",
+    "typical_length": "0x0F",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "82",
+      "84",
+      "95",
+      "9B",
+      "9F34",
+      "9F38",
+      "DF01",
+      "DF02"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "DF02",
+        "tech_name": "ZKA_TM_ERROR_IDENTIFICATION",
+        "length": 15
+      },
+      {
+        "tag": "95",
+        "tech_name": "EMVCO_TERMINAL_VERIFICATION_RESULTS__TVR",
+        "length": 5
+      },
+      {
+        "tag": "9B",
+        "tech_name": "EMVCO_TRANSACTION_STATUS_INFORMATION__TSI",
+        "length": 2
+      },
+      {
+        "tag": "84",
+        "tech_name": "EMVCO_DF_NAME",
+        "length": 5
+      },
+      {
+        "tag": "9F34",
+        "tech_name": "EMVCO_CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS",
+        "length": 10
+      },
+      {
+        "tag": "DF01",
+        "tech_name": "ZKA_TM_ISSUER_SCRIPT_RESULTS",
+        "length": 15
+      }
+    ]
+  },
+  {
+    "id": 234,
+    "poseidon_tag": "DF45",
+    "tai_tag": "DF45",
+    "name": "Customer ticket copy for unsuccessful offline transactions",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_RECEIPT_DOL_CUSTOMER_OFFLINE_DECLINED",
+    "typical_length": "0x0F",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "84",
+      "95",
+      "9B",
+      "9F34",
+      "DF01",
+      "DF02"
+    ],
+    "value_format": "dol",
+    "dol_fields": [
+      {
+        "tag": "DF02",
+        "tech_name": "ZKA_TM_ERROR_IDENTIFICATION",
+        "length": 15
+      },
+      {
+        "tag": "95",
+        "tech_name": "EMVCO_TERMINAL_VERIFICATION_RESULTS__TVR",
+        "length": 5
+      },
+      {
+        "tag": "9B",
+        "tech_name": "EMVCO_TRANSACTION_STATUS_INFORMATION__TSI",
+        "length": 2
+      },
+      {
+        "tag": "84",
+        "tech_name": "EMVCO_DF_NAME",
+        "length": 5
+      },
+      {
+        "tag": "9F34",
+        "tech_name": "EMVCO_CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS",
+        "length": 10
+      },
+      {
+        "tag": "DF01",
+        "tech_name": "ZKA_TM_ISSUER_SCRIPT_RESULTS",
+        "length": 15
+      }
+    ]
+  },
+  {
+    "id": 235,
+    "poseidon_tag": "EE",
+    "tai_tag": "EE",
+    "name": "Additional application data objects",
+    "group": "Chip Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 236,
+    "poseidon_tag": "9F4E",
+    "tai_tag": "9F4E",
+    "name": "Merchant name and location",
+    "group": "Chip Application",
+    "tech_name": "EMVCO_MERCHANT_NAME_AND_LOCATION",
+    "typical_length": "0x1B",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "string"
+  },
+  {
+    "id": 237,
+    "poseidon_tag": "F8",
+    "tai_tag": "F8",
+    "name": "Related magstripe applications",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_ASSOCIATED_MAG_STRIPE",
+    "typical_length": "0x05",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "DF06"
+    ],
+    "value_format": "binary"
+  },
+  {
+    "id": 239,
+    "poseidon_tag": "DF35",
+    "tai_tag": "DF35",
+    "name": "Application Country Code",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_APPLICATION_SPECIFIC_COUNTRY_CODE",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "numeric"
+  },
+  {
+    "id": 241,
+    "poseidon_tag": "DF2F",
+    "tai_tag": "DF2F",
+    "name": "Predrawing PIN-Input",
+    "group": "Chip Application",
+    "tech_name": "ZKA_TM_EARLY_PIN_CONFIGURATION",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 242,
+    "poseidon_tag": "FF60",
+    "tai_tag": "FF60",
+    "name": "Dcc Parameter",
+    "group": "Chip Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 243,
+    "poseidon_tag": "FA",
+    "tai_tag": "FA",
+    "name": "GeldKarte Charging configuration",
+    "group": "Chip Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 247,
+    "poseidon_tag": "FD",
+    "tai_tag": "FD",
+    "name": "Improper PIX-Extension",
+    "group": "Chip Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 301,
+    "poseidon_tag": "DF46",
+    "tai_tag": "DF46",
+    "name": "Needed magstripe tracks",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "ZKA_TM_MAG_STRIPE_NEEDED_TRACKS",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 302,
+    "poseidon_tag": "F1",
+    "tai_tag": "F1",
+    "name": "Identifying magnetic stripe data",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA",
+    "typical_length": "0x2A",
+    "parent_tags": [
+      "E0",
+      "E2"
+    ],
+    "child_tags": [
+      "F9"
+    ],
+    "value_format": "binary"
+  },
+  {
+    "id": 305,
+    "poseidon_tag": "DF25",
+    "tai_tag": "DF25",
+    "name": "Ticket parameter",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "ZKA_TM_TICKET_PARAMETER",
+    "typical_length": "0x04",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "position",
+    "positions": [
+      {
+        "position": 1,
+        "label": "Merchant receipt configuration",
+        "values": {}
+      },
+      {
+        "position": 2,
+        "label": "Customer receipt configuration",
+        "values": {}
+      },
+      {
+        "position": 3,
+        "label": "Additional merchant receipt configuration",
+        "values": {}
+      },
+      {
+        "position": 4,
+        "label": "RFU",
+        "values": {}
+      },
+      {
+        "position": 5,
+        "label": "RFU",
+        "values": {}
+      },
+      {
+        "position": 6,
+        "label": "RFU",
+        "values": {}
+      },
+      {
+        "position": 7,
+        "label": "RFU",
+        "values": {}
+      },
+      {
+        "position": 8,
+        "label": "RFU",
+        "values": {}
+      }
+    ]
+  },
+  {
+    "id": 311,
+    "poseidon_tag": "DF22",
+    "tai_tag": "DF22",
+    "name": "Transaction restrictions",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "ZKA_TM_TRANSACTION_RESTRICTIONS",
+    "typical_length": "0x08",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "position",
+    "positions": [
+      {
+        "position": 1,
+        "label": "Manual Reversal",
+        "values": {}
+      },
+      {
+        "position": 2,
+        "label": "Refund",
+        "values": {}
+      },
+      {
+        "position": 3,
+        "label": "Reservation",
+        "values": {}
+      },
+      {
+        "position": 4,
+        "label": "Tip",
+        "values": {}
+      },
+      {
+        "position": 5,
+        "label": "Referral",
+        "values": {}
+      },
+      {
+        "position": 6,
+        "label": "Voice authorization",
+        "values": {}
+      },
+      {
+        "position": 7,
+        "label": "DC POS 2.5: CDA Mode configuration",
+        "values": {}
+      },
+      {
+        "position": 8,
+        "label": "DC POS 2.5: Extended Fallback rules",
+        "values": {}
+      },
+      {
+        "position": 9,
+        "label": "DC POS 2.5: Treatment of card errors after online sucess",
+        "values": {}
+      },
+      {
+        "position": 10,
+        "label": "DC POS 3.0: DCC cless",
+        "values": {}
+      },
+      {
+        "position": 11,
+        "label": "DC POS 3.0: Voice referral cless",
+        "values": {}
+      },
+      {
+        "position": 12,
+        "label": "DC POS 3.0: Cardholder Authentication",
+        "values": {}
+      },
+      {
+        "position": 13,
+        "label": "DC POS 3.0: Response Code 65 handling",
+        "values": {}
+      },
+      {
+        "position": 14,
+        "label": "RFU",
+        "values": {}
+      },
+      {
+        "position": 15,
+        "label": "RFU",
+        "values": {}
+      },
+      {
+        "position": 16,
+        "label": "RFU",
+        "values": {}
+      }
+    ]
+  },
+  {
+    "id": 312,
+    "poseidon_tag": "F9",
+    "tai_tag": "F9",
+    "name": "Prefix",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "ZKA_TM_MAG_PREFIX_DATA_SET",
+    "typical_length": "0x13",
+    "parent_tags": [
+      "F1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 313,
+    "poseidon_tag": "DF60",
+    "tai_tag": "DF60",
+    "name": "Poseidon Card ID",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "POSEIDON_EMV_CARD_ID",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 351,
+    "poseidon_tag": "DF50",
+    "tai_tag": "DF50",
+    "name": "Application Label Service",
+    "group": "Magnetic Stripe Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 352,
+    "poseidon_tag": "DF51",
+    "tai_tag": "DF51",
+    "name": "Card Holder Authentication",
+    "group": "Magnetic Stripe Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 353,
+    "poseidon_tag": "DF52",
+    "tai_tag": "DF52",
+    "name": "Receipt parameter",
+    "group": "Magnetic Stripe Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 354,
+    "poseidon_tag": "DF54",
+    "tai_tag": "DF54",
+    "name": "Extended Application Label Online",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "CREATION",
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 355,
+    "poseidon_tag": "DF55",
+    "tai_tag": "DF55",
+    "name": "Extended Application Label Offline",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "REF-ID",
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 356,
+    "poseidon_tag": "DF56",
+    "tai_tag": "DF56",
+    "name": "Additional Chip Data",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "CRC?",
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 357,
+    "poseidon_tag": "FB",
+    "tai_tag": "FB",
+    "name": "Chip Application",
+    "group": "Magnetic Stripe Application",
+    "tech_name": "Program File Addititional Data",
+    "typical_length": "0x2A",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 358,
+    "poseidon_tag": "DF7F",
+    "tai_tag": "DF7F",
+    "name": "EMV Confirmation Mode",
+    "group": "Magnetic Stripe Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 400,
+    "poseidon_tag": "DF34",
+    "tai_tag": "DF34",
+    "name": "Registered Application Provider Identifier",
+    "group": "Payment System Keys",
+    "tech_name": "ZKA_TM_RID",
+    "typical_length": "0x05",
+    "parent_tags": [
+      "E1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 401,
+    "poseidon_tag": "9F22",
+    "tai_tag": "9F22",
+    "name": "Key Index",
+    "group": "Payment System Keys",
+    "tech_name": "EMVCO_KEY_INDEX",
+    "typical_length": "0x01",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 402,
+    "poseidon_tag": "DF29",
+    "tai_tag": "DF29",
+    "name": "Certification Authority Hash Algorithm Indicator",
+    "group": "Payment System Keys",
+    "tech_name": "ZKA_TM_CA_HASH_ALGORITHM_INDICATOR",
+    "typical_length": "0x01",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 403,
+    "poseidon_tag": "DF30",
+    "tai_tag": "DF30",
+    "name": "Certification Authority Public Key Algorithm Indicator",
+    "group": "Payment System Keys",
+    "tech_name": "ZKA_TM_CA_PUBLIC_KEY_ALGORITHM_INDICATOR",
+    "typical_length": "0x01",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 404,
+    "poseidon_tag": "DF31",
+    "tai_tag": "DF31",
+    "name": "Public Modulus",
+    "group": "Payment System Keys",
+    "tech_name": "ZKA_TM_RSA_PUBLIC_MODULUS",
+    "typical_length": "0x90",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 405,
+    "poseidon_tag": "DF32",
+    "tai_tag": "DF32",
+    "name": "Public Exponent",
+    "group": "Payment System Keys",
+    "tech_name": "ZKA_TM_RSA_PUBLIC_EXPONENT",
+    "typical_length": "0x01",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 406,
+    "poseidon_tag": "DF33",
+    "tai_tag": "DF33",
+    "name": "Checksum",
+    "group": "Payment System Keys",
+    "tech_name": "ZKA_TM_PUBLIC_KEY_CHECKSUM",
+    "typical_length": "0x14",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 407,
+    "poseidon_tag": "",
+    "tai_tag": "DF04",
+    "name": "Action Control",
+    "group": "Payment System Keys",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 500,
+    "poseidon_tag": "9F09",
+    "tai_tag": "9F09",
+    "name": "Application Version Number",
+    "group": "Contactless Application",
+    "tech_name": "EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "dol"
+  },
+  {
+    "id": 501,
+    "poseidon_tag": "9F1D",
+    "tai_tag": "9F1D",
+    "name": "Terminal Risk Management Data",
+    "group": "Contactless Application",
+    "tech_name": "EMVCO_RISK_MANAGEMENT_DATA",
+    "typical_length": "0x03",
+    "parent_tags": [
+	  "E2",
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 502,
+    "poseidon_tag": "9F66",
+    "tai_tag": "9F66",
+    "name": "Terminal Transaction Quailifiers (TTQ)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 503,
+    "poseidon_tag": "9F6D",
+    "tai_tag": "9F6D",
+    "name": "Application Version Number (Mag-stripe)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 504,
+    "poseidon_tag": "9F6E",
+    "tai_tag": "9F6E",
+    "name": "Enhanced Contactless Reader Capabilities",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 505,
+    "poseidon_tag": "9F7C",
+    "tai_tag": "9F7C",
+    "name": "Merchant Custom Data",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 506,
+    "poseidon_tag": "DF01",
+    "tai_tag": "DF01",
+    "name": "Kernel-ID",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_ISSUER_SCRIPT_RESULTS",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "DF40",
+      "DF41",
+      "DF42",
+      "DF43",
+      "DF44",
+      "DF45"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 507,
+    "poseidon_tag": "DF02",
+    "tai_tag": "DF02",
+    "name": "Status Check Support",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_ERROR_IDENTIFICATION",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "DF39",
+      "DF40",
+      "DF41",
+      "DF42",
+      "DF43",
+      "DF44",
+      "DF45"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 508,
+    "poseidon_tag": "DF03",
+    "tai_tag": "DF03",
+    "name": "Zero Amount Allowed",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 509,
+    "poseidon_tag": "DF04",
+    "tai_tag": "DF04",
+    "name": "Reader Contactless Transaction Limit (Pre-Processing)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_CONFIGURATION_ACTION_CONTROL",
+    "typical_length": "",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "bitmask"
+  },
+  {
+    "id": 510,
+    "poseidon_tag": "DF05",
+    "tai_tag": "DF05",
+    "name": "Reader Contactless Floor Limit (Pre-Processing)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 511,
+    "poseidon_tag": "DF06",
+    "tai_tag": "DF06",
+    "name": "Reader CVM Required Limit (Pre-Processing)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_MID",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E2",
+      "F8"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 512,
+    "poseidon_tag": "DF07",
+    "tai_tag": "DF07",
+    "name": "Supported Transaction Type",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_SUPPORTED_TRANSACTION_TYPES",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "86",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "payment without cashback (including tip and tipable)",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "initial reservation",
+            "set": true
+          },
+          {
+            "bit": 2,
+            "label": "reservation increase",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "00",
+        "bits": []
+      }
+    ]
+  },
+  {
+    "id": 513,
+    "poseidon_tag": "DF08",
+    "tai_tag": "DF08",
+    "name": "Extended Selection Support",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_EXTENDED_SELECTION_SUPPORT_FLAG",
+    "typical_length": null,
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 514,
+    "poseidon_tag": "DF09",
+    "tai_tag": "DF09",
+    "name": "Kernel Priority",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_KERNEL_PRIORITY",
+    "typical_length": null,
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 515,
+    "poseidon_tag": "DF0A",
+    "tai_tag": "DF0A",
+    "name": "Application Label (Default)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_APPLICATION_LABEL",
+    "typical_length": "0x0B",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "4A4342"
+    ],
+    "value_format": "string"
+  },
+  {
+    "id": 516,
+    "poseidon_tag": "DF0E",
+    "tai_tag": "DF0E",
+    "name": "Random Online Data (Threshold)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_THRESHOLD_VALUE",
+    "typical_length": "0x06",
+    "parent_tags": [
+      "E2",
+	  "FB"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 517,
+    "poseidon_tag": "DF0F",
+    "tai_tag": "DF0F",
+    "name": "Random Online Data (Maximum Percentage)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_MAXIMUM_TARGET_PERCENTAGE",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2",
+	  "FB"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 518,
+    "poseidon_tag": "DF10",
+    "tai_tag": "DF10",
+    "name": "Random Online Data (Target Percentage)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_TARGET_PERCENTAGE",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2",
+	  "FB"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 519,
+    "poseidon_tag": "DF11",
+    "tai_tag": "DF11",
+    "name": "TAC (Denial)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_TAC_DENIAL",
+    "typical_length": "0x05",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "04",
+        "label": null,
+        "bits": [
+          {
+            "bit": 3,
+            "label": "CDA failed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "10",
+        "label": null,
+        "bits": [
+          {
+            "bit": 5,
+            "label": "Requested service not allowed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      },
+      {
+        "index": 4,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      },
+      {
+        "index": 5,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      }
+    ]
+  },
+  {
+    "id": 520,
+    "poseidon_tag": "DF12",
+    "tai_tag": "DF12",
+    "name": "TAC (Online)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_TAC_ONLINE",
+    "typical_length": "0x05",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "CC",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Offl. DA not performed",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "SDA failed",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "DDA failed",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "CDA failed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "00",
+        "bits": []
+      },
+      {
+        "index": 3,
+        "hex_value": "FC",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "CV failed",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Unrecognised CVM",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "PIN try limit exceeded",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "PIN entry required but PP not working",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "PIN entry required but PIN not entered",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "Online PIN entered",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "hex_value": "80",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Floor limit exceeded",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "hex_value": "00",
+        "bits": [
+          {
+            "multi_bit": true,
+            "label": "Relay Resistance Protocol: not supported"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 521,
+    "poseidon_tag": "DF13",
+    "tai_tag": "DF13",
+    "name": "TAC (Default)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_TAC_DEFAULT",
+    "typical_length": "0x05",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "CC",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Offl. DA not performed",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "SDA failed",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "DDA failed",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "CDA failed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "00",
+        "bits": []
+      },
+      {
+        "index": 3,
+        "hex_value": "FC",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "CV failed",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Unrecognised CVM",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "PIN try limit exceeded",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "PIN entry required but PP not working",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "PIN entry required but PIN not entered",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "Online PIN entered",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "hex_value": "80",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Floor limit exceeded",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "hex_value": "00",
+        "bits": [
+          {
+            "multi_bit": true,
+            "label": "Relay Resistance Protocol: not supported"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 522,
+    "poseidon_tag": "DF14",
+    "tai_tag": "DF14",
+    "name": "Reader Contactless Transaction Limit (No On-device CVM)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_FLOOR_LIMIT_FOR_MAG_STRIPE",
+    "typical_length": "0x06",
+    "parent_tags": [
+      "E2",
+	  "FB"
+    ],
+    "child_tags": [],
+    "value_format": "numeric"
+  },
+  {
+    "id": 523,
+    "poseidon_tag": "DF15",
+    "tai_tag": "DF15",
+    "name": "Reader Contactless Transaction Limit (On-device CVM)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_MERCHANT_IDENTIFIER",
+    "typical_length": "0x0F",
+    "parent_tags": [
+      "E2",
+	  "FB"
+    ],
+    "child_tags": [],
+    "value_format": "string"
+  },
+  {
+    "id": 524,
+    "poseidon_tag": "DF16",
+    "tai_tag": "DF16",
+    "name": "Reader CVM Required Limit (Kernel)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+      "E2",
+	  "FB"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 525,
+    "poseidon_tag": "DF17",
+    "tai_tag": "DF17",
+    "name": "Kernel 4-Capabilities",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 526,
+    "poseidon_tag": "DF18",
+    "tai_tag": "DF18",
+    "name": "Removal Timeout",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_FALLBACK_PARAMETER",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [
+      "00",
+      "01",
+      "02"
+    ],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "01",
+        "bits": [
+          {
+            "bit": 1,
+            "label": "Fallback allowed, denied if application or chip blocked",
+            "set": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 527,
+    "poseidon_tag": "DF20",
+    "tai_tag": "DF20",
+    "name": "Combination Options",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 528,
+    "poseidon_tag": "DF21",
+    "tai_tag": "DF21",
+    "name": "Terminal Interchange Profile (Static)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 529,
+    "poseidon_tag": "DF24",
+    "tai_tag": "DF24",
+    "name": "Kernel-specific Terminal Type",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 530,
+    "poseidon_tag": "DF26",
+    "tai_tag": "DF26",
+    "name": "Floor-Limit (Chip)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_EMV_FLOOR_LIMIT",
+    "typical_length": "0x06",
+    "parent_tags": [
+      "E2",
+	  "FB"
+    ],
+    "child_tags": [],
+    "value_format": "numeric"
+  },
+  {
+    "id": 531,
+    "poseidon_tag": "DF27",
+    "tai_tag": "DF27",
+    "name": "Terminal Capabilities (Application-specific)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES",
+    "typical_length": "0x03",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "FF",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Manual key entry",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Magnetic stripe",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "IC with contacts",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 2,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 1,
+            "label": "RFU",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "40",
+        "label": null,
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Enciphered PIN for online verification",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "FF",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "SDA",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "DDA",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "card capture",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "CDA",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 2,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 1,
+            "label": "RFU",
+            "set": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 532,
+    "poseidon_tag": "DF28",
+    "tai_tag": "DF28",
+    "name": "Additional Terminal Capabilities (Application-specific)",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES",
+    "typical_length": "0x02",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "FF",
+        "label": "Transaction Type Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Cash",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Goods",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Services",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Cashback",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "Inquiry",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "Transfer",
+            "set": true
+          },
+          {
+            "bit": 2,
+            "label": "Payment",
+            "set": true
+          },
+          {
+            "bit": 1,
+            "label": "Administrative",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "FF",
+        "label": "Transaction Type Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Cash Deposit",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 2,
+            "label": "RFU",
+            "set": true
+          },
+          {
+            "bit": 1,
+            "label": "RFU",
+            "set": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 533,
+    "poseidon_tag": "DF2A",
+    "tai_tag": "DF2A",
+    "name": "Product Display and Language Selection",
+    "group": "Contactless Application",
+    "tech_name": "ZKA_TM_PRODUCT_DISPLAY_CONFIG",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "43",
+        "label": null,
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Don't evaluate the PAN",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "Hint: bit is not set, PAN evaluation is required!",
+            "set": true
+          },
+          {
+            "bit": 2,
+            "label": "Show product name during PIN dialogue",
+            "set": true
+          },
+          {
+            "bit": 1,
+            "label": "Print product name on the receipt",
+            "set": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 534,
+    "poseidon_tag": "DF36",
+    "tai_tag": "DF36",
+    "name": "Unpredictable Number Range",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 536,
+    "poseidon_tag": "DF38",
+    "tai_tag": "DF38",
+    "name": "Transaktion Typ for Kernel Processing",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 537,
+    "poseidon_tag": "DF4A",
+    "tai_tag": "DF4A",
+    "name": "Restriction for Terminal Capabilities (Cashback)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x03",
+    "parent_tags": [
+	  "E2",
+	  "FB"],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 538,
+    "poseidon_tag": "DF8104",
+    "tai_tag": "DF8104",
+    "name": "Balance before GENERATE AC",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x06",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 539,
+    "poseidon_tag": "DF8105",
+    "tai_tag": "DF8105",
+    "name": "Balance After GENERATE AC",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x06",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 540,
+    "poseidon_tag": "DF8118",
+    "tai_tag": "DF8118",
+    "name": "CVM Required",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 541,
+    "poseidon_tag": "DF8119",
+    "tai_tag": "DF8119",
+    "name": "No CVM Required",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 542,
+    "poseidon_tag": "DF811A",
+    "tai_tag": "DF811A",
+    "name": "Default UDOL",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x03",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "dol"
+  },
+  {
+    "id": 543,
+    "poseidon_tag": "DF811B",
+    "tai_tag": "DF811B",
+    "name": "Kernel Configuration",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 544,
+    "poseidon_tag": "DF811C",
+    "tai_tag": "DF811C",
+    "name": "Lifetime of Torn Transaction Log Record (Maximum)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x02",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 545,
+    "poseidon_tag": "DF811D",
+    "tai_tag": "DF811D",
+    "name": "Number of Torn Transaction Log Records (Maximum)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 546,
+    "poseidon_tag": "DF811E",
+    "tai_tag": "DF811E",
+    "name": "CVM Required (Mag-stripe)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 547,
+    "poseidon_tag": "DF8127",
+    "tai_tag": "DF8127",
+    "name": "Time Out Value",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x02",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 548,
+    "poseidon_tag": "DF812C",
+    "tai_tag": "DF812C",
+    "name": "No CVM Required (Mag-stripe)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 549,
+    "poseidon_tag": "DF812D",
+    "tai_tag": "DF812D",
+    "name": "Message Hold Time",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 550,
+    "poseidon_tag": "DF8130",
+    "tai_tag": "DF8130",
+    "name": "Hold Time Value",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 551,
+    "poseidon_tag": "DF8131",
+    "tai_tag": "DF8131",
+    "name": "Phone Message Table",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 552,
+    "poseidon_tag": "DF8132",
+    "tai_tag": "DF8132",
+    "name": "Relay Resistance Grace Period (Minimum)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x02",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 553,
+    "poseidon_tag": "DF8133",
+    "tai_tag": "DF8133",
+    "name": "Relay Resistance Grace Period (Maximum)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x02",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 554,
+    "poseidon_tag": "DF8134",
+    "tai_tag": "DF8134",
+    "name": "Terminal Expected Transmission Time For Relay Resistance (C-APDU)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x02",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 555,
+    "poseidon_tag": "DF8135",
+    "tai_tag": "DF8135",
+    "name": "Terminal Expected Transmission Time For Relay Resistance (R-APDU)",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x02",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 556,
+    "poseidon_tag": "DF8136",
+    "tai_tag": "DF8136",
+    "name": "Relay Resistance Accuracy Threshold",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x02",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 557,
+    "poseidon_tag": "DF8137",
+    "tai_tag": "DF8137",
+    "name": "Relay Resistance Transmission Time Mismatch Threshold",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 558,
+    "poseidon_tag": "DF813A",
+    "tai_tag": "DF813A",
+    "name": "Extended Kernel Configuration",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": "0x05",
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": 559,
+    "poseidon_tag": "DF71",
+    "tai_tag": "DF71",
+    "name": "Version",
+    "group": "Contactless Application",
+    "tech_name": "POSEIDON_EMV_CONFIGURATION_VERSION",
+    "typical_length": "0x06",
+    "parent_tags": [
+      "E0",
+      "E1",
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "bitmask"
+  },
+  {
+    "id": 566,
+    "poseidon_tag": "EA",
+    "tai_tag": "EA",
+    "name": "Reader Limit Set",
+    "group": "Contactless Application",
+    "tech_name": null,
+    "typical_length": null,
+    "parent_tags": [
+	  "FB"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "00",
+    "tai_tag": "00",
+    "name": "Fallback General Denied",
+    "group": "Unknown",
+    "tech_name": "Fallback general denied",
+    "typical_length": null,
+    "parent_tags": [
+      "DF18"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "416D65726963616E2045787072657373",
+    "tai_tag": "416D65726963616E2045787072657373",
+    "name": "'American Express'",
+    "group": "Unknown",
+    "tech_name": "'American Express'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "44696E65727320436C7562",
+    "tai_tag": "44696E65727320436C7562",
+    "name": "'Diners Club'",
+    "group": "Unknown",
+    "tech_name": "'Diners Club'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "45415053",
+    "tai_tag": "45415053",
+    "name": "'Eaps'",
+    "group": "Unknown",
+    "tech_name": "'EAPS'",
+    "typical_length": null,
+    "parent_tags": [
+      "DF0A"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "4A4342",
+    "tai_tag": "4A4342",
+    "name": "'Jcb'",
+    "group": "Unknown",
+    "tech_name": "'JCB'",
+    "typical_length": null,
+    "parent_tags": [
+      "DF0A"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "4A434220437265646974",
+    "tai_tag": "4A434220437265646974",
+    "name": "'Jcb Credit'",
+    "group": "Unknown",
+    "tech_name": "'JCB Credit'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "4D6173746572206A75636865",
+    "tai_tag": "4D6173746572206A75636865",
+    "name": "'Master Juche'",
+    "group": "Unknown",
+    "tech_name": "'Master juche'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "4D617374657243617264",
+    "tai_tag": "4D617374657243617264",
+    "name": "'Mastercard'",
+    "group": "Unknown",
+    "tech_name": "'MasterCard'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5444204575726F20416C6C69616E6365",
+    "tai_tag": "5444204575726F20416C6C69616E6365",
+    "name": "'Td Euro Alliance'",
+    "group": "Unknown",
+    "tech_name": "'TD Euro Alliance'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5444206769726F63617264",
+    "tai_tag": "5444206769726F63617264",
+    "name": "'Td Girocard'",
+    "group": "Unknown",
+    "tech_name": "'TD girocard'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5444206769726F6361726420454D5635",
+    "tai_tag": "5444206769726F6361726420454D5635",
+    "name": "'Td Girocard Emv5'",
+    "group": "Unknown",
+    "tech_name": "'TD girocard EMV5'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5444206769726F6361726420454D5636",
+    "tai_tag": "5444206769726F6361726420454D5636",
+    "name": "'Td Girocard Emv6'",
+    "group": "Unknown",
+    "tech_name": "'TD girocard EMV6'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5620504159",
+    "tai_tag": "5620504159",
+    "name": "'V Pay'",
+    "group": "Unknown",
+    "tech_name": "'V PAY'",
+    "typical_length": null,
+    "parent_tags": [
+      "DF0A"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "56495341",
+    "tai_tag": "56495341",
+    "name": "'Visa'",
+    "group": "Unknown",
+    "tech_name": "'VISA'",
+    "typical_length": null,
+    "parent_tags": [
+      "DF0A"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "564953412056504159",
+    "tai_tag": "564953412056504159",
+    "name": "'Visa Vpay'",
+    "group": "Unknown",
+    "tech_name": "'VISA VPAY'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5649534120637265646974",
+    "tai_tag": "5649534120637265646974",
+    "name": "'Visa Credit'",
+    "group": "Unknown",
+    "tech_name": "'VISA credit'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5649534120656C656374726F6E",
+    "tai_tag": "5649534120656C656374726F6E",
+    "name": "'Visa Electron'",
+    "group": "Unknown",
+    "tech_name": "'VISA electron'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5669736120656C656374726F6E",
+    "tai_tag": "5669736120656C656374726F6E",
+    "name": "'Visa Electron'",
+    "group": "Unknown",
+    "tech_name": "'Visa electron'",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A0000000031010",
+    "tai_tag": "A0000000031010",
+    "name": "Visa",
+    "group": "Unknown",
+    "tech_name": "VISA",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A0000000032010",
+    "tai_tag": "A0000000032010",
+    "name": "Visa Electron",
+    "group": "Unknown",
+    "tech_name": "VISA Electron",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A0000000032020",
+    "tai_tag": "A0000000032020",
+    "name": "V Pay",
+    "group": "Unknown",
+    "tech_name": "V PAY",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A0000000041010",
+    "tai_tag": "A0000000041010",
+    "name": "Mastercard",
+    "group": "Unknown",
+    "tech_name": "Mastercard",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A00000002501",
+    "tai_tag": "A00000002501",
+    "name": "American Express",
+    "group": "Unknown",
+    "tech_name": "American Express",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A0000000651010",
+    "tai_tag": "A0000000651010",
+    "name": "Jcb Credit",
+    "group": "Unknown",
+    "tech_name": "JCB Credit",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A0000003591010",
+    "tai_tag": "A0000003591010",
+    "name": "Eaps",
+    "group": "Unknown",
+    "tech_name": "EAPS",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "A0000003591010028001",
+    "tai_tag": "A0000003591010028001",
+    "name": "Girocard Emv 6",
+    "group": "Unknown",
+    "tech_name": "girocard EMV 6",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "D27600002547410100",
+    "tai_tag": "D27600002547410100",
+    "name": "Girocard Emv 5",
+    "group": "Unknown",
+    "tech_name": "girocard EMV 5",
+    "typical_length": null,
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF2C",
+    "tai_tag": "DF2C",
+    "name": "Zka Tm Mag Prefix",
+    "group": "Unknown",
+    "tech_name": "ZKA_TM_MAG_PREFIX",
+    "typical_length": "0x02",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF2D",
+    "tai_tag": "DF2D",
+    "name": "Zka Tm Mag Prefix Activation Date",
+    "group": "Unknown",
+    "tech_name": "ZKA_TM_MAG_PREFIX_ACTIVATION_DATE",
+    "typical_length": "0x04",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "numeric"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF2E",
+    "tai_tag": "DF2E",
+    "name": "Zka Tm Mag Prefix Expiration Date",
+    "group": "Unknown",
+    "tech_name": "ZKA_TM_MAG_PREFIX_EXPIRATION_DATE",
+    "typical_length": "0x04",
+    "parent_tags": [],
+    "child_tags": [],
+    "value_format": "numeric"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E0",
+    "tai_tag": "E0",
+    "name": "Zka Tm Terminal Config Data Template",
+    "group": "Unknown",
+    "tech_name": "ZKA_TM_TERMINAL_CONFIG_DATA_TEMPLATE",
+    "typical_length": "0x45",
+    "parent_tags": [],
+    "child_tags": [
+      "9F1A",
+      "9F33",
+      "9F35",
+      "9F40",
+      "DF1B",
+      "DF1C",
+      "DF39",
+      "DF47",
+      "DF48",
+      "DF49",
+      "DF71",
+      "F1"
+    ],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "E0",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Manual key entry",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Magnetic stripe",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "IC with contacts",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "F8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Plaintext PIN for ICC verification",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Enciphered PIN for online verification",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Signature (paper)",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Enciphered PIN for offline verification",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "No CVM required",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "C8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "SDA",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "DDA",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "CDA",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "hex_value": "E0",
+        "label": "Transaction Type Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Cash",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Goods",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Services",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "00",
+        "label": "Transaction Type Capability",
+        "bits": []
+      },
+      {
+        "index": 3,
+        "hex_value": "F0",
+        "label": "Terminal Data Input Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Numeric keys",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Alphabetic and special characters keys",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Command keys",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Function keys",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "hex_value": "F0",
+        "label": "Term. Data Output Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Print, attendant",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Print, cardholder",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Display, attendant",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Display, cardholder",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "hex_value": "00",
+        "label": "Term. Data Output Capability",
+        "bits": []
+      }
+    ]
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E1",
+    "tai_tag": "E1",
+    "name": "Zka Tm Rid Config Data Template",
+    "group": "Unknown",
+    "tech_name": "ZKA_TM_RID_CONFIG_DATA_TEMPLATE",
+    "typical_length": "0x37B",
+    "parent_tags": [],
+    "child_tags": [
+      "DF34",
+      "DF71",
+      "E4",
+      "E5",
+      "E6",
+      "E7",
+      "E8",
+      "E9"
+    ],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E2",
+    "tai_tag": "E2",
+    "name": "Zka Tm Application Config Data Template",
+    "group": "Unknown",
+    "tech_name": "ZKA_TM_APPLICATION_CONFIG_DATA_TEMPLATE",
+    "typical_length": "0x2D4",
+    "parent_tags": [],
+    "child_tags": [
+      "9F01",
+      "9F06",
+      "9F09",
+      "9F15",
+      "9F16",
+      "9F4E",
+      "9F53",
+      "DF06",
+      "DF0A",
+      "DF0B",
+      "DF0C",
+      "DF0D",
+      "DF0E",
+      "DF0F",
+      "DF10",
+      "DF11",
+      "DF12",
+      "DF13",
+      "DF14",
+      "DF15",
+      "DF16",
+      "DF18",
+      "DF19",
+      "DF1A",
+      "DF22",
+      "DF23",
+      "DF25",
+      "DF26",
+      "DF27",
+      "DF28",
+      "DF2A",
+      "DF2F",
+      "DF35",
+      "DF40",
+      "DF41",
+      "DF42",
+      "DF43",
+      "DF44",
+      "DF45",
+      "DF46",
+      "DF50",
+      "DF51",
+      "DF52",
+      "DF53",
+      "DF54",
+      "DF55",
+      "DF56",
+      "DF57",
+      "DF58",
+      "DF59",
+      "DF5A",
+      "DF5B",
+      "DF60",
+      "DF71",
+      "DF77",
+      "DF7F",
+      "DF8500",
+      "DF850D",
+      "F0",
+      "F1",
+      "F8",
+      "FB",
+      "FF60"
+    ],
+    "value_format": "bitmask",
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "43",
+        "label": null,
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Don't evaluate the PAN",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "Hint: bit is not set, PAN evaluation is required!",
+            "set": true
+          },
+          {
+            "bit": 2,
+            "label": "Show product name during PIN dialogue",
+            "set": true
+          },
+          {
+            "bit": 1,
+            "label": "Print product name on the receipt",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "hex_value": "E0",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Manual key entry",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Magnetic stripe",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "IC with contacts",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "F0",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Plaintext PIN for ICC verification",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Enciphered PIN for online verification",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Signature (paper)",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Enciphered PIN for offline verification",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "C8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "SDA",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "DDA",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "CDA",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "hex_value": "60",
+        "label": "Transaction Type Capability",
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Goods",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Services",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "00",
+        "label": "Transaction Type Capability",
+        "bits": []
+      },
+      {
+        "index": 1,
+        "hex_value": "04",
+        "label": null,
+        "bits": [
+          {
+            "bit": 3,
+            "label": "CDA failed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "10",
+        "label": null,
+        "bits": [
+          {
+            "bit": 5,
+            "label": "Requested service not allowed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      },
+      {
+        "index": 4,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      },
+      {
+        "index": 5,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      },
+      {
+        "index": 1,
+        "hex_value": "D8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Offl. DA not performed",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "SDA failed",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Card on exception list",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "DDA failed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "40",
+        "label": null,
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Appl expired",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "04",
+        "label": null,
+        "bits": [
+          {
+            "bit": 3,
+            "label": "Online PIN entered",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "hex_value": "F8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Floor limit exceeded",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "LCOL exceeded",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "UCOL exceeded",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Random online",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "Merchant forced online",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      },
+      {
+        "index": 1,
+        "hex_value": "DC",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Offl. DA not performed",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "SDA failed",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Card on exception list",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "DDA failed",
+            "set": true
+          },
+          {
+            "bit": 3,
+            "label": "CDA failed",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "40",
+        "label": null,
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Appl expired",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      },
+      {
+        "index": 4,
+        "hex_value": "F8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Floor limit exceeded",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "LCOL exceeded",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "UCOL exceeded",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Random online",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "Merchant forced online",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "hex_value": "00",
+        "label": null,
+        "bits": []
+      }
+    ]
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E4",
+    "tai_tag": "E4",
+    "name": "Poseidon Emv Ca Key Data Template 1",
+    "group": "Unknown",
+    "tech_name": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_1",
+    "typical_length": "0xA4",
+    "parent_tags": [
+      "E1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E5",
+    "tai_tag": "E5",
+    "name": "Poseidon Emv Ca Key Data Template 2",
+    "group": "Unknown",
+    "tech_name": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_2",
+    "typical_length": "0xBB",
+    "parent_tags": [
+      "E1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E6",
+    "tai_tag": "E6",
+    "name": "Poseidon Emv Ca Key Data Template 3",
+    "group": "Unknown",
+    "tech_name": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_3",
+    "typical_length": "0xDB",
+    "parent_tags": [
+      "E1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E7",
+    "tai_tag": "E7",
+    "name": "Poseidon Emv Ca Key Data Template 4",
+    "group": "Unknown",
+    "tech_name": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_4",
+    "typical_length": "0x123",
+    "parent_tags": [
+      "E1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E8",
+    "tai_tag": "E8",
+    "name": "Poseidon Emv Ca Key Data Template 5",
+    "group": "Unknown",
+    "tech_name": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_5",
+    "typical_length": "0x123",
+    "parent_tags": [
+      "E1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "E9",
+    "tai_tag": "E9",
+    "name": "Poseidon Emv Ca Key Data Template 6",
+    "group": "Unknown",
+    "tech_name": "POSEIDON_EMV_CA_KEY_DATA_TEMPLATE_6",
+    "typical_length": "0xEB",
+    "parent_tags": [
+      "E1"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "5F34",
+    "tai_tag": "5F34",
+    "name": "Emvco Pseq",
+    "group": "Unknown",
+    "tech_name": "EMVCO_PSEQ",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "DF40",
+      "DF42",
+      "DF43"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF6E",
+    "tai_tag": "DF6E",
+    "name": "Appusername",
+    "group": "Unknown",
+    "tech_name": "AppUserName",
+    "typical_length": "0x01",
+    "parent_tags": [
+	  "FF60"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF59",
+    "tai_tag": "DF59",
+    "name": "Key Index",
+    "group": "Unknown",
+    "tech_name": "Key index",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF5B",
+    "tai_tag": "DF5B",
+    "name": "Hash-Algo",
+    "group": "Unknown",
+    "tech_name": "Hash-Algo",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF5A",
+    "tai_tag": "DF5A",
+    "name": "Key-Algo",
+    "group": "Unknown",
+    "tech_name": "Key-Algo",
+    "typical_length": "",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF53",
+    "tai_tag": "DF53",
+    "name": "Version",
+    "group": "Unknown",
+    "tech_name": "VERSION",
+    "typical_length": "0x01",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "FF51",
+    "tai_tag": "FF51",
+    "name": "Program Identification",
+    "group": "Unknown",
+    "tech_name": "Program Identification",
+    "typical_length": "",
+    "parent_tags": [
+	  "E2"
+	],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF57",
+    "tai_tag": "DF57",
+    "name": "Crc",
+    "group": "Unknown",
+    "tech_name": "CRC",
+    "typical_length": "",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  },
+  {
+    "id": null,
+    "poseidon_tag": "DF58",
+    "tai_tag": "DF58",
+    "name": "Program Length",
+    "group": "Unknown",
+    "tech_name": "Program length",
+    "typical_length": "",
+    "parent_tags": [
+      "E2"
+    ],
+    "child_tags": [],
+    "value_format": "binary"
+  }
+  
+]

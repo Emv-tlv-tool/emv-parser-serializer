@@ -6,43 +6,149 @@ Reads hex data from test.txt, parses it as EMV TLV,
 and generates a detailed tree hierarchy output file.
 """
 
-from emv_tlv import parse
+from emv_tlv import parse, Dictionary
 from emv_tlv.decoders.bitmask_decoder import BitmaskDecoder
 
 
-def collect_lines(node, indent=0):
+def decode_dictionary_bitmask(node):
     """
-    Collect tree lines recursively with indentation, without connectors.
+    Decode bitmask using bytes definitions from the tag dictionary.
+    
+    The merged dictionaries now contain 'bytes' arrays with bit-level
+    definitions for bitmask tags. This function reads those definitions
+    and produces the same {byte, mask, name, set} format as BitmaskDecoder.
+    """
+    tag = node.get("tag", "")
+    value_hex = node.get("value", "")
+    if not value_hex:
+        return None
+    
+    metadata = Dictionary.lookup_by_tag(tag)
+    if not metadata:
+        return None
+    
+    bytes_defs = metadata.get("bytes")
+    if not bytes_defs:
+        return None
+    
+    value_bytes = bytes.fromhex(value_hex)
+    results = []
+    
+    for byte_def in bytes_defs:
+        byte_index = byte_def.get("index", 1) - 1  # 1-based to 0-based
+        if byte_index >= len(value_bytes):
+            continue
+        
+        byte_value = value_bytes[byte_index]
+        
+        for bit_def in byte_def.get("bits", []):
+            if "multi_bit" in bit_def and bit_def["multi_bit"]:
+                # Multi-bit field: just show as set if any bit in the field is set
+                results.append({
+                    "byte": byte_index,
+                    "mask": 0x00,
+                    "name": bit_def.get("label", ""),
+                    "set": byte_value != 0,
+                })
+            else:
+                bit = bit_def.get("bit", 0)
+                mask = 1 << (bit - 1) if bit > 0 else 0
+                results.append({
+                    "byte": byte_index,
+                    "mask": mask,
+                    "name": bit_def.get("label", ""),
+                    "set": bool(byte_value & mask),
+                })
+    
+    return results if results else None
+
+
+def enrich_tree_with_bitmasks(tree):
+    """Walk the tree and enrich nodes with dictionary-based bitmask data."""
+    for node in tree:
+        # Skip if bitmask already set by BitmaskDecoder
+        if "bitmask" not in node or not node["bitmask"]:
+            bitmask = decode_dictionary_bitmask(node)
+            if bitmask:
+                node["bitmask"] = bitmask
+        
+        if "children" in node:
+            enrich_tree_with_bitmasks(node["children"])
+    return tree
+
+
+def collect_lines(node, indent=0, is_last=True):
+    """
+    Collect tree lines recursively with visual tree connectors.
     """
     lines = []
-    indent_str = " " * (indent * 4)
-    prop_str = " " * (indent * 4 + 2)
-
+    
+    # Connector prefix
+    if indent == 0:
+        prefix = "+--+ "
+    else:
+        prefix = "  " * indent + "+--+ "
+    
     # Header
     tag = node.get("tag", "")
     name = node.get("name", "")
     description = node.get("description", "")
-    if name:
-        header = f"[{tag}] {name}"
-        if description and description != name:
-            header += f" - {description}"
-    else:
-        header = f"[{tag}]"
-        
+    length = node.get("length", 0)
     value_hex = node.get("value", "")
+    
+    if name:
+        header = f"{tag} ({name}, len=0x{length:02X})"
+        if description and description != name:
+            header = f"{tag} ({description}, len=0x{length:02X})"
+    else:
+        header = f"{tag} (len=0x{length:02X})"
+    
     if value_hex:
-        header += f": {value_hex}"
-        
-    lines.append(indent_str + header)
-
-    # Bitmask details (if any)
+        header += f' value="{value_hex}"'
+    
+    lines.append(prefix + header)
+    
+    # Bitmask details grouped by byte (if any)
     if "bitmask" in node and node["bitmask"]:
-        set_bits = [b for b in node["bitmask"] if b["set"]]
-        if set_bits:
-            lines.append(prop_str + "Bitmask details:")
-            bit_indent = " " * (indent * 4 + 4)
-            for bit in set_bits:
-                lines.append(bit_indent + f"- Byte {bit['byte']}, Mask 0x{bit['mask']:02X}: {bit['name']}")
+        value_bytes = bytes.fromhex(value_hex) if value_hex else b""
+        
+        # Group bits by byte index
+        bytes_map = {}
+        for bit in node["bitmask"]:
+            byte_idx = bit.get("byte", 0)
+            mask = bit.get("mask", 0)
+            if byte_idx not in bytes_map:
+                byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
+                bytes_map[byte_idx] = {
+                    "value": byte_val,
+                    "bits": []
+                }
+            if bit.get("set", False):
+                bytes_map[byte_idx]["bits"].append(bit)
+        
+        if bytes_map:
+            sorted_bytes = sorted(bytes_map.keys())
+            base_indent = "  " * (indent + 1)
+            for i, byte_idx in enumerate(sorted_bytes):
+                byte_data = bytes_map[byte_idx]
+                is_last_byte = (i == len(sorted_bytes) - 1)
+                pipe = "|" if not is_last_byte else " "
+                
+                if indent == 0:
+                    byte_line = f"  +--+ Byte {byte_idx + 1} ({byte_data['value']:02X})"
+                else:
+                    byte_line = f"  " * (indent + 1) + f"+--+ Byte {byte_idx + 1} ({byte_data['value']:02X})"
+                lines.append(byte_line)
+                
+                for bit in byte_data["bits"]:
+                    mask = bit.get("mask", 0)
+                    label = bit.get("name", "")
+                    if mask:
+                        bit_val = byte_data["value"] & mask
+                        bit_line = f"{base_indent}|  +--+  Bit {bit.get('bit', 0)} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) --> {label}"
+                    else:
+                        bit_line = f"{base_indent}|  +--+  {label}"
+                    lines.append(bit_line)
 
     # Children
     children = node.get("children", [])
@@ -75,6 +181,9 @@ def generate_tree_output(hex_data, output_file="tree_output.txt"):
         tree = parse(hex_data, 'config')
     
     print(f"Parsed {len(tree)} top-level nodes")
+    
+    # Enrich tree with dictionary-based bitmask data
+    tree = enrich_tree_with_bitmasks(tree)
     
     # Collect all lines
     all_lines = []

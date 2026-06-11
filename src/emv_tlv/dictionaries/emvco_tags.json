@@ -3,66 +3,279 @@
     "name": "Aquirer Identifier",
     "description": "EMVCO_AQUIRER_IDENTIFIER",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "E2"
+    ]
   },
   "9F06": {
     "name": "Aid",
     "description": "EMVCO_AID",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "E2",
+      "F0"
+    ]
   },
   "9F09": {
     "name": "Application Version Number Terminal",
     "description": "EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E2"
+    ]
   },
   "9F15": {
     "name": "Merchant Industry Key",
     "description": "EMVCO_MERCHANT_INDUSTRY_KEY",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "E2"
+    ]
   },
   "9F16": {
     "name": "Merchant Identifier",
     "description": "EMVCO_MERCHANT_IDENTIFIER",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "E2"
+    ]
   },
   "9F1A": {
     "name": "Terminal Country Code",
     "description": "EMVCO_TERMINAL_COUNTRY_CODE",
     "format": "bcd",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E0"
+    ]
   },
   "9F33": {
     "name": "Terminal Capabilities",
     "description": "EMVCO_TERMINAL_CAPABILITIES",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E0"
+    ],
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "E0",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Manual key entry",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Magnetic stripe",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "IC with contacts",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "F8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Plaintext PIN for ICC verification",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Enciphered PIN for online verification",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Signature (paper)",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Enciphered PIN for offline verification",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "No CVM required",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "hex_value": "C8",
+        "label": null,
+        "bits": [
+          {
+            "bit": 8,
+            "label": "SDA",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "DDA",
+            "set": true
+          },
+          {
+            "bit": 4,
+            "label": "CDA",
+            "set": true
+          }
+        ]
+      }
+    ]
   },
   "9F35": {
     "name": "Terminal Type",
     "description": "EMVCO_TERMINAL_TYPE",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E0"
+    ]
   },
   "9F40": {
     "name": "Additional Terminal Capabilities",
     "description": "EMVCO_ADDITIONAL_TERMINAL_CAPABILITIES",
     "format": "binary",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "E0"
+    ],
+    "bytes": [
+      {
+        "index": 1,
+        "hex_value": "60",
+        "label": "Transaction Type Capability",
+        "bits": [
+          {
+            "bit": 7,
+            "label": "Goods",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Services",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "hex_value": "00",
+        "label": "Transaction Type Capability",
+        "bits": []
+      },
+      {
+        "index": 3,
+        "hex_value": "F0",
+        "label": "Terminal Data Input Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Numeric keys",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Alphabetic and special characters keys",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Command keys",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Function keys",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "hex_value": "F0",
+        "label": "Term. Data Output Capability",
+        "bits": [
+          {
+            "bit": 8,
+            "label": "Print, attendant",
+            "set": true
+          },
+          {
+            "bit": 7,
+            "label": "Print, cardholder",
+            "set": true
+          },
+          {
+            "bit": 6,
+            "label": "Display, attendant",
+            "set": true
+          },
+          {
+            "bit": 5,
+            "label": "Display, cardholder",
+            "set": true
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "hex_value": "01",
+        "label": "Term. Data Output Capability",
+        "bits": [
+          {
+            "bit": 1,
+            "label": "Code table 1",
+            "set": true
+          }
+        ]
+      }
+    ]
   },
   "9F4E": {
     "name": "Merchant Name And Location",
     "description": "EMVCO_MERCHANT_NAME_AND_LOCATION",
     "format": "ans",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "E2"
+    ]
   },
   "9F53": {
     "name": "Transaction Category Code",
     "description": "EMVCO_TRANSACTION_CATEGORY_CODE",
     "format": "bcd",
-    "constructed": false
+    "constructed": false,
+    "parent_tags": [
+      "DF40",
+      "DF43",
+      "E2"
+    ]
   }
 }

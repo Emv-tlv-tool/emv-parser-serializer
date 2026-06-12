@@ -70,6 +70,8 @@ def _enhance_node(node):
         enhanced["description"] = metadata.get("description", "")
         enhanced["format"] = metadata.get("format", "")
         enhanced["source"] = metadata.get("source", "")
+    else:
+        enhanced["is_unknown"] = True
 
     if not node.is_constructed and len(node.value) > 0:
         try:

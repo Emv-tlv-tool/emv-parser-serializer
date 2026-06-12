@@ -6,7 +6,7 @@ Reads hex data from test.txt, parses it as EMV TLV,
 and generates a detailed tree hierarchy output file.
 """
 
-from emv_tlv import parse, Dictionary
+from emv_tlv import parse, Dictionary, validate_hex
 from emv_tlv.decoders.bitmask_decoder import BitmaskDecoder
 
 
@@ -107,7 +107,9 @@ def collect_lines(node, indent=0, is_last=True):
     length = node.get("length", 0)
     value_hex = node.get("value", "")
     
-    if name:
+    if node.get("is_unknown"):
+        header = f"{tag} [UNKNOWN] (len=0x{length:02X})"
+    elif name:
         header = f"{tag} ({name}, len=0x{length:02X})"
         if description and description != name:
             header = f"{tag} ({description}, len=0x{length:02X})"
@@ -178,18 +180,44 @@ def generate_tree_output(hex_data, output_file="tree_output.txt"):
         hex_data: Hex string to parse
         output_file: Output file path
     """
-    print("Parsing TLV data...")
-    
     # Remove whitespace and newlines
-    hex_data = "".join(hex_data.split())
+    raw_data = "".join(hex_data.split())
     
-    # Parse as raw EMV TLV (could also try 'config' mode)
+    # --- Level 1: Format validation ---
+    print("Validating format...")
+    fmt_result = validate_hex(raw_data, level="format")
+    if not fmt_result.valid:
+        for err in fmt_result.errors:
+            print(f"  [FORMAT ERROR] {err.code}: {err.message}")
+        print("Aborting: input has format errors.")
+        return
+    for w in fmt_result.warnings:
+        print(f"  [FORMAT WARNING] {w.code}: {w.message}")
+    
+    # --- Level 2: Structure validation ---
+    print("Validating TLV structure...")
+    struct_result = validate_hex(fmt_result.cleaned_hex, level="structure")
+    if not struct_result.valid:
+        for err in struct_result.errors:
+            print(f"  [STRUCTURE ERROR] {err.code}: {err.message}")
+        print("Aborting: input has TLV structure errors.")
+        return
+    for w in struct_result.warnings:
+        print(f"  [STRUCTURE WARNING] {w.code}: {w.message}")
+    
+    print(f"Validation passed: {struct_result.metadata['tag_count']} tag(s), "
+          f"max depth {struct_result.metadata['max_depth']}")
+    
+    cleaned = fmt_result.cleaned_hex
+    
+    # Parse as raw EMV TLV
+    print("Parsing TLV data...")
     try:
-        tree = parse(hex_data, 'raw')
+        tree = parse(cleaned, 'raw')
     except Exception as e:
         print(f"Error parsing as 'raw': {e}")
         print("Trying 'config' mode...")
-        tree = parse(hex_data, 'config')
+        tree = parse(cleaned, 'config')
     
     print(f"Parsed {len(tree)} top-level nodes")
     

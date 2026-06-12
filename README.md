@@ -279,23 +279,66 @@ Unknown tags fall back to an uppercase hex string.
 
 ### Bitmask Decoding
 
-The `BitmaskDecoder` provides EMV-spec-compliant decoding for tags whose `format` is `bitmask`, including:
+The `BitmaskDecoder` provides per-bit decoding for tags whose `format` is `bitmask`. It uses a **dual-source approach**:
 
-- `95` — Terminal Verification Results (TVR)
-- `9B` — Transaction Status Information (TSI)
-- `9F33` — Terminal Capabilities
-- `9F40` — Additional Terminal Capabilities
-- `DF11`, `DF12`, `DF13` — TAC Online / Default / Denial
+1. **Dictionary metadata** — checks for a `bytes` array in the tag's JSON dictionary entry. If found, uses those bit-level definitions (supports ZKA tags like `DF07`, `DF11`–`DF13`, `DF27`, `DF28`, `DF2A`, and many more).
+2. **Hardcoded fallback** — EMV-spec compliant definitions for core tags:
+   - `95` — Terminal Verification Results (TVR)
+   - `9B` — Transaction Status Information (TSI)
+   - `9F33` — Terminal Capabilities
+   - `9F40` — Additional Terminal Capabilities
+   - `DF11`, `DF12`, `DF13` — TAC Online / Default / Denial
 
-Each bit is returned as `{byte, mask, name, set}`:
+Each bit is returned as `{byte, bit, mask, name, set}`:
 
 ```python
-{
-    'byte': 1,
-    'mask': 0x80,
-    'name': 'Offline data authentication was not performed',
-    'set': True
-}
+[
+    {'byte': 2, 'bit': 8, 'mask': 0x80, 'name': 'Plaintext PIN for ICC verification', 'set': True},
+    {'byte': 2, 'bit': 7, 'mask': 0x40, 'name': 'Enciphered PIN for online verification', 'set': False},
+    {'byte': 3, 'bit': 8, 'mask': 0x80, 'name': 'SDA', 'set': True},
+]
+```
+
+**Usage:**
+
+```python
+from emv_tlv import parse
+from emv_tlv.decoders.bitmask_decoder import BitmaskDecoder
+
+# Automatic: parse detects 'bitmask' format and decodes inline
+tree = parse("9F330360F8C8", "raw")
+print(tree[0]["bitmask"])
+# [{'byte': 1, 'bit': 7, 'mask': 0x40, 'name': 'Magnetic stripe', 'set': True}, ...]
+
+# Manual: decode any tag with dictionary bit definitions
+bits = BitmaskDecoder.decode_bitmask("DF27", bytes.fromhex("20F0C8"))
+for b in bits:
+    if b["set"]:
+        print(f"  Byte {b['byte']+1}, Bit {b['bit']}: {b['name']}")
+```
+
+### Tree Output With Bitmask Visualization
+
+The `parser/parse_tree.py` script generates a visual tree with per-byte bitmask details:
+
+```
++--+ 9F33 (EMVCO_TERMINAL_CAPABILITIES, len=0x03) value="60F8C8"
+    +--+ Byte 1 (60)
+    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
+    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
+    +--+ Byte 2 (F8)
+    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Plaintext PIN for ICC verification
+    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
+    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Enciphered PIN for offline verification
+    +--+ Byte 3 (C8)
+       +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
+       +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
+       +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+```
+
+Run the tree generator:
+```bash
+cd parser && python parse_tree.py
 ```
 
 ---

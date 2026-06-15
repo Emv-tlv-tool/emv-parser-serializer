@@ -4,7 +4,7 @@ A Python library for parsing, decoding, and serializing EMV TLV (Tag-Length-Valu
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://python.org)
-[![Tests](https://img.shields.io/badge/Tests-pytest-green.svg)](https://docs.pytest.org)
+[![Tests](https://img.shields.io/badge/Tests-218%20passed-green.svg)](https://docs.pytest.org)
 
 ---
 
@@ -13,6 +13,8 @@ A Python library for parsing, decoding, and serializing EMV TLV (Tag-Length-Valu
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [TLVNode Data Structure](#tlvnode-data-structure)
+- [Parent Validation](#parent-validation)
 - [API Reference](#api-reference)
 - [Supported Formats](#supported-formats)
 - [Project Structure](#project-structure)
@@ -34,6 +36,9 @@ A Python library for parsing, decoding, and serializing EMV TLV (Tag-Length-Valu
 - **EMVCo + ZKA tag dictionaries** — over 100 known tags with names, descriptions, formats, and source attribution.
 - **Human-readable value decoding** — PAN masking, BCD dates, currency/country code lookups, cryptogram types, and more.
 - **EMV-spec bitmask decoding** — TVR, TSI, Terminal Capabilities, and TAC tags.
+- **Dict-based TLVNode** — every parsed node is both a Python `dict` and an object, giving you `node["tag"]` and `node.tag` access simultaneously.
+- **Inline metadata enrichment** — dictionary lookup, value decoding, and bitmask decoding happen automatically at parse time — no second pass required.
+- **Parent-child validation** — each node verifies at construction time that its parent tag is allowed per the JSON dictionary definition.
 - **Zero external dependencies** — everything implemented from spec, no third-party parsing libraries.
 - **Round-trip safe** — `parse → serialize → parse` is byte-identical for any valid input.
 
@@ -43,13 +48,13 @@ A Python library for parsing, decoding, and serializing EMV TLV (Tag-Length-Valu
 
 ```bash
 # Clone the repository
-git clone https://github.com/chameauu/emv-tool.git
+git clone https://github.com/Emv-tlv-tool/emv-parser-serializer
 
-cd emv-tool
+cd emv-parser-serializer
+
 
 # Install with uv (recommended)
 uv sync
-
 ```
 
 No runtime dependencies — the library is self-contained.
@@ -63,15 +68,17 @@ from emv_tlv import parse, serialize, find_tag, find_all_tags, to_json
 
 # 1. Parse raw EMV TLV from a hex string
 tree = parse('9A03210315', 'raw')
-print(tree[0])
-# {
-#   'tag': '9A',
-#   'name': 'Transaction Date',
-#   'length': 3,
-#   'value': '210315',
-#   'decoded': '2021-03-15',
-#   'is_constructed': False
-# }
+node = tree[0]
+
+# Dict-like access
+print(node["tag"])     # '9A'
+print(node["name"])    # 'Transaction Date'
+print(node["decoded"]) # '2021-03-15'
+
+# Object attribute access — identical values
+print(node.tag)        # '9A'
+print(node.name)       # 'Transaction Date'
+print(node.decoded)    # '2021-03-15'
 
 # 2. Parse a ZVT transaction message from bytes
 zvt = parse(data, 'zvt')
@@ -81,7 +88,7 @@ print(zvt['tlv'])        # EMV TLV extracted from BMP fields
 # 3. Parse a Poseidon terminal config blob
 config = parse(data, 'config')
 print(config.application_configs)  # AID, label, TAC, floor limit, ...
-print(config.ca_keys)              # RID, index, modulus, exponent, ...
+print(config.ca_keys)              # RID, index, modulus, exponent, checksum
 
 # 4. Serialize a TLV tree back to hex
 hex_str = serialize(tree)
@@ -89,7 +96,108 @@ print(hex_str)  # '9A03210315'
 
 # 5. Find a tag by hex value
 aid = find_tag(tree, '84')
-print(aid)  # {'tag': '84', 'name': 'DF Name', ...}
+print(aid)  # TLVNode{'tag': '84', 'name': 'DF Name', ...}
+```
+
+---
+
+## TLVNode Data Structure
+
+Every parsed node is a `TLVNode` — a subclass of Python's built-in `dict` — so it supports both object property access and dictionary key access.
+
+### Schema
+
+```
+TLVNode (dict)
+├── "tag"                     → str         e.g. "E0", "9F1A"
+├── "value"                   → str (hex)   e.g. "0280"           # dict key
+│   (node.value)              → bytes        e.g. b'\x02\x80'     # object property
+├── "length"                  → int         e.g. 2
+├── "is_constructed"          → bool        True = contains children
+│
+├── ── Dictionary Metadata (always populated for known tags) ──
+├── "name"                    → str         e.g. "Terminal Country Code"
+├── "description"             → str         e.g. "EMVCO_TERMINAL_COUNTRY_CODE"
+├── "format"                  → str         e.g. "bcd", "binary", "bitmask"
+├── "source"                  → str         e.g. "emvco", ""
+│
+├── ── Decoded Values ──
+├── "decoded"                 → str | None  e.g. "Germany (280)"
+├── "bitmask"                 → list | None e.g. [{byte, bit, mask, name, set}, ...]
+│
+├── ── Unknown Flag (only present if tag is NOT in any dictionary) ──
+├── "is_unknown"              → True
+│
+├── ── Parent Validation ──
+├── "is_valid_parent"         → bool        True = parent tag is allowed
+├── "parent_validation_error" → str | None  message when parent is invalid
+│
+└── "children"                → list[TLVNode]   nested nodes (constructed only)
+```
+
+> **Note:** `"is_unknown"` is only present in the dict for unknown tags — known tags do not have this key at all. This lets you test with `"is_unknown" in node`.
+
+### Visual Tree Example
+
+For the blob `E0 09 [9F1A 02 2800] [9F35 01 22]`:
+
+```
+TLVNode  tag="E0"  is_constructed=True  name="Zka Tm Terminal Config Data Template"
+│  parent=None  is_valid_parent=True
+│
+├── TLVNode  tag="9F1A"  value=b'\x02\x80'  decoded="Germany (280)"
+│       parent.tag="E0"  is_valid_parent=True
+│
+└── TLVNode  tag="9F35"  value=b'\x22'
+        parent.tag="E0"  is_valid_parent=True
+```
+
+---
+
+## Parent Validation
+
+Each node automatically validates whether its parent tag is allowed by the dictionary's `parent_tags` definition. This check runs at construction time (inside `add_child()`) — no manual call required.
+
+### Checking Validation After Parsing
+
+```python
+from emv_tlv import parse
+
+tree = parse("E0099F1A0228009F350122", "raw")
+child = tree[0].children[0]  # 9F1A under E0
+
+print(child["is_valid_parent"])        # True
+print(child.parent.tag)                # "E0"
+print(child.parent_validation_error)  # None
+```
+
+### Invalid Parent Example
+
+```python
+from emv_tlv.core.tlv_node import TLVNode
+
+# F2 is not a valid parent for 9F1A (only DF40, DF43, E0 are)
+wrong_parent = TLVNode("F2", b"", is_constructed=True)
+child = TLVNode("9F1A", bytes([0x02, 0x80]))
+wrong_parent.add_child(child)
+
+print(child["is_valid_parent"])        # False
+print(child.parent_validation_error)
+# → "Tag 9F1A appears under parent F2, but expected parent is one of: ['DF40', 'DF43', 'E0']"
+```
+
+### Scanning a Whole Tree for Violations
+
+```python
+def check_parents(nodes):
+    for node in nodes:
+        if not node["is_valid_parent"]:
+            print(f"[INVALID PARENT] {node.parent_validation_error}")
+        if node.children:
+            check_parents(node.children)
+
+tree = parse("E0099F1A0228009F350122", "raw")
+check_parents(tree)
 ```
 
 ---
@@ -105,7 +213,7 @@ Parses input data based on the specified type.
 | `data` | `bytes` \| `str` | Raw bytes or hex-encoded string |
 | `type` | `str` | One of `'raw'`, `'zvt'`, or `'config'` (default: `'raw'`) |
 
-**Returns:** `list[dict]` — an enhanced TLV tree with metadata, decoded values, and (for bitmask tags) bit-level breakdown.
+**Returns:** `list[TLVNode]` — a list of fully-enhanced `TLVNode` instances with metadata, decoded values, bitmask, and parent validation populated inline.
 
 **Config mode returns** a list-like object with extra attributes:
 - `result.application_configs` — list of app config dicts
@@ -117,7 +225,7 @@ Serializes one or more TLV nodes back into a hex string.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `nodes` | `dict` \| `list[dict]` | A single enhanced node or a list of nodes |
+| `nodes` | `TLVNode` \| `list[TLVNode]` | A single node or a list of nodes |
 
 **Returns:** `str` — concatenated hex representation of the TLV tree(s).
 
@@ -143,7 +251,7 @@ Re-decodes a node's value (e.g. after manual modification).
 
 ### `to_json(tree)`
 
-Strips a TLV tree down to a clean JSON-friendly shape (tag, name, length, value, decoded, bitmask, children).
+Converts a TLV tree to a clean JSON-serializable list (tag, name, length, value, decoded, bitmask, children).
 
 ### Exposed Internals
 
@@ -167,7 +275,7 @@ from emv_tlv import (
 Standard BER-TLV as used by EMVCo specifications. Supports:
 
 - 1-byte and 2-byte tags
-- Primitive (`0x__`) and constructed (`0x__` with bit 6 set) nodes
+- Primitive and constructed nodes
 - Short (1-byte) lengths
 - Long-form lengths prefixed with `0x81` (2 bytes) or `0x82` (3 bytes)
 - Automatic skipping of `0x00` and `0xFF` padding bytes
@@ -206,12 +314,12 @@ emv-tool-python/
 │   ├── emv_tlv/
 │   │   ├── __init__.py              # Public API entry point
 │   │   ├── core/
-│   │   │   ├── tlv_node.py          # TLV node class with tree traversal
+│   │   │   ├── tlv_node.py          # TLVNode: dict subclass with metadata & parent validation
 │   │   │   ├── tlv_parser.py        # Recursive BER-TLV parser
 │   │   │   └── tlv_serializer.py    # Recursive serializer
 │   │   ├── dictionaries/
-│   │   │   ├── emvco_tags.json      # EMVCo tag reference data
-│   │   │   ├── zka_tags.json        # ZKA (German) tag reference data
+│   │   │   ├── emvco_tags.json      # EMVCo tag reference data (with parent_tags)
+│   │   │   ├── zka_tags.json        # ZKA (German) tag reference data (with parent_tags)
 │   │   │   └── __init__.py          # Merged dictionary + lookup API
 │   │   ├── adapters/
 │   │   │   ├── zvt_adapter.py       # ZVT protocol parser
@@ -226,7 +334,11 @@ emv-tool-python/
 │   ├── test_decoder.py              # Value & bitmask decoder tests
 │   ├── test_zvt.py                  # ZVT adapter tests
 │   ├── test_config.py               # Config adapter tests
-│   └── test_api.py                  # Public API integration tests
+│   ├── test_api.py                  # Public API integration tests
+│   ├── test_unknown_tags.py         # Unknown tag detection tests
+│   └── test_parent_validation.py    # Parent-child validation tests
+├── parser/
+│   └── parse_tree.py                # Visual tree generator script
 ├── pyproject.toml
 └── README.md
 ```
@@ -240,19 +352,25 @@ The library ships with reference data for **EMVCo** (Book 3, Book 4) and **ZKA**
 | Field | Description |
 |-------|-------------|
 | `name` | Short human-readable name |
-| `description` | Long-form description |
-| `source` | `'EMVCo'`, `'ZKA'`, etc. |
-| `format` | `'numeric'`, `'bcd'`, `'bitmask'`, `'ascii'`, `'binary'`, etc. |
-| `minLength` / `maxLength` | Length constraints |
+| `description` | Constant identifier (e.g. `EMVCO_TERMINAL_COUNTRY_CODE`) |
+| `format` | `'numeric'`, `'bcd'`, `'bitmask'`, `'ans'`, `'binary'`, etc. |
 | `constructed` | Whether the tag contains nested TLV |
+| `parent_tags` | List of allowed parent tags (used for parent validation) |
+| `bytes` | Per-byte bitmask definitions (for bitmask-format tags) |
 
 **Lookup API:**
 
 ```python
 from emv_tlv.dictionaries import Dictionary
 
-Dictionary.lookup_by_tag('9A')   # {'name': 'Transaction Date', ...}
-Dictionary.lookup_by_name('PAN') # {'tag': '5A', ...}
+Dictionary.lookup_by_tag('9F1A')
+# {'name': 'Terminal Country Code', 'format': 'bcd', 'parent_tags': ['DF40', 'DF43', 'E0'], ...}
+
+Dictionary.lookup_by_name('Terminal Country Code')
+# {'tag': '9F1A', 'name': 'Terminal Country Code', ...}
+
+Dictionary.has_tag('9F1A')  # True
+Dictionary.has_tag('ZZ')    # False
 ```
 
 ---
@@ -346,7 +464,7 @@ cd parser && python parse_tree.py
 ## Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (218 tests)
 uv run pytest
 
 # Verbose output
@@ -358,8 +476,8 @@ uv run pytest -q
 # Run specific test file
 uv run pytest tests/test_tlv_node.py
 
-# Run specific test class
-uv run pytest tests/test_tlv_node.py::TestTLVParserPadding
+# Run parent validation tests only
+uv run pytest tests/test_parent_validation.py -v
 ```
 
 The test suite covers:
@@ -370,6 +488,8 @@ The test suite covers:
 - Poseidon config blob template extraction
 - Value decoder accuracy (PAN, dates, amounts, cryptograms, ISO codes)
 - Bitmask decoder accuracy (TVR, TSI, TAC, Terminal Capabilities)
+- Unknown tag detection (`is_unknown` flag)
+- Parent-child relationship validation against dictionary `parent_tags`
 
 ---
 

@@ -39,8 +39,21 @@ def get_node_display_length(node: TLVNode) -> int:
         return node.length
 
 
+class BitmaskPseudoNode:
+    def __init__(self, text, is_constructed=False):
+        self.tag = ""
+        self.name = ""
+        self.length = 0
+        self.is_constructed = is_constructed
+        self.is_valid_parent = True
+        self.parent_validation_error = None
+        self.text = text
+        self.value = b""
+        self.children = []
+
+
 class TreeRow(ctk.CTkFrame):
-    def __init__(self, master, node: TLVNode, depth: int,
+    def __init__(self, master, node, depth: int,
                  on_toggle, on_edit_done, on_select, **kwargs):
         super().__init__(master, fg_color="transparent", corner_radius=0, **kwargs)
 
@@ -63,7 +76,13 @@ class TreeRow(ctk.CTkFrame):
         self._inner.pack(fill="x", padx=(indent, 0), pady=1)
         self._inner.bind("<Button-1>", self._on_click)
 
-        if self.node.is_constructed:
+        is_constructed = False
+        if isinstance(self.node, BitmaskPseudoNode):
+            is_constructed = self.node.is_constructed
+        else:
+            is_constructed = self.node.is_constructed or bool(getattr(self.node, "bitmask", None))
+
+        if is_constructed:
             self.btn_triangle = ctk.CTkButton(
                 self._inner, text=">",
                 width=22, height=22,
@@ -78,28 +97,15 @@ class TreeRow(ctk.CTkFrame):
         else:
             ctk.CTkLabel(self._inner, text="", width=26).pack(side="left", padx=(0, 4))
 
-        # Tag badge — red for parent validation issues, blue otherwise
-        tag_fg = COLORS["danger"] if not self.node.is_valid_parent else COLORS["accent"]
-        warn_prefix = "[!] " if not self.node.is_valid_parent else ""
-
-        self.lbl_tag = ctk.CTkLabel(
-            self._inner,
-            text=f"{warn_prefix}[{self.node.tag}]",
-            font=ctk.CTkFont(MONO_FONT, 13, "bold"),
-            text_color=tag_fg,
-            width=90, anchor="w",
-        )
-        self.lbl_tag.pack(side="left", padx=(0, 6))
-        self.lbl_tag.bind("<Button-1>", self._on_click)
-
         self.lbl_text = ctk.CTkLabel(
             self._inner, text="",
-            font=ctk.CTkFont(UI_FONT, 12),
+            font=ctk.CTkFont(MONO_FONT, 12),
             text_color=COLORS["text"], anchor="w",
         )
         self.lbl_text.pack(side="left", fill="x", expand=True)
         self.lbl_text.bind("<Button-1>", self._on_click)
-        self.lbl_text.bind("<Double-1>", self._on_double_click)
+        if not isinstance(self.node, BitmaskPseudoNode) and not self.node.is_constructed:
+            self.lbl_text.bind("<Double-1>", self._on_double_click)
 
         self.refresh_text()
 
@@ -107,22 +113,31 @@ class TreeRow(ctk.CTkFrame):
         self._inner.bind("<Leave>", self._on_hover_out)
 
     def refresh_text(self):
-        tag_name = self.node.name or "Unknown Tag"
-        length   = get_node_display_length(self.node)
+        if isinstance(self.node, BitmaskPseudoNode):
+            self.lbl_text.configure(text=self.node.text)
+            return
 
-        if self.node.is_constructed:
-            txt = f"{tag_name}  |  {length} bytes"
+        # Real TLVNode formatting to match parse_tree.py
+        tag = self.node.tag
+        length = self.node.length
+        value_hex = self.node["value"]
+
+        if self.node.is_unknown:
+            header = f"{tag} [UNKNOWN] (len=0x{length:02X})"
+        elif self.node.description:
+            header = f"{tag} ({self.node.description}, len=0x{length:02X})"
+        elif self.node.name:
+            header = f"{tag} ({self.node.name}, len=0x{length:02X})"
         else:
-            val = self.node["value"]
-            if len(val) > 44:
-                val = val[:41] + "..."
-            decoded = ""
-            node_decoded = self.node.get("decoded")
-            if node_decoded is not None and str(node_decoded) != self.node["value"]:
-                decoded = f'  ->  "{node_decoded}"'
-            txt = f"{tag_name}  |  {length} bytes  |  {val}{decoded}"
+            header = f"{tag} (len=0x{length:02X})"
 
-        self.lbl_text.configure(text=txt)
+        if value_hex:
+            header += f' value="{value_hex}"'
+
+        if not self.node.is_valid_parent:
+            header += f"  ⚠ {self.node.parent_validation_error}"
+
+        self.lbl_text.configure(text=header)
 
     def _do_toggle(self):
         self.is_open = not self.is_open
@@ -153,13 +168,12 @@ class TreeRow(ctk.CTkFrame):
             return
         self.lbl_text.pack_forget()
 
-        tag_name = self.node.name or "Unknown Tag"
-        length   = get_node_display_length(self.node)
-        prefix   = f"{tag_name}  |  {length} bytes  |  value: "
+        tag = self.node.tag
+        prefix = f"{tag} value: "
 
         self.lbl_prefix = ctk.CTkLabel(
             self._inner, text=prefix,
-            font=ctk.CTkFont(UI_FONT, 12),
+            font=ctk.CTkFont(MONO_FONT, 12),
             text_color=COLORS["text"], anchor="w",
         )
         self.lbl_prefix.pack(side="left")
@@ -170,7 +184,7 @@ class TreeRow(ctk.CTkFrame):
             fg_color=COLORS["surface"],
             border_color=COLORS["accent"],
             text_color=COLORS["accent"],
-            width=200, height=24, corner_radius=4,
+            width=300, height=24, corner_radius=4,
         )
         self._entry.insert(0, self.node["value"])
         self._entry.select_range(0, "end")
@@ -391,20 +405,66 @@ class App(ctk.CTk):
         Walk the full node tree and return a flat ordered list of
         (row, should_pack) tuples. Only top-level rows are packed;
         child rows are built but start hidden.
+        Handles both nested children and bitmask pseudo-nodes.
         """
         result = []
         for node in nodes:
             row = self._make_row(node, depth, parent_row)
             is_root = (parent_row is None)
             result.append((row, is_root))
-            if node.children:
-                child_rows = []
+
+            sub_rows = []
+
+            # Recurse children first if constructed
+            if node.is_constructed and node.children:
                 sub = self._collect_all_rows(node.children, row, depth + 1)
+                result.extend(sub)
                 for child_row, _ in sub:
                     if child_row._parent_row is row:
-                        child_rows.append(child_row)
-                result.extend(sub)
-                row._child_rows = child_rows
+                        sub_rows.append(child_row)
+
+            # Recurse bitmask details if present
+            bitmask = getattr(node, "bitmask", None)
+            if bitmask:
+                value_bytes = node.value
+                bytes_map = {}
+                for bit in bitmask:
+                    byte_idx = bit.get("byte", 0)
+                    if byte_idx not in bytes_map:
+                        byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
+                        bytes_map[byte_idx] = {"value": byte_val, "bits": []}
+                    if bit.get("set", False):
+                        bytes_map[byte_idx]["bits"].append(bit)
+
+                for byte_idx in sorted(bytes_map):
+                    byte_data = bytes_map[byte_idx]
+                    byte_text = f"Byte {byte_idx + 1} ({byte_data['value']:02X})"
+
+                    byte_node = BitmaskPseudoNode(byte_text, is_constructed=True)
+                    byte_row = self._make_row(byte_node, depth + 1, row)
+                    result.append((byte_row, False))
+                    sub_rows.append(byte_row)
+
+                    byte_child_rows = []
+                    for bit in byte_data["bits"]:
+                        mask = bit.get("mask", 0)
+                        label = bit.get("name", "")
+                        if mask:
+                            bit_val = byte_data["value"] & mask
+                            bit_text = f"Bit {bit.get('bit', 0)} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) --> {label}"
+                        else:
+                            bit_text = label
+
+                        bit_node = BitmaskPseudoNode(bit_text, is_constructed=False)
+                        bit_row = self._make_row(bit_node, depth + 2, byte_row)
+                        result.append((bit_row, False))
+                        byte_child_rows.append(bit_row)
+
+                    byte_row._child_rows = byte_child_rows
+
+            if sub_rows:
+                row._child_rows = sub_rows
+
         return result
 
     def _build_tree_rows(self, nodes):
@@ -430,15 +490,6 @@ class App(ctk.CTk):
             # All rows are built — update scroll region and final status
             self._on_frame_configure()
             self._finish_parse()
-
-    def _build_subtree(self, node: TLVNode, parent_row: TreeRow, depth: int):
-        child_rows = []
-        for child in node.children:
-            crow = self._make_row(child, depth, parent_row)
-            if child.children:
-                self._build_subtree(child, crow, depth + 1)
-            child_rows.append(crow)
-        parent_row._child_rows = child_rows
 
     def _on_toggle(self, row: TreeRow, is_open: bool):
         if is_open:
@@ -466,6 +517,10 @@ class App(ctk.CTk):
         row.set_selected(True)
         self._selected_row = row
 
+        if isinstance(row.node, BitmaskPseudoNode):
+            self._set_status(row.node.text, "ready")
+            return
+
         tag_name = row.node.name or "Unknown Tag"
         length   = get_node_display_length(row.node)
         msg      = f"[{row.node.tag}]  {tag_name}  |  {length} bytes"
@@ -478,14 +533,14 @@ class App(ctk.CTk):
 
     def _on_edit_done(self, row: TreeRow, new_val, level: str):
         if level == "ok":
-            self._set_status(
-                f"[{row.node.tag}] updated -> {new_val}  (click Generate Hex to export)",
-                "ok",
-            )
-            curr = row._parent_row
-            while curr:
-                curr.refresh_text()
-                curr = curr._parent_row
+            try:
+                new_hex = serialize(self._root_nodes)
+                self.entry_tlv.delete(0, "end")
+                self.entry_tlv.insert(0, new_hex)
+                self._do_parse()
+                self._set_status(f"Updated [{row.node.tag}] to {new_val} and refreshed tree", "ok")
+            except Exception as e:
+                self._set_status(f"Refreshing error: {e}", "error")
         else:
             self._set_status(
                 "Invalid hex -- must be even-length digits 0-9 A-F only",

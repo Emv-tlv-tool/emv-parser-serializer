@@ -7,7 +7,9 @@ authors = [
     { name = "MohamedAliDjemal", email = "mohamed.ali.djemal@proton.me" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "customtkinter>=5.2.2",
+]
 
 [build-system]
 requires = ["uv_build>=0.11.0,<0.12.0"]

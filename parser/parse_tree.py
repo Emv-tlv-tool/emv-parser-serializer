@@ -163,8 +163,8 @@ def generate_tree_output(hex_data, output_file="tree_output.txt"):
 
 def main():
     """Main entry point."""
-    input_file = "test2.txt"
-    output_file = "tree_output2.txt"
+    input_file = "test.txt"
+    output_file = "tree_output.txt"
 
     print(f"Reading hex data from {input_file}...")
 

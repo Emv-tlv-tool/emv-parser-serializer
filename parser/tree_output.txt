@@ -40,34 +40,6 @@
 
   +--+ 9F40 (EMVCO_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x05) value="6000F0F000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 3 (F0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Numeric keys
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Alphabetic and special characters keys
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Command keys
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Function keys
-
-    +--+ Byte 4 (F0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Print, attendant
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Print, cardholder
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Display, attendant
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Display, cardholder
-
-    +--+ Byte 5 (00)
-
   +--+ DF47 (ZKA_TM_RETRY_PARAMETER, len=0x02) value="0101"
 
   +--+ DF39 (ZKA_TM_JOURNAL_DOL, len=0x0A) value="DF020F95059B029F3403"
@@ -76,55 +48,55 @@
 
   +--+ F1 (ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA, len=0x60) value="DF010102DF040100F209DF020200BCDF030101F209DF02020000DF030102F209DF02020015DF030103F209DF0202009EDF030103F209DF02020001DF030104F209DF02020003DF030104F209DF02020005DF030105F209DF020200A8DF030100"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"  ⚠ Tag DF01 appears under parent F1, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF04 (ZKA_TM_CONFIGURATION_ACTION_CONTROL, len=0x01) value="00"
 
-    +--+ F2 (len=0x09) value="DF020200BCDF030101"
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF020200BCDF030101"
 
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="00BC"
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="00BC"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
       +--+ DF03 (Zero Amount Allowed, len=0x01) value="01"
 
-    +--+ F2 (len=0x09) value="DF02020000DF030102"
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF02020000DF030102"
 
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0000"
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0000"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
       +--+ DF03 (Zero Amount Allowed, len=0x01) value="02"
 
-    +--+ F2 (len=0x09) value="DF02020015DF030103"
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF02020015DF030103"
 
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0015"
-
-      +--+ DF03 (Zero Amount Allowed, len=0x01) value="03"
-
-    +--+ F2 (len=0x09) value="DF0202009EDF030103"
-
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="009E"
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0015"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
       +--+ DF03 (Zero Amount Allowed, len=0x01) value="03"
 
-    +--+ F2 (len=0x09) value="DF02020001DF030104"
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF0202009EDF030103"
 
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0001"
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="009E"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
+
+      +--+ DF03 (Zero Amount Allowed, len=0x01) value="03"
+
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF02020001DF030104"
+
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0001"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
       +--+ DF03 (Zero Amount Allowed, len=0x01) value="04"
 
-    +--+ F2 (len=0x09) value="DF02020003DF030104"
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF02020003DF030104"
 
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0003"
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0003"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
       +--+ DF03 (Zero Amount Allowed, len=0x01) value="04"
 
-    +--+ F2 (len=0x09) value="DF02020005DF030105"
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF02020005DF030105"
 
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0005"
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="0005"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
       +--+ DF03 (Zero Amount Allowed, len=0x01) value="05"
 
-    +--+ F2 (len=0x09) value="DF020200A8DF030100"
+    +--+ F2 [UNKNOWN] (len=0x09) value="DF020200A8DF030100"
 
-      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="00A8"
+      +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x02) value="00A8"  ⚠ Tag DF02 appears under parent F2, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
       +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -268,12 +240,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ 9F09 (EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL, len=0x02) value="0001"
@@ -284,39 +250,11 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20F0C8"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (00)
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F4E (EMVCO_MERCHANT_NAME_AND_LOCATION, len=0x28) value="42535061796F6E6520476D62482020202020202020202020204672616E6B6675727420616D204445"
 
@@ -328,67 +266,7 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="CC00FC8000"
 
-    +--+ Byte 1 (CC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (FC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Unrecognised CVM
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (80)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="CC00FC8000"
-
-    +--+ Byte 1 (CC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (FC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Unrecognised CVM
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (80)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22000000"
 
@@ -396,7 +274,7 @@
 
   +--+ FB (P, len=0x5E) value="DF010104DF07028600DF0406000099999999DF0506000000000000DF0606000000005001DF11050010000000DF1205DE00FC9800DF1305DC50FC9800DF2703E068089F6E049CE000039F6D01C0DF1702C800DF4B028E20DF4C04E0E00000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="04"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="04"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -412,97 +290,15 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="DE00FC9800"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 2 (10)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="DC50FC9800"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
-
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="DE00FC9800"
-
-      +--+ Byte 1 (DE)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (FC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Unrecognised CVM
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (98)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (00)
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="DC50FC9800"
-
-      +--+ Byte 1 (DC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (FC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Unrecognised CVM
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (98)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (00)
-
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E06808"
-
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E06808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ 9F6E (Enhanced Contactless Reader Capabilities, len=0x04) value="9CE00003"
 
@@ -510,13 +306,13 @@
 
     +--+ DF17 (Kernel 4-Capabilities, len=0x02) value="C800"
 
-    +--+ DF4B (len=0x02) value="8E20"
+    +--+ DF4B [UNKNOWN] (len=0x02) value="8E20"
 
-    +--+ DF4C (len=0x04) value="E0E00000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="E0E00000"
 
   +--+ FB (P, len=0x56) value="DF010104DF07021900DF0406000099999999DF0506000000000000DF0606000099999999DF11050010000000DF1205DE00FC9800DF1305DC50FC9800DF380100DF2703E020C89F6E04188000009F6D01C0DF1702C800"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="04"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="04"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
@@ -526,101 +322,17 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="DE00FC9800"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 2 (10)
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
-
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="DE00FC9800"
-
-      +--+ Byte 1 (DE)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (FC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Unrecognised CVM
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (98)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (00)
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="DC50FC9800"
-
-      +--+ Byte 1 (DC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (FC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Unrecognised CVM
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (98)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (00)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="DC50FC9800"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF38 (Transaktion Typ for Kernel Processing, len=0x01) value="00"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E020C8"
-
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (20)
-
-      +--+ Byte 3 (C8)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E020C8"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ 9F6E (Enhanced Contactless Reader Capabilities, len=0x04) value="18800000"
 
@@ -638,43 +350,11 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C0F0C8"
 
-    +--+ Byte 1 (C0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="03"
-
-    +--+ Byte 1 (03)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22000000"
 
@@ -685,10 +365,6 @@
   +--+ DF15 (ZKA_TM_MERCHANT_IDENTIFIER, len=0x0F) value="393530353630323235302020202020"
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="01"
-
-    +--+ Byte 1 (01)
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Fallback allowed, denied if application or chip blocked
 
   +--+ F1 (ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA, len=0x0C) value="F904DF2C0134F904DF2C0137"
 
@@ -710,33 +386,17 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C02000"
 
-    +--+ Byte 1 (C0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (20)
-
-    +--+ Byte 3 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="03"
-
-    +--+ Byte 1 (03)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ DF60 (POSEIDON_EMV_CARD_ID, len=0x02) value="00D0"
 
   +--+ DF71 (POSEIDON_EMV_CONFIGURATION_VERSION, len=0x06) value="010600000000"
 
-  +--+ DF850D (len=0x08) value="0011110000000000"
+  +--+ DF850D [UNKNOWN] (len=0x08) value="0011110000000000"
 
   +--+ FB (P, len=0x2F) value="DF0103D10001DF0406000099999999DF0702FFFFDF090100DF2703C02000DF2A0103DF7A0A6B6F6E74616B746C6F73"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x03) value="D10001"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x03) value="D10001"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF04 (ZKA_TM_CONFIGURATION_ACTION_CONTROL, len=0x06) value="000099999999"
 
@@ -752,27 +412,11 @@
 
     +--+ DF09 (ZKA_TM_KERNEL_PRIORITY, len=0x01) value="00"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C02000"
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C02000"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (C0)
+    +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="03"  ⚠ Tag DF2A appears under parent FB, but expected parent is one of: ['E2']
 
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      +--+ Byte 2 (20)
-
-      +--+ Byte 3 (00)
-
-    +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="03"
-
-      +--+ Byte 1 (03)
-
-      |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-      |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
-    +--+ DF7A (len=0x0A) value="6B6F6E74616B746C6F73"
+    +--+ DF7A [UNKNOWN] (len=0x0A) value="6B6F6E74616B746C6F73"
 
   +--+ 9F06 (EMVCO_AID, len=0x07) value="D2760001317002"
 
@@ -794,12 +438,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ DF0D (ZKA_TM_DEFAULT_TDOL, len=0x0F) value="9F02065F2A029A039C0195059F3704"
@@ -809,14 +447,6 @@
   +--+ 9F15 (EMVCO_MERCHANT_INDUSTRY_KEY, len=0x02) value="7011"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F53 (EMVCO_TRANSACTION_CATEGORY_CODE, len=0x01) value="52"
 
@@ -832,83 +462,13 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20F0C8"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (00)
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110001000000"
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="F850ACF800"
 
-    +--+ Byte 1 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    +--+ Byte 3 (AC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FC50ACF800"
-
-    +--+ Byte 1 (FC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (AC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF19 (ZKA_TM_NEEDED_DATA_OBJECTS, len=0x01) value="8E"
 
@@ -918,7 +478,7 @@
 
   +--+ FB (P, len=0x3A) value="DF010106DF07028600DF0606000000005001DF020100DF030100DF0406000099999999DF05060000000000009F6604B660C000DF4C04A0600000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="06"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="06"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -930,9 +490,9 @@
 
       |  +--+  Bit 2 (Mask 0x02, value 0x02) --> reservation increase
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -942,17 +502,17 @@
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="B660C000"
 
-    +--+ DF4C (len=0x04) value="A0600000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0600000"
 
   +--+ FB (P, len=0x37) value="DF010106DF07021900DF020100DF030100DF0406999999999999DF0506000000000000DF06069999999999999F6604B0800000DF380100"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="06"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="06"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
       +--+ Byte 1 (19)
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -960,7 +520,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="999999999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="999999999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="B0800000"
 
@@ -982,49 +542,13 @@
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="04"
 
-    +--+ Byte 1 (04)
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C0F0C8"
-
-    +--+ Byte 1 (C0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2100110000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="07"
-
-    +--+ Byte 1 (07)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Hint: bit is not set, PAN evaluation is required!
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22000000"
 
@@ -1078,12 +602,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0A (ZKA_TM_APPLICATION_LABEL, len=0x08) value="6769726F63617264"
 
   +--+ DF0B (ZKA_TM_APPLICATION_SELECTION_INDICATOR_ASI, len=0x01) value="01"
@@ -1110,59 +628,7 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FC50ACF800"
 
-    +--+ Byte 1 (FC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (AC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FC50ACA000"
-
-    +--+ Byte 1 (FC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (AC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (A0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF19 (ZKA_TM_NEEDED_DATA_OBJECTS, len=0x04) value="8E575F34"
 
@@ -1172,39 +638,11 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="605048"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (50)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (48)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (00)
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2003000100001000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22100000"
 
@@ -1212,7 +650,7 @@
 
   +--+ FB (P, len=0x99) value="DF01012ADF07028000DF090101DF0606000000005001DF0801019F1D08CD50800000000000DF1205FC50BCF80CDF1305FC50BCA00CDF2703204808DF81180140DF81190148DF811A039F6A04DF811B01B0DF811C020000DF811D0100DF813402000CDF813502000FDF81360200C8DF813A058400800000DF1406000099999999DF1506000099999999DF1606000000005001DF4C0480280000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="2A"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="2A"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8000"
 
@@ -1222,89 +660,17 @@
 
     +--+ DF09 (ZKA_TM_KERNEL_PRIORITY, len=0x01) value="01"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ DF08 (ZKA_TM_EXTENDED_SELECTION_SUPPORT_FLAG, len=0x01) value="01"
 
     +--+ 9F1D (EMVCO_RISK_MANAGEMENT_DATA, len=0x08) value="CD50800000000000"
 
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FC50BCF80C"
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FC50BCF80C"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (FC)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FC50BCA00C"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (BC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (F8)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (0C)
-
-      |  +--+  Relay Resistance Protocol: not supported
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FC50BCA00C"
-
-      +--+ Byte 1 (FC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (BC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (A0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (0C)
-
-      |  +--+  Relay Resistance Protocol: not supported
-
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="204808"
-
-      +--+ Byte 1 (20)
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (48)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="204808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF8118 (CVM Required, len=0x01) value="40"
 
@@ -1332,11 +698,11 @@
 
     +--+ DF16 (Reader CVM Required Limit (Kernel), len=0x06) value="000000005001"
 
-    +--+ DF4C (len=0x04) value="80280000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="80280000"
 
   +--+ FB (P, len=0x8C) value="DF01012ADF07020800DF090101DF0606000099999999DF0801019F1D088000800000000000DF1105FFFFFFFFFFDF12050000000000DF13050000000000DF380120DF2606000000000000DF2703200808DF81180100DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D0103DF813A058400800000DF1406000099999999DF1506000099999999"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="2A"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="2A"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="0800"
 
@@ -1344,57 +710,23 @@
 
     +--+ DF09 (ZKA_TM_KERNEL_PRIORITY, len=0x01) value="01"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ DF08 (ZKA_TM_EXTENDED_SELECTION_SUPPORT_FLAG, len=0x01) value="01"
 
     +--+ 9F1D (EMVCO_RISK_MANAGEMENT_DATA, len=0x08) value="8000800000000000"
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (FF)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="0000000000"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 2 (FF)
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
-
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="0000000000"
-
-      +--+ Byte 1 (00)
-
-      +--+ Byte 3 (00)
-
-      +--+ Byte 4 (00)
-
-      +--+ Byte 5 (00)
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="0000000000"
-
-      +--+ Byte 1 (00)
-
-      +--+ Byte 3 (00)
-
-      +--+ Byte 4 (00)
-
-      +--+ Byte 5 (00)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="0000000000"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF38 (Transaktion Typ for Kernel Processing, len=0x01) value="20"
 
     +--+ DF26 (ZKA_TM_EMV_FLOOR_LIMIT, len=0x06) value="000000000000"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="200808"
-
-      +--+ Byte 1 (20)
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (08)
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="200808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF8118 (CVM Required, len=0x01) value="00"
 
@@ -1428,29 +760,7 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="03"
 
-    +--+ Byte 1 (03)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="604048"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (40)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (48)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2030000000000000"
 
@@ -1458,21 +768,11 @@
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF46 (ZKA_TM_MAG_STRIPE_NEEDED_TRACKS, len=0x01) value="02"
 
   +--+ DF71 (POSEIDON_EMV_CONFIGURATION_VERSION, len=0x06) value="030000000000"
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="00"
-
-    +--+ Byte 1 (00)
 
   +--+ F1 (ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA, len=0x257) value="F905DF2C02672FF905DF2C02680FF905DF2C024711F905DF2C024822F905DF2C024825F906DF2C03458612F906DF2C03458613F906DF2C03458620F906DF2C03458621F906DF2C03458622F906DF2C03458623F906DF2C03458624F906DF2C03458625F906DF2C03458626F906DF2C03458630F906DF2C03458632F906DF2C03458650F906DF2C03458651F906DF2C03458652F906DF2C03458653F906DF2C03458654F906DF2C03458655F906DF2C03458656F906DF2C03458660F906DF2C03458661F906DF2C03458662F906DF2C03458663F906DF2C03458664F906DF2C03458665F906DF2C03458666F906DF2C03458670F906DF2C03458671F906DF2C03458672F906DF2C03458673F906DF2C03458674F906DF2C03458675F906DF2C03458676F906DF2C03458677F906DF2C03458678F906DF2C03458679F906DF2C03458680F906DF2C03458681F906DF2C03458685F906DF2C03458686F906DF2C03466630F906DF2C03466631F906DF2C03466632F906DF2C03466640F906DF2C03466641F906DF2C03466642F906DF2C03466643F906DF2C03466650F906DF2C03466651F906DF2C03466652F906DF2C03466653F906DF2C03466654F906DF2C03466655F906DF2C03458910F906DF2C03458920F906DF2C03458921F906DF2C03458940F906DF2C03458950F906DF2C03458951F906DF2C03458952F906DF2C03458960F906DF2C03458961F906DF2C03458970F906DF2C03458971F906DF2C03458980F906DF2C03466920F906DF2C03466921F906DF2C03466940F906DF2C03466950F906DF2C03466951F906DF2C034669905F340106"
 
@@ -1776,7 +1076,7 @@
 
       +--+ DF2C (ZKA_TM_MAG_PREFIX, len=0x03) value="466990"
 
-    +--+ 5F34 (EMVCO_PSEQ, len=0x01) value="06"
+    +--+ 5F34 (EMVCO_PSEQ, len=0x01) value="06"  ⚠ Tag 5F34 appears under parent F1, but expected parent is one of: ['DF40', 'DF42', 'DF43']
 
 +--+ E2 (ZKA_TM_APPLICATION_CONFIG_DATA_TEMPLATE, len=0x146) value="9F0607A0000000651010DF60020005DF0A034A4342DF0B0101F805DF06020005DF2A0123DF0C039F37049F090202009F150270119F160F343535363030343138323030202020DF23020000DF2606000000000000DF11050100000000DF1205FC60ACF800DF1305FC60ACF800DF270320F0C8DF22082123110001000000DF28026000DF250422000000DF7F0100FB5CDF010105DF07028600DF0606000000005001DF11050010000000DF1205FC60ACF800DF1305FC6024A800DF2606000000000000DF1406000099999999DF1606000000005001DF20022300DF2103F38000DF18020013DF4C04A0600000FB59DF010105DF07021900DF0606009999999999DF1105FFFFFFFFFFDF12050000000000DF13050000000000DF380120DF2606000000000000DF1406000099999999DF1606000099999999DF20022200DF2103D38000DF18020013"
 
@@ -1794,12 +1094,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ 9F09 (EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL, len=0x02) value="0200"
@@ -1814,95 +1108,15 @@
 
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0100000000"
 
-    +--+ Byte 1 (01)
-
-    +--+ Byte 2 (00)
-
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FC60ACF800"
-
-    +--+ Byte 1 (FC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (AC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FC60ACF800"
 
-    +--+ Byte 1 (FC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (AC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20F0C8"
-
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110001000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22000000"
 
@@ -1910,7 +1124,7 @@
 
   +--+ FB (P, len=0x5C) value="DF010105DF07028600DF0606000000005001DF11050010000000DF1205FC60ACF800DF1305FC6024A800DF2606000000000000DF1406000099999999DF1606000000005001DF20022300DF2103F38000DF18020013DF4C04A0600000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="05"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="05"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -1922,67 +1136,13 @@
 
       |  +--+  Bit 2 (Mask 0x02, value 0x02) --> reservation increase
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FC60ACF800"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 2 (10)
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
-
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FC60ACF800"
-
-      +--+ Byte 1 (FC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (AC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (F8)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (00)
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FC6024A800"
-
-      +--+ Byte 1 (FC)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (24)
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (A8)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (00)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FC6024A800"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF26 (ZKA_TM_EMV_FLOOR_LIMIT, len=0x06) value="000000000000"
 
@@ -1994,51 +1154,25 @@
 
     +--+ DF21 (Terminal Interchange Profile (Static), len=0x03) value="F38000"
 
-    +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x02) value="0013"
+    +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x02) value="0013"  ⚠ Tag DF18 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
-
-    +--+ DF4C (len=0x04) value="A0600000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0600000"
 
   +--+ FB (P, len=0x59) value="DF010105DF07021900DF0606009999999999DF1105FFFFFFFFFFDF12050000000000DF13050000000000DF380120DF2606000000000000DF1406000099999999DF1606000099999999DF20022200DF2103D38000DF18020013"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="05"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="05"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
       +--+ Byte 1 (19)
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="009999999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="009999999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (FF)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="0000000000"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 2 (FF)
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
-
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="0000000000"
-
-      +--+ Byte 1 (00)
-
-      +--+ Byte 3 (00)
-
-      +--+ Byte 4 (00)
-
-      +--+ Byte 5 (00)
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="0000000000"
-
-      +--+ Byte 1 (00)
-
-      +--+ Byte 3 (00)
-
-      +--+ Byte 4 (00)
-
-      +--+ Byte 5 (00)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="0000000000"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF38 (Transaktion Typ for Kernel Processing, len=0x01) value="20"
 
@@ -2052,9 +1186,7 @@
 
     +--+ DF21 (Terminal Interchange Profile (Static), len=0x03) value="D38000"
 
-    +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x02) value="0013"
-
-      +--+ Byte 1 (00)
+    +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x02) value="0013"  ⚠ Tag DF18 appears under parent FB, but expected parent is one of: ['E2']
 
 +--+ E2 (ZKA_TM_APPLICATION_CONFIG_DATA_TEMPLATE, len=0x5C) value="DF06020005DF60020005DF0A034A4342DF1406000000000000DF150F343535363030343138323030202020DF460102DF180104DF2703C0B0C8DF22082103110000000000DF28026000DF2A0107DF250422000000F106F904DF2C0135"
 
@@ -2072,47 +1204,13 @@
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="04"
 
-    +--+ Byte 1 (04)
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C0B0C8"
-
-    +--+ Byte 1 (C0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (B0)
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2103110000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="07"
-
-    +--+ Byte 1 (07)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Hint: bit is not set, PAN evaluation is required!
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22000000"
 
@@ -2142,12 +1240,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ DF0D (ZKA_TM_DEFAULT_TDOL, len=0x0F) value="9F02065F2A029A039C0195059F3704"
@@ -2157,14 +1249,6 @@
   +--+ 9F15 (EMVCO_MERCHANT_INDUSTRY_KEY, len=0x02) value="7011"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F53 (EMVCO_TRANSACTION_CATEGORY_CODE, len=0x01) value="52"
 
@@ -2178,87 +1262,11 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FE50BCF800"
 
-    +--+ Byte 1 (FE)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (BC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FE50BCA000"
-
-    +--+ Byte 1 (FE)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (BC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (A0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20D0C8"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (D0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (00)
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110001000000"
 
@@ -2266,17 +1274,17 @@
 
   +--+ DF7F (EMV Confirmation Mode, len=0x01) value="01"
 
-  +--+ 60 (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+  +--+ 60 [UNKNOWN] (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
-    +--+ DF70 (len=0x01) value="01"
+    +--+ DF70 [UNKNOWN] (len=0x01) value="01"
 
-    +--+ DF6E (AppUserName, len=0x01) value="01"
+    +--+ DF6E (AppUserName, len=0x01) value="01"  ⚠ Tag DF6E appears under parent 60, but expected parent is one of: ['FF60']
 
-    +--+ DF6F (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+    +--+ DF6F [UNKNOWN] (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
   +--+ FB (P, len=0x8D) value="DF010102DF07028600DF0606000000005001DF1606000000005000DF0801019F1D084C52800000000000DF11050000800000DF1205F45004800CDF1305F45004800CDF2703204808DF81180140DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D01039F6D020001DF81270201F4DF1406000099999999DF1506000099999999DF4C0480600000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -2288,7 +1296,7 @@
 
       |  +--+  Bit 2 (Mask 0x02, value 0x02) --> reservation increase
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ DF16 (Reader CVM Required Limit (Kernel), len=0x06) value="000000005000"
 
@@ -2296,69 +1304,13 @@
 
     +--+ 9F1D (EMVCO_RISK_MANAGEMENT_DATA, len=0x08) value="4C52800000000000"
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000800000"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000800000"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="F45004800C"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 2 (00)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="F45004800C"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="F45004800C"
-
-      +--+ Byte 1 (F4)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (04)
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (80)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (0C)
-
-      |  +--+  Relay Resistance Protocol: not supported
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="F45004800C"
-
-      +--+ Byte 1 (F4)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (04)
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (80)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (0C)
-
-      |  +--+  Relay Resistance Protocol: not supported
-
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="204808"
-
-      +--+ Byte 1 (20)
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (48)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="204808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF8118 (CVM Required, len=0x01) value="40"
 
@@ -2380,81 +1332,35 @@
 
     +--+ DF15 (ZKA_TM_MERCHANT_IDENTIFIER, len=0x06) value="000099999999"
 
-    +--+ DF4C (len=0x04) value="80600000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="80600000"
 
   +--+ FB (P, len=0x93) value="DF010102DF07021900DF0606000000005001DF0801019F1D080808800000000000DF1105FFFFFFFFFFDF12050000000000DF13050000000000DF380120DF2606000000000000DF2703E00808DF28026000DF81180100DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D0103DF81270201F4DF1406000099999999DF1506000099999999DF1606000000000000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
       +--+ Byte 1 (19)
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ DF08 (ZKA_TM_EXTENDED_SELECTION_SUPPORT_FLAG, len=0x01) value="01"
 
     +--+ 9F1D (EMVCO_RISK_MANAGEMENT_DATA, len=0x08) value="0808800000000000"
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (FF)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="0000000000"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 2 (FF)
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
-
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="0000000000"
-
-      +--+ Byte 1 (00)
-
-      +--+ Byte 3 (00)
-
-      +--+ Byte 4 (00)
-
-      +--+ Byte 5 (00)
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="0000000000"
-
-      +--+ Byte 1 (00)
-
-      +--+ Byte 3 (00)
-
-      +--+ Byte 4 (00)
-
-      +--+ Byte 5 (00)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="0000000000"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF38 (Transaktion Typ for Kernel Processing, len=0x01) value="20"
 
     +--+ DF26 (ZKA_TM_EMV_FLOOR_LIMIT, len=0x06) value="000000000000"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E00808"
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E00808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (08)
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
-    +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-      +--+ Byte 1 (60)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-      +--+ Byte 2 (00)
+    +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"  ⚠ Tag DF28 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF8118 (CVM Required, len=0x01) value="00"
 
@@ -2492,25 +1398,7 @@
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="04"
 
-    +--+ Byte 1 (04)
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="40D0C8"
-
-    +--+ Byte 1 (40)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (D0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2100000000000000"
 
@@ -2518,21 +1406,13 @@
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
+  +--+ 60 [UNKNOWN] (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
+    +--+ DF70 [UNKNOWN] (len=0x01) value="01"
 
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
+    +--+ DF6E (AppUserName, len=0x01) value="01"  ⚠ Tag DF6E appears under parent 60, but expected parent is one of: ['FF60']
 
-    +--+ Byte 2 (00)
-
-  +--+ 60 (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
-
-    +--+ DF70 (len=0x01) value="01"
-
-    +--+ DF6E (AppUserName, len=0x01) value="01"
-
-    +--+ DF6F (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+    +--+ DF6F [UNKNOWN] (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
   +--+ F1 (ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA, len=0x1D5) value="F904DF2C0150F904DF2C0156F904DF2C0157F904DF2C0158F904DF2C0161F904DF2C0162F904DF2C0166F904DF2C0168F904DF2C0169F905DF2C02600FF905DF2C02602FF905DF2C02603FF905DF2C02604FF905DF2C02605FF905DF2C02606FF905DF2C02607FF905DF2C02608FF905DF2C02609FF905DF2C026010F905DF2C026012F905DF2C026013F905DF2C026014F905DF2C026015F905DF2C026016F905DF2C026017F905DF2C026018F905DF2C026019F905DF2C02630FF905DF2C02631FF905DF2C02632FF905DF2C02633FF905DF2C02634FF905DF2C02635FF905DF2C02637FF905DF2C02638FF905DF2C02639FF905DF2C026360F905DF2C026361F905DF2C026363F905DF2C026364F905DF2C026365F905DF2C026366F905DF2C026367F905DF2C026368F905DF2C026369F906DF2C0363621FF906DF2C0363622FF906DF2C0363623FF906DF2C0363624FF906DF2C0363625FF906DF2C0363626FF906DF2C0363627FF906DF2C0363628FF906DF2C0363629FF905DF2C02640FF905DF2C02641FF905DF2C02642FF905DF2C02643FF905DF2C02670FF905DF2C02671FF905DF2C02673FF905DF2C02674FF905DF2C02675FF905DF2C02676FF905DF2C02677FF905DF2C02678FF905DF2C02679F"
 
@@ -2824,12 +1704,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ DF0D (ZKA_TM_DEFAULT_TDOL, len=0x0F) value="9F02065F2A029A039C0195059F3704"
@@ -2839,14 +1713,6 @@
   +--+ 9F15 (EMVCO_MERCHANT_INDUSTRY_KEY, len=0x02) value="7011"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F53 (EMVCO_TRANSACTION_CATEGORY_CODE, len=0x01) value="52"
 
@@ -2860,85 +1726,11 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="FE50BCF800"
 
-    +--+ Byte 1 (FE)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (BC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="FE50BCA000"
-
-    +--+ Byte 1 (FE)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (BC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> PIN try limit exceeded
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> PIN entry required but PP not working
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> PIN entry required but PIN not entered
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (A0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20F048"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (48)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (00)
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110001000000"
 
@@ -2946,17 +1738,17 @@
 
   +--+ DF7F (EMV Confirmation Mode, len=0x01) value="01"
 
-  +--+ 60 (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+  +--+ 60 [UNKNOWN] (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
-    +--+ DF70 (len=0x01) value="01"
+    +--+ DF70 [UNKNOWN] (len=0x01) value="01"
 
-    +--+ DF6E (AppUserName, len=0x01) value="01"
+    +--+ DF6E (AppUserName, len=0x01) value="01"  ⚠ Tag DF6E appears under parent 60, but expected parent is one of: ['FF60']
 
-    +--+ DF6F (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+    +--+ DF6F [UNKNOWN] (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
   +--+ FB (P, len=0x97) value="DF010102DF07028600DF0606000000005001DF1606000000005000DF0801019F1D086C72800000000000DF11050000000000DF1205F45084800CDF1305F45084800CDF2703E06808DF81180160DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D01039F6D020001DF811E0110DF812C0110DF81270201F4DF1406000099999999DF1506000099999999DF4C0480600000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -2968,7 +1760,7 @@
 
       |  +--+  Bit 2 (Mask 0x02, value 0x02) --> reservation increase
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ DF16 (Reader CVM Required Limit (Kernel), len=0x06) value="000000005000"
 
@@ -2976,77 +1768,13 @@
 
     +--+ 9F1D (EMVCO_RISK_MANAGEMENT_DATA, len=0x08) value="6C72800000000000"
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000000000"
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0000000000"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
+    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="F45084800C"  ⚠ Tag DF12 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 2 (00)
+    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="F45084800C"  ⚠ Tag DF13 appears under parent FB, but expected parent is one of: ['E2']
 
-    +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="F45084800C"
-
-      +--+ Byte 1 (F4)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (84)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (80)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (0C)
-
-      |  +--+  Relay Resistance Protocol: not supported
-
-    +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="F45084800C"
-
-      +--+ Byte 1 (F4)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 3 (84)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> CV failed
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-      +--+ Byte 4 (80)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-      +--+ Byte 5 (0C)
-
-      |  +--+  Relay Resistance Protocol: not supported
-
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E06808"
-
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E06808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF8118 (CVM Required, len=0x01) value="60"
 
@@ -3072,49 +1800,27 @@
 
     +--+ DF15 (ZKA_TM_MERCHANT_IDENTIFIER, len=0x06) value="000099999999"
 
-    +--+ DF4C (len=0x04) value="80600000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="80600000"
 
   +--+ FB (P, len=0x7F) value="DF010102DF07021900DF0606000000005001DF0801019F1D086C7A000000000000DF1105FFFFFFFFFFDF380120DF2703E00808DF81180100DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D0103DF811E0108DF812C0108DF81270201F4DF1406999999999999DF1506999999999999DF1606000000000000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="02"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
       +--+ Byte 1 (19)
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ DF08 (ZKA_TM_EXTENDED_SELECTION_SUPPORT_FLAG, len=0x01) value="01"
 
     +--+ 9F1D (EMVCO_RISK_MANAGEMENT_DATA, len=0x08) value="6C7A000000000000"
 
-    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"
-
-      +--+ Byte 1 (FF)
-
-      |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-      +--+ Byte 2 (FF)
-
-      |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
+    +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="FFFFFFFFFF"  ⚠ Tag DF11 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF38 (Transaktion Typ for Kernel Processing, len=0x01) value="20"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E00808"
-
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (08)
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E00808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
     +--+ DF8118 (CVM Required, len=0x01) value="00"
 
@@ -3156,27 +1862,7 @@
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="01"
 
-    +--+ Byte 1 (01)
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Fallback allowed, denied if application or chip blocked
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C020C8"
-
-    +--+ Byte 1 (C0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (20)
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110000000000"
 
@@ -3184,23 +1870,7 @@
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="63"
-
-    +--+ Byte 1 (63)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Don't evaluate the PAN
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ F1 (ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA, len=0xBB) value="F905DF2C022221F905DF2C022222F905DF2C022223F905DF2C022224F905DF2C022225F905DF2C022226F905DF2C022227F905DF2C022228F905DF2C022229F905DF2C02223FF905DF2C02224FF905DF2C02225FF905DF2C02226FF905DF2C02227FF905DF2C02228FF905DF2C02229FF905DF2C02270FF905DF2C02271FF905DF2C022720F904DF2C0151F904DF2C0152F904DF2C0153F904DF2C0154F904DF2C0155F904DF2C0123F904DF2C0124F904DF2C0125F904DF2C0126"
 
@@ -3322,7 +1992,7 @@
 
   +--+ DF60 (POSEIDON_EMV_CARD_ID, len=0x02) value="00BC"
 
-  +--+ DF8500 (len=0x0A) value="A0000003591010028001"
+  +--+ DF8500 [UNKNOWN] (len=0x0A) value="A0000003591010028001"
 
   +--+ DF71 (POSEIDON_EMV_CONFIGURATION_VERSION, len=0x06) value="030000000000"
 
@@ -3340,14 +2010,6 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="202800"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (28)
-
-    +--+ Byte 3 (00)
-
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2000000000000000"
 
   +--+ DF59 (K, len=0x01) value="01"
@@ -3358,7 +2020,7 @@
 
   +--+ DF5B (H, len=0x01) value="15"
 
-  +--+ DF77 (len=0x01) value="01"
+  +--+ DF77 [UNKNOWN] (len=0x01) value="01"
 
   +--+ DF51 (Card Holder Authentication, len=0x01) value="01"
 
@@ -3368,7 +2030,7 @@
 
   +--+ FB (P, len=0x42) value="DF0103D10000DF07028000DF090100DF1606000000000000DF2703202800DF56069F339F349F36DF770100DF7A0A6B6F6E74616B746C6F73DF851406999999999999"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x03) value="D10000"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x03) value="D10000"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8000"
 
@@ -3380,27 +2042,19 @@
 
     +--+ DF16 (Reader CVM Required Limit (Kernel), len=0x06) value="000000000000"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="202800"
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="202800"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (20)
+    +--+ DF56 (CRC, len=0x06) value="9F339F349F36"  ⚠ Tag DF56 appears under parent FB, but expected parent is one of: ['E2']
 
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
+    +--+ DF77 [UNKNOWN] (len=0x01) value="00"
 
-      +--+ Byte 2 (28)
+    +--+ DF7A [UNKNOWN] (len=0x0A) value="6B6F6E74616B746C6F73"
 
-      +--+ Byte 3 (00)
-
-    +--+ DF56 (CRC, len=0x06) value="9F339F349F36"
-
-    +--+ DF77 (len=0x01) value="00"
-
-    +--+ DF7A (len=0x0A) value="6B6F6E74616B746C6F73"
-
-    +--+ DF8514 (len=0x06) value="999999999999"
+    +--+ DF8514 [UNKNOWN] (len=0x06) value="999999999999"
 
   +--+ FB (P, len=0xD8) value="DF0103D10000DF07020800DF090100DF0406000099999999DF0506000000000000DF1606000099999999DF2703202800DF770110DF7A0A6B6F6E74616B746C6F73FF518193DF01012ADF0801019F090200029F1D088000800000000000DF1105FFFFFFFFFFDF12050000000000DF13050000000000DF380120DF2606000000000000DF2703200800DF28026000DF81180100DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D0103DF81270201F4DF813A058400800000DF1406999999999999DF1506999999999999DF1606999999999999"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x03) value="D10000"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x03) value="D10000"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="0800"
 
@@ -3414,21 +2068,13 @@
 
     +--+ DF16 (Reader CVM Required Limit (Kernel), len=0x06) value="000099999999"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="202800"
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="202800"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (20)
+    +--+ DF77 [UNKNOWN] (len=0x01) value="10"
 
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
+    +--+ DF7A [UNKNOWN] (len=0x0A) value="6B6F6E74616B746C6F73"
 
-      +--+ Byte 2 (28)
-
-      +--+ Byte 3 (00)
-
-    +--+ DF77 (len=0x01) value="10"
-
-    +--+ DF7A (len=0x0A) value="6B6F6E74616B746C6F73"
-
-    +--+ 51 (len=0x93) value="DF01012ADF0801019F090200029F1D088000800000000000DF1105FFFFFFFFFFDF12050000000000DF13050000000000DF380120DF2606000000000000DF2703200800DF28026000DF81180100DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D0103DF81270201F4DF813A058400800000DF1406999999999999DF1506999999999999DF1606999999999999"
+    +--+ 51 [UNKNOWN] (len=0x93) value="DF01012ADF0801019F090200029F1D088000800000000000DF1105FFFFFFFFFFDF12050000000000DF13050000000000DF380120DF2606000000000000DF2703200800DF28026000DF81180100DF81190108DF811A039F6A04DF811B01B0DF811C02012CDF811D0103DF81270201F4DF813A058400800000DF1406999999999999DF1506999999999999DF1606999999999999"
 
   +--+ DF57 (CRC, len=0xA8) value="4469652042656C617374756E67206572666F6C6774207A756D206EE4636873746DF6676C696368656E202343524C462342616E6B617262656974737461672E2343524C46232343524C46235765697465726520496E666F726D6174696F6E656E207A7520534550412D4C617374736368726966743A2343524C462368747470733A2F2F7777772E7061796F6E652E636F6D2F2343524C4623534550412D4C61737473636872696674"
 
@@ -3450,12 +2096,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ 9F09 (EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL, len=0x02) value="0020"
@@ -3466,43 +2106,11 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="60F0C8"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (10)
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2120000000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F4E (EMVCO_MERCHANT_NAME_AND_LOCATION, len=0x28) value="42535061796F6E6520476D62482020202020202020202020204672616E6B6675727420616D204445"
 
@@ -3524,41 +2132,7 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="D84004F800"
 
-    +--+ Byte 1 (D8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    +--+ Byte 3 (04)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="D84000A800"
-
-    +--+ Byte 1 (D8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    +--+ Byte 3 (00)
-
-    +--+ Byte 4 (A8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF40 (ZKA_TM_RECEIPT_DOL_MERCHANT_ONLINE, len=0x04) value="9B029505"
 
@@ -3568,7 +2142,7 @@
 
   +--+ FB (P, len=0x43) value="DF010107DF07028600DF0406000099999999DF0506000000000000DF06060000000050019F660436800000DF811C02012CDF811D0103DF2703006808DF4C04A0600000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -3584,7 +2158,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36800000"
 
@@ -3592,23 +2166,13 @@
 
     +--+ DF811D (Number of Torn Transaction Log Records (Maximum), len=0x01) value="03"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="006808"
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="006808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
-    +--+ DF4C (len=0x04) value="A0600000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0600000"
 
   +--+ FB (P, len=0x40) value="DF010107DF07021900DF0406000099999999DF0506000000000000DF06060000999999999F660436800000DF380120DF811C02012CDF811D0103DF2703E068C8"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
@@ -3618,7 +2182,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36800000"
 
@@ -3628,27 +2192,7 @@
 
     +--+ DF811D (Number of Torn Transaction Log Records (Maximum), len=0x01) value="03"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E068C8"
-
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (C8)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E068C8"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
 +--+ E2 (ZKA_TM_APPLICATION_CONFIG_DATA_TEMPLATE, len=0x170) value="9F0608A000000333010102DF60020095DF0A0F556E696F6E506179204372656469749F150270119F160F3435353630303431383230302020209F4E2842535061796F6E6520476D62482020202020202020202020204672616E6B6675727420616D2044459F09020020DF1205D84004F800DF1305D84000A800DF2606000000000000DF23020000DF0B0101DF0C039F3704DF2703E0F0C8DF11050010000000DF22082120000000000000DF28026000DF2A0123F805DF06020095DF250422000000DF7F0101DF0E06000000000000DF0F0199DF100199DF2F0101DF40029B02DF41029B02DF42029B02FB43DF010107DF07028600DF0406000099999999DF0506000000000000DF06060000000050019F660436800000DF811C02012CDF811D0103DF2703006808DF4C04A0600000FB40DF010107DF07021900DF0406000099999999DF0506000000000000DF06060000999999999F660436800000DF380120DF811C02012CDF811D0103DF2703E068C8"
 
@@ -3668,41 +2212,7 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="D84004F800"
 
-    +--+ Byte 1 (D8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    +--+ Byte 3 (04)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="D84000A800"
-
-    +--+ Byte 1 (D8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    +--+ Byte 3 (00)
-
-    +--+ Byte 4 (A8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF26 (ZKA_TM_EMV_FLOOR_LIMIT, len=0x06) value="000000000000"
 
@@ -3714,53 +2224,13 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E0F0C8"
 
-    +--+ Byte 1 (E0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (10)
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2120000000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
-
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ F8 (ZKA_TM_ASSOCIATED_MAG_STRIPE, len=0x05) value="DF06020095"
 
@@ -3786,7 +2256,7 @@
 
   +--+ FB (P, len=0x43) value="DF010107DF07028600DF0406000099999999DF0506000000000000DF06060000000050019F660436800000DF811C02012CDF811D0103DF2703006808DF4C04A0600000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -3802,7 +2272,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36800000"
 
@@ -3810,23 +2280,13 @@
 
     +--+ DF811D (Number of Torn Transaction Log Records (Maximum), len=0x01) value="03"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="006808"
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="006808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
-    +--+ DF4C (len=0x04) value="A0600000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0600000"
 
   +--+ FB (P, len=0x40) value="DF010107DF07021900DF0406000099999999DF0506000000000000DF06060000999999999F660436800000DF380120DF811C02012CDF811D0103DF2703E068C8"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
@@ -3836,7 +2296,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36800000"
 
@@ -3846,27 +2306,7 @@
 
     +--+ DF811D (Number of Torn Transaction Log Records (Maximum), len=0x01) value="03"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E068C8"
-
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (C8)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E068C8"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
 +--+ E2 (ZKA_TM_APPLICATION_CONFIG_DATA_TEMPLATE, len=0x171) value="9F0608A000000333010103DF60020095DF0A10556E696F6E50617920514372656469749F150270119F160F3435353630303431383230302020209F4E2842535061796F6E6520476D62482020202020202020202020204672616E6B6675727420616D2044459F09020020DF1205D84004F800DF1305D84000A800DF2606000000000000DF23020000DF0B0101DF0C039F3704DF2703E0F0C8DF11050010000000DF22082120000000000000DF28026000DF2A0123F805DF06020095DF250422000000DF7F0101DF0E06000000000000DF0F0199DF100199DF2F0101DF40029B02DF41029B02DF42029B02FB43DF010107DF07028600DF0406000099999999DF0506000000000000DF06060000000050019F660436800000DF811C02012CDF811D0103DF2703006808DF4C04A0600000FB40DF010107DF07020900DF0406000099999999DF0506000000000000DF06060000999999999F660436800000DF380120DF811C02012CDF811D0103DF2703E068C8"
 
@@ -3886,41 +2326,7 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="D84004F800"
 
-    +--+ Byte 1 (D8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    +--+ Byte 3 (04)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="D84000A800"
-
-    +--+ Byte 1 (D8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    +--+ Byte 3 (00)
-
-    +--+ Byte 4 (A8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF26 (ZKA_TM_EMV_FLOOR_LIMIT, len=0x06) value="000000000000"
 
@@ -3932,53 +2338,13 @@
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E0F0C8"
 
-    +--+ Byte 1 (E0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (10)
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2120000000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
-
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ F8 (ZKA_TM_ASSOCIATED_MAG_STRIPE, len=0x05) value="DF06020095"
 
@@ -4004,7 +2370,7 @@
 
   +--+ FB (P, len=0x43) value="DF010107DF07028600DF0406000099999999DF0506000000000000DF06060000000050019F660436800000DF811C02012CDF811D0103DF2703006808DF4C04A0600000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -4020,7 +2386,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36800000"
 
@@ -4028,23 +2394,13 @@
 
     +--+ DF811D (Number of Torn Transaction Log Records (Maximum), len=0x01) value="03"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="006808"
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="006808"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
-      +--+ Byte 1 (00)
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (08)
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
-    +--+ DF4C (len=0x04) value="A0600000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0600000"
 
   +--+ FB (P, len=0x40) value="DF010107DF07020900DF0406000099999999DF0506000000000000DF06060000999999999F660436800000DF380120DF811C02012CDF811D0103DF2703E068C8"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="07"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="0900"
 
@@ -4054,7 +2410,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36800000"
 
@@ -4064,27 +2420,7 @@
 
     +--+ DF811D (Number of Torn Transaction Log Records (Maximum), len=0x01) value="03"
 
-    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E068C8"
-
-      +--+ Byte 1 (E0)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-      |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-      +--+ Byte 2 (68)
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-      +--+ Byte 3 (C8)
-
-      |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-      |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-      |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
+    +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="E068C8"  ⚠ Tag DF27 appears under parent FB, but expected parent is one of: ['E2']
 
 +--+ E2 (ZKA_TM_APPLICATION_CONFIG_DATA_TEMPLATE, len=0x837) value="DF06020095DF60020095DF0A03555049DF1406000000000000DF150F343535363030343138323030202020DF460102DF180104DF2703C060C8DF22082110000000000000DF28026000DF250422000000DF2A0123F18207DFF906DF2C03620003F906DF2C03620096F906DF2C03620101F906DF2C03620161F906DF2C03620162F906DF2C03620163F906DF2C03620175F906DF2C03620271F906DF2C03620272F906DF2C03620273F906DF2C03620274F906DF2C03620275F906DF2C03620276F906DF2C03620277F906DF2C03620278F906DF2C03620279F906DF2C0362028FF906DF2C0362029FF905DF2C026205F906DF2C03620614F906DF2C03620615F906DF2C03620616F906DF2C03620617F906DF2C03620618F906DF2C03620619F906DF2C0362062FF906DF2C0362063FF906DF2C0362064FF906DF2C0362065FF906DF2C0362066FF906DF2C0362067FF906DF2C0362068FF906DF2C0362069FF905DF2C026207F905DF2C026208F905DF2C026209F905DF2C026210F906DF2C0362110FF906DF2C0362112FF906DF2C0362113FF906DF2C0362114FF906DF2C0362115FF906DF2C0362116FF906DF2C0362117FF906DF2C0362118FF906DF2C0362119FF905DF2C026212F905DF2C026213F905DF2C026214F905DF2C026215F905DF2C026216F905DF2C026217F906DF2C0362180FF906DF2C0362181FF906DF2C0362182FF906DF2C0362184FF906DF2C0362185FF906DF2C03621870F906DF2C03621871F906DF2C03621872F906DF2C03621873F906DF2C03621874F906DF2C03621875F906DF2C03621876F906DF2C03621877F906DF2C03621879F906DF2C0362189FF906DF2C0362190FF906DF2C0362191FF906DF2C0362192FF906DF2C0362193FF906DF2C0362194FF906DF2C0362195FF906DF2C0362196FF906DF2C03621970F906DF2C03621971F906DF2C03621972F906DF2C03621973F906DF2C03621974F906DF2C03621975F906DF2C03622926F906DF2C03622927F906DF2C03622928F906DF2C03622929F906DF2C0362293FF906DF2C0362294FF906DF2C0362295FF906DF2C0362296FF906DF2C0362297FF906DF2C0362298FF906DF2C0362299FF905DF2C026230F905DF2C026231F905DF2C026232F905DF2C026233F905DF2C026234F905DF2C026235F905DF2C026236F906DF2C0362370FF906DF2C0362371FF906DF2C0362372FF906DF2C0362373FF906DF2C0362374FF906DF2C0362375FF906DF2C0362376FF906DF2C0362377FF906DF2C0362378FF906DF2C03623790F906DF2C03623791F906DF2C03623792F906DF2C03623793F906DF2C03623794F906DF2C03623795F906DF2C03623796F906DF2C03623798F906DF2C03623799F905DF2C026238F905DF2C026239F905DF2C02624FF905DF2C02625FF905DF2C02626FF906DF2C0362700FF906DF2C0362701FF906DF2C0362702FF906DF2C0362703FF906DF2C0362704FF906DF2C0362705FF906DF2C0362706FF906DF2C0362707FF906DF2C03627080F906DF2C03627081F906DF2C03628183F906DF2C03628184F906DF2C03628185F906DF2C03628186F906DF2C03628187F906DF2C03628188F906DF2C03628189F906DF2C0362819FF905DF2C026282F905DF2C026283F905DF2C026284F905DF2C026285F905DF2C026286F905DF2C026287F905DF2C026288F906DF2C0362890FF906DF2C0362891FF906DF2C0362892FF906DF2C0362893FF906DF2C0362894FF906DF2C0362895FF906DF2C0362896FF906DF2C0362897FF906DF2C0362898FF906DF2C03628990F906DF2C03628991F906DF2C03628992F906DF2C03628993F906DF2C03628994F906DF2C03628995F906DF2C03628996F906DF2C03628997F906DF2C03628998F906DF2C0362903FF906DF2C0362904FF906DF2C0362905FF906DF2C0362906FF906DF2C0362907FF906DF2C0362908FF906DF2C0362909FF905DF2C026291F905DF2C026292F905DF2C026293F906DF2C0362940FF906DF2C0362941FF906DF2C0362942FF906DF2C0362943FF906DF2C03629440F906DF2C03629440F906DF2C03601382F906DF2C03622126F905DF2C026222F905DF2C026223F905DF2C026224F905DF2C026225F905DF2C026226F905DF2C026227F905DF2C026228F906DF2C0362290FF906DF2C0362291FF906DF2C03622920F906DF2C03622921F906DF2C03622922F906DF2C03622923F906DF2C03622924F906DF2C03622925F906DF2C03690755F906DF2C03900105F906DF2C03900205F906DF2C0390030FF906DF2C0390592FF905DF2C029111F906DF2C03940001F906DF2C03940003F906DF2C03940010F906DF2C03940013F906DF2C03940015F906DF2C03940018F906DF2C03940020F906DF2C03940021F906DF2C03940023F906DF2C03940027F906DF2C03940028F906DF2C03940030F906DF2C03940031F906DF2C03940035F906DF2C03940037F906DF2C03940039F906DF2C03940040F906DF2C03940046F906DF2C03940047F906DF2C03940048F906DF2C03940049F906DF2C03940050F906DF2C03940055F906DF2C03940056F906DF2C03940061F906DF2C03940062F906DF2C03940063F906DF2C03940066F906DF2C03940068F906DF2C03940073F906DF2C03940074F906DF2C03955100F906DF2C03955550F906DF2C03955590F906DF2C03955591F906DF2C03955592F906DF2C03955593F906DF2C03955880F906DF2C03955881F906DF2C03955882F906DF2C03955888F906DF2C0395599FF906DF2C03966666F906DF2C03968807F906DF2C03968808F906DF2C03968809F906DF2C03984300F906DF2C03984301F906DF2C03984302F906DF2C03984303F906DF2C03990027F906DF2C03998800F906DF2C03998801F906DF2C03998802"
 
@@ -4102,49 +2438,15 @@
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="04"
 
-    +--+ Byte 1 (04)
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C060C8"
-
-    +--+ Byte 1 (C0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2110000000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22000000"
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
-
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ F1 (ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA, len=0x7DF) value="F906DF2C03620003F906DF2C03620096F906DF2C03620101F906DF2C03620161F906DF2C03620162F906DF2C03620163F906DF2C03620175F906DF2C03620271F906DF2C03620272F906DF2C03620273F906DF2C03620274F906DF2C03620275F906DF2C03620276F906DF2C03620277F906DF2C03620278F906DF2C03620279F906DF2C0362028FF906DF2C0362029FF905DF2C026205F906DF2C03620614F906DF2C03620615F906DF2C03620616F906DF2C03620617F906DF2C03620618F906DF2C03620619F906DF2C0362062FF906DF2C0362063FF906DF2C0362064FF906DF2C0362065FF906DF2C0362066FF906DF2C0362067FF906DF2C0362068FF906DF2C0362069FF905DF2C026207F905DF2C026208F905DF2C026209F905DF2C026210F906DF2C0362110FF906DF2C0362112FF906DF2C0362113FF906DF2C0362114FF906DF2C0362115FF906DF2C0362116FF906DF2C0362117FF906DF2C0362118FF906DF2C0362119FF905DF2C026212F905DF2C026213F905DF2C026214F905DF2C026215F905DF2C026216F905DF2C026217F906DF2C0362180FF906DF2C0362181FF906DF2C0362182FF906DF2C0362184FF906DF2C0362185FF906DF2C03621870F906DF2C03621871F906DF2C03621872F906DF2C03621873F906DF2C03621874F906DF2C03621875F906DF2C03621876F906DF2C03621877F906DF2C03621879F906DF2C0362189FF906DF2C0362190FF906DF2C0362191FF906DF2C0362192FF906DF2C0362193FF906DF2C0362194FF906DF2C0362195FF906DF2C0362196FF906DF2C03621970F906DF2C03621971F906DF2C03621972F906DF2C03621973F906DF2C03621974F906DF2C03621975F906DF2C03622926F906DF2C03622927F906DF2C03622928F906DF2C03622929F906DF2C0362293FF906DF2C0362294FF906DF2C0362295FF906DF2C0362296FF906DF2C0362297FF906DF2C0362298FF906DF2C0362299FF905DF2C026230F905DF2C026231F905DF2C026232F905DF2C026233F905DF2C026234F905DF2C026235F905DF2C026236F906DF2C0362370FF906DF2C0362371FF906DF2C0362372FF906DF2C0362373FF906DF2C0362374FF906DF2C0362375FF906DF2C0362376FF906DF2C0362377FF906DF2C0362378FF906DF2C03623790F906DF2C03623791F906DF2C03623792F906DF2C03623793F906DF2C03623794F906DF2C03623795F906DF2C03623796F906DF2C03623798F906DF2C03623799F905DF2C026238F905DF2C026239F905DF2C02624FF905DF2C02625FF905DF2C02626FF906DF2C0362700FF906DF2C0362701FF906DF2C0362702FF906DF2C0362703FF906DF2C0362704FF906DF2C0362705FF906DF2C0362706FF906DF2C0362707FF906DF2C03627080F906DF2C03627081F906DF2C03628183F906DF2C03628184F906DF2C03628185F906DF2C03628186F906DF2C03628187F906DF2C03628188F906DF2C03628189F906DF2C0362819FF905DF2C026282F905DF2C026283F905DF2C026284F905DF2C026285F905DF2C026286F905DF2C026287F905DF2C026288F906DF2C0362890FF906DF2C0362891FF906DF2C0362892FF906DF2C0362893FF906DF2C0362894FF906DF2C0362895FF906DF2C0362896FF906DF2C0362897FF906DF2C0362898FF906DF2C03628990F906DF2C03628991F906DF2C03628992F906DF2C03628993F906DF2C03628994F906DF2C03628995F906DF2C03628996F906DF2C03628997F906DF2C03628998F906DF2C0362903FF906DF2C0362904FF906DF2C0362905FF906DF2C0362906FF906DF2C0362907FF906DF2C0362908FF906DF2C0362909FF905DF2C026291F905DF2C026292F905DF2C026293F906DF2C0362940FF906DF2C0362941FF906DF2C0362942FF906DF2C0362943FF906DF2C03629440F906DF2C03629440F906DF2C03601382F906DF2C03622126F905DF2C026222F905DF2C026223F905DF2C026224F905DF2C026225F905DF2C026226F905DF2C026227F905DF2C026228F906DF2C0362290FF906DF2C0362291FF906DF2C03622920F906DF2C03622921F906DF2C03622922F906DF2C03622923F906DF2C03622924F906DF2C03622925F906DF2C03690755F906DF2C03900105F906DF2C03900205F906DF2C0390030FF906DF2C0390592FF905DF2C029111F906DF2C03940001F906DF2C03940003F906DF2C03940010F906DF2C03940013F906DF2C03940015F906DF2C03940018F906DF2C03940020F906DF2C03940021F906DF2C03940023F906DF2C03940027F906DF2C03940028F906DF2C03940030F906DF2C03940031F906DF2C03940035F906DF2C03940037F906DF2C03940039F906DF2C03940040F906DF2C03940046F906DF2C03940047F906DF2C03940048F906DF2C03940049F906DF2C03940050F906DF2C03940055F906DF2C03940056F906DF2C03940061F906DF2C03940062F906DF2C03940063F906DF2C03940066F906DF2C03940068F906DF2C03940073F906DF2C03940074F906DF2C03955100F906DF2C03955550F906DF2C03955590F906DF2C03955591F906DF2C03955592F906DF2C03955593F906DF2C03955880F906DF2C03955881F906DF2C03955882F906DF2C03955888F906DF2C0395599FF906DF2C03966666F906DF2C03968807F906DF2C03968808F906DF2C03968809F906DF2C03984300F906DF2C03984301F906DF2C03984302F906DF2C03984303F906DF2C03990027F906DF2C03998800F906DF2C03998801F906DF2C03998802"
 
@@ -5198,12 +3500,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ 9F09 (EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL, len=0x02) value="008C"
@@ -5211,14 +3507,6 @@
   +--+ 9F15 (EMVCO_MERCHANT_INDUSTRY_KEY, len=0x02) value="7011"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F4E (EMVCO_MERCHANT_NAME_AND_LOCATION, len=0x28) value="42535061796F6E6520476D62482020202020202020202020204672616E6B6675727420616D204445"
 
@@ -5230,73 +3518,13 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="DC4004F800"
 
-    +--+ Byte 1 (DC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (04)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="DC4000A800"
-
-    +--+ Byte 1 (DC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (00)
-
-    +--+ Byte 4 (A8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF19 (ZKA_TM_NEEDED_DATA_OBJECTS, len=0x03) value="579F08"
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20F0C8"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (10)
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110001000000"
 
@@ -5306,17 +3534,17 @@
 
   +--+ DF7F (EMV Confirmation Mode, len=0x01) value="01"
 
-  +--+ 60 (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+  +--+ 60 [UNKNOWN] (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
-    +--+ DF70 (len=0x01) value="01"
+    +--+ DF70 [UNKNOWN] (len=0x01) value="01"
 
-    +--+ DF6E (AppUserName, len=0x01) value="01"
+    +--+ DF6E (AppUserName, len=0x01) value="01"  ⚠ Tag DF6E appears under parent 60, but expected parent is one of: ['FF60']
 
-    +--+ DF6F (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+    +--+ DF6F [UNKNOWN] (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
   +--+ FB (P, len=0x3A) value="DF010103DF07028600DF020100DF030100DF0406000099999999DF0506000000000000DF06060000000050019F660436E04000DF4C04A0700000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -5328,7 +3556,7 @@
 
       |  +--+  Bit 2 (Mask 0x02, value 0x02) --> reservation increase
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -5336,21 +3564,21 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36E04000"
 
-    +--+ DF4C (len=0x04) value="A0700000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0700000"
 
   +--+ FB (P, len=0x37) value="DF010103DF07021900DF020100DF030100DF0406000099999999DF0506000000000000DF06060000999999999F660430204000DF380120"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
       +--+ Byte 1 (19)
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -5358,7 +3586,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="30204000"
 
@@ -5384,12 +3612,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ 9F09 (EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL, len=0x02) value="008C"
@@ -5397,14 +3619,6 @@
   +--+ 9F15 (EMVCO_MERCHANT_INDUSTRY_KEY, len=0x02) value="7011"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F53 (EMVCO_TRANSACTION_CATEGORY_CODE, len=0x01) value="52"
 
@@ -5418,73 +3632,13 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="DC4004F800"
 
-    +--+ Byte 1 (DC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (04)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="DC4000A800"
-
-    +--+ Byte 1 (DC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (00)
-
-    +--+ Byte 4 (A8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF19 (ZKA_TM_NEEDED_DATA_OBJECTS, len=0x03) value="579F08"
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20F0C8"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (F0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0010000000"
-
-    +--+ Byte 1 (00)
-
-    +--+ Byte 2 (10)
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110001000000"
 
@@ -5494,17 +3648,17 @@
 
   +--+ DF7F (EMV Confirmation Mode, len=0x01) value="01"
 
-  +--+ 60 (len=0x1EC) value="DF700101DF6E0101DF6F8201DF4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E637920616E64207468617420746869732343524C462363686F6963652069732066696E616C2E20492343524C46236163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+  +--+ 60 [UNKNOWN] (len=0x1EC) value="DF700101DF6E0101DF6F8201DF4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E637920616E64207468617420746869732343524C462363686F6963652069732066696E616C2E20492343524C46236163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
-    +--+ DF70 (len=0x01) value="01"
+    +--+ DF70 [UNKNOWN] (len=0x01) value="01"
 
-    +--+ DF6E (AppUserName, len=0x01) value="01"
+    +--+ DF6E (AppUserName, len=0x01) value="01"  ⚠ Tag DF6E appears under parent 60, but expected parent is one of: ['FF60']
 
-    +--+ DF6F (len=0x1DF) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E637920616E64207468617420746869732343524C462363686F6963652069732066696E616C2E20492343524C46236163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+    +--+ DF6F [UNKNOWN] (len=0x1DF) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E637920616E64207468617420746869732343524C462363686F6963652069732066696E616C2E20492343524C46236163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
   +--+ FB (P, len=0x3E) value="DF010103DF07028600DF080101DF0606000000005001DF020100DF030100DF0406999999999999DF05060000000000009F660436E04000DF4C04A0700000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -5518,9 +3672,9 @@
 
     +--+ DF08 (ZKA_TM_EXTENDED_SELECTION_SUPPORT_FLAG, len=0x01) value="01"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -5530,17 +3684,17 @@
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36E04000"
 
-    +--+ DF4C (len=0x04) value="A0700000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0700000"
 
   +--+ FB (P, len=0x37) value="DF010103DF07021900DF020100DF030100DF0406000099999999DF0506000000000000DF06060000999999999F660430204000DF380120"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
       +--+ Byte 1 (19)
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -5548,7 +3702,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="30204000"
 
@@ -5570,59 +3724,23 @@
 
   +--+ DF18 (ZKA_TM_FALLBACK_PARAMETER, len=0x01) value="01"
 
-    +--+ Byte 1 (01)
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Fallback allowed, denied if application or chip blocked
-
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="C020C8"
-
-    +--+ Byte 1 (C0)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Manual key entry
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Magnetic stripe
-
-    +--+ Byte 2 (20)
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2121110000000000"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
 
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
-
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="63"
-
-    +--+ Byte 1 (63)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Don't evaluate the PAN
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
 
   +--+ DF25 (ZKA_TM_TICKET_PARAMETER, len=0x04) value="22000000"
 
-  +--+ 60 (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+  +--+ 60 [UNKNOWN] (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
-    +--+ DF70 (len=0x01) value="01"
+    +--+ DF70 [UNKNOWN] (len=0x01) value="01"
 
-    +--+ DF6E (AppUserName, len=0x01) value="01"
+    +--+ DF6E (AppUserName, len=0x01) value="01"  ⚠ Tag DF6E appears under parent 60, but expected parent is one of: ['FF60']
 
-    +--+ DF6F (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+    +--+ DF6F [UNKNOWN] (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
   +--+ F1 (ZKA_TM_IDENTIFYING_MAG_STRIPE_DATA, len=0x06) value="F904DF2C014F"
 
@@ -5648,12 +3766,6 @@
 
   +--+ DF2A (ZKA_TM_PRODUCT_DISPLAY_CONFIG, len=0x01) value="23"
 
-    +--+ Byte 1 (23)
-
-    |  +--+  Bit 2 (Mask 0x02, value 0x02) --> Show product name during PIN dialogue
-
-    |  +--+  Bit 1 (Mask 0x01, value 0x01) --> Print product name on the receipt
-
   +--+ DF0C (ZKA_TM_DEFAULT_DDOL, len=0x03) value="9F3704"
 
   +--+ 9F09 (EMVCO_APPLICATION_VERSION_NUMBER_TERMINAL, len=0x02) value="008C"
@@ -5661,14 +3773,6 @@
   +--+ 9F15 (EMVCO_MERCHANT_INDUSTRY_KEY, len=0x02) value="7011"
 
   +--+ DF28 (ZKA_TM_RESTRICTED_ADDITIONAL_TERMINAL_CAPABILITIES, len=0x02) value="6000"
-
-    +--+ Byte 1 (60)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Goods
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> Services
-
-    +--+ Byte 2 (00)
 
   +--+ 9F4E (EMVCO_MERCHANT_NAME_AND_LOCATION, len=0x28) value="42535061796F6E6520476D62482020202020202020202020204672616E6B6675727420616D204445"
 
@@ -5680,73 +3784,11 @@
 
   +--+ DF12 (ZKA_TM_TAC_ONLINE, len=0x05) value="DC4004F800"
 
-    +--+ Byte 1 (DC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (04)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> Online PIN entered
-
-    +--+ Byte 4 (F8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
-
   +--+ DF13 (ZKA_TM_TAC_DEFAULT, len=0x05) value="DC4000A800"
-
-    +--+ Byte 1 (DC)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Offl. DA not performed
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> SDA failed
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> DDA failed
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 3 (00)
-
-    +--+ Byte 4 (A8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> Floor limit exceeded
-
-    +--+ Byte 5 (00)
 
   +--+ DF27 (ZKA_TM_RESTRICTED_TERMINAL_CAPABILITIES, len=0x03) value="20D0C8"
 
-    +--+ Byte 1 (20)
-
-    |  +--+  Bit 6 (Mask 0x20, value 0x20) --> IC with contacts
-
-    +--+ Byte 2 (D0)
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> Enciphered PIN for online verification
-
-    +--+ Byte 3 (C8)
-
-    |  +--+  Bit 8 (Mask 0x80, value 0x80) --> SDA
-
-    |  +--+  Bit 7 (Mask 0x40, value 0x40) --> DDA
-
-    |  +--+  Bit 4 (Mask 0x08, value 0x08) --> CDA
-
   +--+ DF11 (ZKA_TM_TAC_DENIAL, len=0x05) value="0410000000"
-
-    +--+ Byte 1 (04)
-
-    |  +--+  Bit 3 (Mask 0x04, value 0x04) --> CDA failed
-
-    +--+ Byte 2 (10)
-
-    |  +--+  Bit 5 (Mask 0x10, value 0x10) --> Requested service not allowed
 
   +--+ DF22 (ZKA_TM_TRANSACTION_RESTRICTIONS, len=0x08) value="2123110001000000"
 
@@ -5758,17 +3800,17 @@
 
   +--+ DF7F (EMV Confirmation Mode, len=0x01) value="01"
 
-  +--+ 60 (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+  +--+ 60 [UNKNOWN] (len=0x1C9) value="DF700101DF6E0101DF6F8201BC4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
-    +--+ DF70 (len=0x01) value="01"
+    +--+ DF70 [UNKNOWN] (len=0x01) value="01"
 
-    +--+ DF6E (AppUserName, len=0x01) value="01"
+    +--+ DF6E (AppUserName, len=0x01) value="01"  ⚠ Tag DF6E appears under parent 60, but expected parent is one of: ['FF60']
 
-    +--+ DF6F (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
+    +--+ DF6F [UNKNOWN] (len=0x1BC) value="4920616363657074207468617420492068617665202343524C46236265656E206F66666572656420612063686F696365206F662343524C462363757272656E6369657320696E636C7564696E67207468652343524C46236D65726368616E742773206C6F63616C2343524C462363757272656E63792E2343524C462349206163636570742074686520636F6E76657273696F6E2343524C46237261746520616E642066696E616C20616D6F756E742343524C4623616E642074686174207468652073656C65637465642343524C46237472616E73616374696F6E2063757272656E63792069732343524C46232349434343232E2343524C462344434320536572766963652069732343524C46236F66666572656420627920746865206D65726368616E742343524C4623696E636C7564696E672061206D61726B2D75702343524C46236F6E207265666572656E63652072617465206F663A2343524C4623234443434D23252343524C4623234D555445232343524C46232343524C46234920616363657074207468652061626F76652343524C4623636F6E646974696F6E732343524C46232343524C46235945533A205B585D20204E4F3A205B205D"
 
   +--+ FB (P, len=0x3A) value="DF010103DF07028600DF0606000000005001DF020100DF030100DF0406000099999999DF05060000000000009F660436E04000DF4C04A0700000"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="8600"
 
@@ -5780,9 +3822,9 @@
 
       |  +--+  Bit 2 (Mask 0x02, value 0x02) --> reservation increase
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000000005001"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -5792,17 +3834,17 @@
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="36E04000"
 
-    +--+ DF4C (len=0x04) value="A0700000"
+    +--+ DF4C [UNKNOWN] (len=0x04) value="A0700000"
 
   +--+ FB (P, len=0x37) value="DF010103DF07021900DF020100DF030100DF0406000099999999DF0506000000000000DF06060000999999999F660430204000DF380120"
 
-    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"
+    +--+ DF01 (ZKA_TM_ISSUER_SCRIPT_RESULTS, len=0x01) value="03"  ⚠ Tag DF01 appears under parent FB, but expected parent is one of: ['DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF07 (ZKA_TM_SUPPORTED_TRANSACTION_TYPES, len=0x02) value="1900"
 
       +--+ Byte 1 (19)
 
-    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"
+    +--+ DF02 (ZKA_TM_ERROR_IDENTIFICATION, len=0x01) value="00"  ⚠ Tag DF02 appears under parent FB, but expected parent is one of: ['DF39', 'DF40', 'DF41', 'DF42', 'DF43', 'DF44', 'DF45']
 
     +--+ DF03 (Zero Amount Allowed, len=0x01) value="00"
 
@@ -5810,7 +3852,7 @@
 
     +--+ DF05 (Reader Contactless Floor Limit (Pre-Processing), len=0x06) value="000000000000"
 
-    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"
+    +--+ DF06 (ZKA_TM_MID, len=0x06) value="000099999999"  ⚠ Tag DF06 appears under parent FB, but expected parent is one of: ['E2', 'F8']
 
     +--+ 9F66 (Terminal Transaction Quailifiers (TTQ), len=0x04) value="30204000"
 

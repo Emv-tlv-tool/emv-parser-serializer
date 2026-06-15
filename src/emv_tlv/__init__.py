@@ -57,34 +57,7 @@ def _ensure_bytes(data):
 
 def _enhance_node(node):
     """Enhance a TLV node with metadata and decoded values."""
-    metadata = Dictionary.lookup_by_tag(node.tag)
-    enhanced = {
-        "tag": node.tag,
-        "length": node.length,
-        "value": node.value.hex().upper(),
-        "is_constructed": node.is_constructed,
-    }
-
-    if metadata:
-        enhanced["name"] = metadata["name"]
-        enhanced["description"] = metadata.get("description", "")
-        enhanced["format"] = metadata.get("format", "")
-        enhanced["source"] = metadata.get("source", "")
-    else:
-        enhanced["is_unknown"] = True
-
-    if not node.is_constructed and len(node.value) > 0:
-        try:
-            enhanced["decoded"] = ValueDecoder.decode_value(node.tag, node.value)
-        except Exception:
-            enhanced["decoded"] = node.value.hex().upper()
-        if metadata and metadata.get("format") == "bitmask":
-            enhanced["bitmask"] = BitmaskDecoder.decode_bitmask(node.tag, node.value)
-
-    if node.is_constructed and len(node.children) > 0:
-        enhanced["children"] = [_enhance_node(child) for child in node.children]
-
-    return enhanced
+    return node
 
 
 def _reconstruct_node(enhanced_node):

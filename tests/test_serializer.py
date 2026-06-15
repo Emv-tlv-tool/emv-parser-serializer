@@ -203,3 +203,19 @@ class TestRoundTrip:
         nodes = TLVParser.parse(data)
         serialized = TLVSerializer.serialize(nodes[0])
         assert serialized == original
+
+    def test_serialize_after_dict_modification(self):
+        """Test serializing after modifying node via dictionary keys."""
+        node = TLVNode("9A", bytes([0x21, 0x03, 0x15]), False)
+        node["tag"] = "9B"
+        node["value"] = "1122"
+        result = TLVSerializer.serialize(node)
+        assert result == "9B021122"
+
+    def test_serialize_constructed_dict_modification(self):
+        """Test serializing constructed node modified via dict keys."""
+        parent = TLVNode("6F", b"", True)
+        child = TLVNode("84", bytes([0xA0, 0x00]), False)
+        parent["children"] = [child]
+        result = TLVSerializer.serialize(parent)
+        assert result == "6F048402A000"

@@ -26,7 +26,11 @@ class TLVSerializer:
         Returns:
             Uppercase hex string
         """
-        tag_bytes = TLVSerializer._encode_tag(node.tag)
+        tag = node.get("tag") if isinstance(node, dict) else getattr(node, "tag", "")
+        if not tag:
+            raise ValueError("Node must have a tag")
+
+        tag_bytes = TLVSerializer._encode_tag(tag)
         value_bytes = TLVSerializer._serialize_value(node)
         length_bytes = TLVSerializer._encode_length(len(value_bytes))
         return (tag_bytes + length_bytes + value_bytes).hex().upper()
@@ -92,12 +96,34 @@ class TLVSerializer:
         Returns:
             Value bytes
         """
-        if node.is_primitive():
-            return node.value or b""
+        is_constructed = (
+            node.get("is_constructed", False)
+            if isinstance(node, dict)
+            else getattr(node, "is_constructed", False)
+        )
+
+        if not is_constructed:
+            val = None
+            if isinstance(node, dict):
+                val = node.get("value")
+            
+            if val is None:
+                val = getattr(node, "value", b"")
+
+            if isinstance(val, str):
+                return bytes.fromhex(val)
+            elif isinstance(val, bytes):
+                return val
+            return b""
         else:
+            children = (
+                node.get("children", [])
+                if isinstance(node, dict)
+                else getattr(node, "children", [])
+            )
             child_buffers = [
                 bytes.fromhex(TLVSerializer.serialize(child))
-                for child in node.children
+                for child in children
             ]
             return b"".join(child_buffers)
 

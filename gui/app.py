@@ -258,6 +258,15 @@ class App(ctk.CTk):
         self._build_tree_zone()
         self._build_statusbar()
 
+        # Immediate close on window X button — bypass slow widget-by-widget teardown
+        self.protocol("WM_DELETE_WINDOW", self._immediate_close)
+
+    def _immediate_close(self):
+        """Close instantly without cascading destroy of each TreeRow."""
+        self.withdraw()          # hide window immediately (user sees instant close)
+        self.quit()              # stop the mainloop
+        self.destroy()           # force destroy all widgets at once
+
     def _build_header(self):
         h = ctk.CTkFrame(self, height=50, fg_color=COLORS["surface"], corner_radius=0)
         h.pack(fill="x")

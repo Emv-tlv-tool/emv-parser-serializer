@@ -80,7 +80,11 @@ class TreeRow(ctk.CTkFrame):
         if isinstance(self.node, BitmaskPseudoNode):
             is_constructed = self.node.is_constructed
         else:
-            is_constructed = self.node.is_constructed or bool(getattr(self.node, "bitmask", None))
+            # Use _cached_bitmask if available (set by _cache_bitmasks), fall back to getattr
+            cached_bitmask = getattr(self.node, "_cached_bitmask", None)
+            if cached_bitmask is None:
+                cached_bitmask = getattr(self.node, "bitmask", None)
+            is_constructed = self.node.is_constructed or bool(cached_bitmask)
 
         if is_constructed:
             self.btn_triangle = ctk.CTkButton(
@@ -423,8 +427,10 @@ class App(ctk.CTk):
                     if child_row._parent_row is row:
                         sub_rows.append(child_row)
 
-            # Recurse bitmask details if present
-            bitmask = getattr(node, "bitmask", None)
+            # Recurse bitmask details if present (use cached bitmask from _cache_bitmasks)
+            bitmask = getattr(node, "_cached_bitmask", None)
+            if bitmask is None:
+                bitmask = getattr(node, "bitmask", None)
             if bitmask:
                 value_bytes = node.value
                 bytes_map = {}
@@ -534,13 +540,15 @@ class App(ctk.CTk):
     def _on_edit_done(self, row: TreeRow, new_val, level: str):
         if level == "ok":
             try:
+                # Optimization #1: Update in-place instead of re-parsing entire tree
+                # The node value was already updated in TreeRow._commit_edit()
+                # Just refresh the hex input field without rebuilding the tree
                 new_hex = serialize(self._root_nodes)
                 self.entry_tlv.delete(0, "end")
                 self.entry_tlv.insert(0, new_hex)
-                self._do_parse()
-                self._set_status(f"Updated [{row.node.tag}] to {new_val} and refreshed tree", "ok")
+                self._set_status(f"Updated [{row.node.tag}] to {new_val}", "ok")
             except Exception as e:
-                self._set_status(f"Refreshing error: {e}", "error")
+                self._set_status(f"Serialization error: {e}", "error")
         else:
             self._set_status(
                 "Invalid hex -- must be even-length digits 0-9 A-F only",
@@ -557,9 +565,6 @@ class App(ctk.CTk):
             return
 
         self._do_clear()
-        self._set_status("Validating...", "ready")
-        self.update_idletasks()  # let the UI repaint before blocking work
-
         raw_hex = "".join(raw.split()).upper()
 
         # 1. Format validation (fast — keep on main thread)
@@ -574,27 +579,44 @@ class App(ctk.CTk):
             self._set_status(f"[STRUCTURE ERROR] {struct.errors[0].message}", "error")
             return
 
+        # Optimization #4: Single update_idletasks before parse
         self._set_status("Parsing... (please wait)", "ready")
         self.update_idletasks()
 
-        # 3. Parse on a background thread so the UI stays responsive
-        self._parse_result_queue = queue.Queue()
         cleaned = fmt.cleaned_hex
-
-        def _bg_parse():
+        
+        # Optimization #2: Use sync parse for small payloads (< 2KB / 2048 chars)
+        FAST_THRESHOLD = 2048
+        
+        if len(cleaned) < FAST_THRESHOLD:
+            # Parse synchronously for small payloads - fast enough to not block UI
             try:
                 tree = parse(cleaned, "raw")
             except Exception:
                 try:
                     tree = parse(cleaned, "config")
                 except Exception as e2:
-                    self._parse_result_queue.put(("error", str(e2)))
+                    self._set_status(f"Parse error: {e2}", "error")
                     return
-            self._parse_result_queue.put(("ok", tree))
+            self._on_parse_complete(tree)
+        else:
+            # 3. Parse large payloads on a background thread so the UI stays responsive
+            self._parse_result_queue = queue.Queue()
 
-        threading.Thread(target=_bg_parse, daemon=True).start()
-        # Poll every 50 ms until background thread finishes
-        self.after(50, self._poll_parse_result)
+            def _bg_parse():
+                try:
+                    tree = parse(cleaned, "raw")
+                except Exception:
+                    try:
+                        tree = parse(cleaned, "config")
+                    except Exception as e2:
+                        self._parse_result_queue.put(("error", str(e2)))
+                        return
+                self._parse_result_queue.put(("ok", tree))
+
+            threading.Thread(target=_bg_parse, daemon=True).start()
+            # Poll every 50 ms until background thread finishes
+            self.after(50, self._poll_parse_result)
 
     def _poll_parse_result(self):
         """Check if the background parse is done; reschedule if not."""
@@ -609,6 +631,10 @@ class App(ctk.CTk):
             return
 
         tree = payload
+        self._on_parse_complete(tree)
+
+    def _on_parse_complete(self, tree):
+        """Common completion handler for both sync and async parse."""
         self._root_nodes = tree
 
         # Count nodes and parent issues
@@ -626,6 +652,9 @@ class App(ctk.CTk):
                     self._invalid_nodes.append(node)
                 scan(node.children)
         scan(self._root_nodes)
+
+        # Cache bitmask attributes for fast access during tree building
+        self._cache_bitmasks(self._root_nodes)
 
         self._set_status(
             f"Building tree ({self._total_nodes} tags)...", "ready"
@@ -655,6 +684,13 @@ class App(ctk.CTk):
         self._selected_row = None
         self._root_nodes   = []
         self._set_status("Ready", "ready")
+
+    # Optimization #3: Cache bitmask on all nodes to avoid repeated getattr() lookups
+    def _cache_bitmasks(self, nodes):
+        for node in nodes:
+            node._cached_bitmask = getattr(node, "bitmask", None)
+            if node.children:
+                self._cache_bitmasks(node.children)
 
     def _do_generate(self):
         if not self._root_nodes:

@@ -11,6 +11,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from emv_tlv import parse, serialize, validate_hex, Dictionary, TLVNode
 
+
+def hex_bytes_to_decimals(value_hex: str) -> str:
+    """Convert a hex string to space-separated decimal byte values."""
+    if not value_hex or len(value_hex) % 2 != 0:
+        return ""
+    bytes_list = [str(int(value_hex[i:i+2], 16)) for i in range(0, len(value_hex), 2)]
+    return " ".join(bytes_list)
+
 # helvetica and courier are available on every Tk platform including Linux
 UI_FONT   = "helvetica"
 MONO_FONT = "courier"
@@ -65,9 +73,47 @@ class TreeRow(ctk.CTkFrame):
         self.is_open      = False
         self._entry       = None
         self.selected     = False
+        self._tooltip     = None
+        self._tooltip_timer = None
 
         self._build()
         self.bind("<Button-1>", self._on_click)
+
+    def _build_tooltip_text(self) -> str | None:
+        """Build a detailed tooltip string for this node."""
+        if isinstance(self.node, BitmaskPseudoNode):
+            return None
+        n = self.node
+        lines = []
+        lines.append(f"Name: {n.name or 'Tag inconnu'}")
+        if n.description:
+            lines.append(f"Description: {n.description}")
+        lines.append(f"Length: {n.length} byte(s)")
+        value_hex = n["value"]
+        if value_hex:
+            dec = hex_bytes_to_decimals(value_hex)
+            if dec:
+                lines.append(f"Decimal: {dec}")
+        if not n.is_valid_parent:
+            lines.append(f"⚠ {n.parent_validation_error}")
+        return "\n".join(lines)
+
+    def _show_tooltip(self, event=None):
+        """Show detail info in the tree zone detail frame."""
+        if isinstance(self.node, BitmaskPseudoNode):
+            return
+        text = self._build_tooltip_text()
+        if not text:
+            return
+        # Forward to the app's detail display by climbing to the root window
+        self.on_select(self)
+        root = self.winfo_toplevel()
+        if hasattr(root, '_show_detail'):
+            root._show_detail(text, self.node)
+
+    def _hide_tooltip(self):
+        """No-op: the detail stays until another row is clicked."""
+        pass
 
     def _build(self):
         indent = self.depth * 24
@@ -80,7 +126,11 @@ class TreeRow(ctk.CTkFrame):
         if isinstance(self.node, BitmaskPseudoNode):
             is_constructed = self.node.is_constructed
         else:
-            is_constructed = self.node.is_constructed or bool(getattr(self.node, "bitmask", None))
+            # Use _cached_bitmask if available (set by _cache_bitmasks), fall back to getattr
+            cached_bitmask = getattr(self.node, "_cached_bitmask", None)
+            if cached_bitmask is None:
+                cached_bitmask = getattr(self.node, "bitmask", None)
+            is_constructed = self.node.is_constructed or bool(cached_bitmask)
 
         if is_constructed:
             self.btn_triangle = ctk.CTkButton(
@@ -106,6 +156,19 @@ class TreeRow(ctk.CTkFrame):
         self.lbl_text.bind("<Button-1>", self._on_click)
         if not isinstance(self.node, BitmaskPseudoNode) and not self.node.is_constructed:
             self.lbl_text.bind("<Double-1>", self._on_double_click)
+
+        # Info button — click to show detailed popup with decimal conversion
+        self.btn_info = ctk.CTkButton(
+            self._inner, text=" ℹ ",
+            width=28, height=22,
+            font=ctk.CTkFont(MONO_FONT, 11, "bold"),
+            fg_color="transparent",
+            hover_color=COLORS["hover"],
+            text_color=COLORS["text_muted"],
+            corner_radius=4,
+            command=self._show_tooltip,
+        )
+        self.btn_info.pack(side="right", padx=(4, 4))
 
         self.refresh_text()
 
@@ -158,6 +221,7 @@ class TreeRow(ctk.CTkFrame):
     def _on_hover_out(self, event=None):
         if not self.selected:
             self._inner.configure(fg_color="transparent")
+        self._hide_tooltip()
 
     def set_selected(self, sel: bool):
         self.selected = sel
@@ -254,6 +318,15 @@ class App(ctk.CTk):
         self._build_tree_zone()
         self._build_statusbar()
 
+        # Immediate close on window X button — bypass slow widget-by-widget teardown
+        self.protocol("WM_DELETE_WINDOW", self._immediate_close)
+
+    def _immediate_close(self):
+        """Close instantly without cascading destroy of each TreeRow."""
+        self.withdraw()          # hide window immediately (user sees instant close)
+        self.quit()              # stop the mainloop
+        self.destroy()           # force destroy all widgets at once
+
     def _build_header(self):
         h = ctk.CTkFrame(self, height=50, fg_color=COLORS["surface"], corner_radius=0)
         h.pack(fill="x")
@@ -324,15 +397,19 @@ class App(ctk.CTk):
             corner_radius=8, border_color=COLORS["border"], border_width=1,
         )
         outer.pack(fill="both", expand=True, padx=15, pady=(0, 5))
-        outer.rowconfigure(0, weight=1)
-        outer.columnconfigure(0, weight=1)
 
-        self._canvas = ctk.CTkCanvas(outer, bg=COLORS["surface"], highlightthickness=0)
-        self._canvas.grid(row=0, column=0, sticky="nsew", padx=4, pady=4)
+        # Top area: tree canvas + scrollbars
+        tree_container = ctk.CTkFrame(outer, fg_color="transparent")
+        tree_container.pack(fill="both", expand=True, padx=4, pady=(4, 0))
+        tree_container.rowconfigure(0, weight=1)
+        tree_container.columnconfigure(0, weight=1)
 
-        sv = ttk.Scrollbar(outer, orient="vertical",   command=self._canvas.yview)
+        self._canvas = ctk.CTkCanvas(tree_container, bg=COLORS["surface"], highlightthickness=0)
+        self._canvas.grid(row=0, column=0, sticky="nsew")
+
+        sv = ttk.Scrollbar(tree_container, orient="vertical",   command=self._canvas.yview)
         sv.grid(row=0, column=1, sticky="ns")
-        sh = ttk.Scrollbar(outer, orient="horizontal", command=self._canvas.xview)
+        sh = ttk.Scrollbar(tree_container, orient="horizontal", command=self._canvas.xview)
         sh.grid(row=1, column=0, sticky="ew")
 
         self._canvas.configure(yscrollcommand=sv.set, xscrollcommand=sh.set)
@@ -350,7 +427,6 @@ class App(ctk.CTk):
             "<MouseWheel>",
             lambda e: self._canvas.yview_scroll(-1 if e.delta > 0 else 1, "units"),
         )
-        # Linux scroll events
         self._canvas.bind_all(
             "<Button-4>", lambda e: self._canvas.yview_scroll(-1, "units")
         )
@@ -358,11 +434,42 @@ class App(ctk.CTk):
             "<Button-5>", lambda e: self._canvas.yview_scroll(1, "units")
         )
 
+        # Detail info panel — shows when ℹ button is clicked on a row
+        self._detail_frame = ctk.CTkFrame(
+            outer, fg_color=COLORS["bg"],
+            corner_radius=6, border_color=COLORS["border"], border_width=1,
+            height=100,
+        )
+        self._detail_frame.pack(fill="x", padx=4, pady=4)
+        self._detail_frame.pack_propagate(False)
+        self._detail_label = ctk.CTkLabel(
+            self._detail_frame, text="",
+            font=ctk.CTkFont(MONO_FONT, 18),
+            text_color=COLORS["text_muted"],
+            anchor="w", justify="left",
+            padx=10, pady=6,
+        )
+        self._detail_label.pack(fill="both", expand=True)
+        # Hide detail panel initially
+        self._detail_frame.pack_forget()
+
     def _on_frame_configure(self, event=None):
         self._canvas.configure(scrollregion=self._canvas.bbox("all"))
 
     def _on_canvas_configure(self, event=None):
         self._canvas.itemconfig(self._win_id, width=event.width)
+
+    def _show_detail(self, text: str, node=None):
+        """Show detail info in the panel inside the tree zone."""
+        self._detail_label.configure(
+            text=text,
+            text_color=COLORS["text"],
+        )
+        self._detail_frame.pack(fill="x", padx=4, pady=4)
+
+    def _clear_detail(self):
+        """Hide the detail panel."""
+        self._detail_frame.pack_forget()
 
     def _build_statusbar(self):
         bar = ctk.CTkFrame(self, height=28, fg_color=COLORS["surface"], corner_radius=0)
@@ -423,8 +530,10 @@ class App(ctk.CTk):
                     if child_row._parent_row is row:
                         sub_rows.append(child_row)
 
-            # Recurse bitmask details if present
-            bitmask = getattr(node, "bitmask", None)
+            # Recurse bitmask details if present (use cached bitmask from _cache_bitmasks)
+            bitmask = getattr(node, "_cached_bitmask", None)
+            if bitmask is None:
+                bitmask = getattr(node, "bitmask", None)
             if bitmask:
                 value_bytes = node.value
                 bytes_map = {}
@@ -534,13 +643,15 @@ class App(ctk.CTk):
     def _on_edit_done(self, row: TreeRow, new_val, level: str):
         if level == "ok":
             try:
+                # Optimization #1: Update in-place instead of re-parsing entire tree
+                # The node value was already updated in TreeRow._commit_edit()
+                # Just refresh the hex input field without rebuilding the tree
                 new_hex = serialize(self._root_nodes)
                 self.entry_tlv.delete(0, "end")
                 self.entry_tlv.insert(0, new_hex)
-                self._do_parse()
-                self._set_status(f"Updated [{row.node.tag}] to {new_val} and refreshed tree", "ok")
+                self._set_status(f"Updated [{row.node.tag}] to {new_val}", "ok")
             except Exception as e:
-                self._set_status(f"Refreshing error: {e}", "error")
+                self._set_status(f"Serialization error: {e}", "error")
         else:
             self._set_status(
                 "Invalid hex -- must be even-length digits 0-9 A-F only",
@@ -557,9 +668,6 @@ class App(ctk.CTk):
             return
 
         self._do_clear()
-        self._set_status("Validating...", "ready")
-        self.update_idletasks()  # let the UI repaint before blocking work
-
         raw_hex = "".join(raw.split()).upper()
 
         # 1. Format validation (fast — keep on main thread)
@@ -574,27 +682,44 @@ class App(ctk.CTk):
             self._set_status(f"[STRUCTURE ERROR] {struct.errors[0].message}", "error")
             return
 
+        # Optimization #4: Single update_idletasks before parse
         self._set_status("Parsing... (please wait)", "ready")
         self.update_idletasks()
 
-        # 3. Parse on a background thread so the UI stays responsive
-        self._parse_result_queue = queue.Queue()
         cleaned = fmt.cleaned_hex
-
-        def _bg_parse():
+        
+        # Optimization #2: Use sync parse for small payloads (< 2KB / 2048 chars)
+        FAST_THRESHOLD = 2048
+        
+        if len(cleaned) < FAST_THRESHOLD:
+            # Parse synchronously for small payloads - fast enough to not block UI
             try:
                 tree = parse(cleaned, "raw")
             except Exception:
                 try:
                     tree = parse(cleaned, "config")
                 except Exception as e2:
-                    self._parse_result_queue.put(("error", str(e2)))
+                    self._set_status(f"Parse error: {e2}", "error")
                     return
-            self._parse_result_queue.put(("ok", tree))
+            self._on_parse_complete(tree)
+        else:
+            # 3. Parse large payloads on a background thread so the UI stays responsive
+            self._parse_result_queue = queue.Queue()
 
-        threading.Thread(target=_bg_parse, daemon=True).start()
-        # Poll every 50 ms until background thread finishes
-        self.after(50, self._poll_parse_result)
+            def _bg_parse():
+                try:
+                    tree = parse(cleaned, "raw")
+                except Exception:
+                    try:
+                        tree = parse(cleaned, "config")
+                    except Exception as e2:
+                        self._parse_result_queue.put(("error", str(e2)))
+                        return
+                self._parse_result_queue.put(("ok", tree))
+
+            threading.Thread(target=_bg_parse, daemon=True).start()
+            # Poll every 50 ms until background thread finishes
+            self.after(50, self._poll_parse_result)
 
     def _poll_parse_result(self):
         """Check if the background parse is done; reschedule if not."""
@@ -609,6 +734,10 @@ class App(ctk.CTk):
             return
 
         tree = payload
+        self._on_parse_complete(tree)
+
+    def _on_parse_complete(self, tree):
+        """Common completion handler for both sync and async parse."""
         self._root_nodes = tree
 
         # Count nodes and parent issues
@@ -626,6 +755,9 @@ class App(ctk.CTk):
                     self._invalid_nodes.append(node)
                 scan(node.children)
         scan(self._root_nodes)
+
+        # Cache bitmask attributes for fast access during tree building
+        self._cache_bitmasks(self._root_nodes)
 
         self._set_status(
             f"Building tree ({self._total_nodes} tags)...", "ready"
@@ -655,6 +787,13 @@ class App(ctk.CTk):
         self._selected_row = None
         self._root_nodes   = []
         self._set_status("Ready", "ready")
+
+    # Optimization #3: Cache bitmask on all nodes to avoid repeated getattr() lookups
+    def _cache_bitmasks(self, nodes):
+        for node in nodes:
+            node._cached_bitmask = getattr(node, "bitmask", None)
+            if node.children:
+                self._cache_bitmasks(node.children)
 
     def _do_generate(self):
         if not self._root_nodes:

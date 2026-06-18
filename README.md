@@ -57,7 +57,48 @@ cd emv-parser-serializer
 uv sync
 ```
 
-No runtime dependencies — the library is self-contained.
+> **Note:** The library itself has zero external dependencies. The optional GUI (`gui/app.py`) requires `customtkinter` — see [GUI Application](#gui-application).
+
+
+### GUI Application
+
+A desktop GUI built with **CustomTkinter** provides an interactive way to parse, browse, edit, and re-serialize TLV data.
+
+#### Launching
+
+```bash
+# Make sure customtkinter is installed (included via `uv sync`)
+uv sync
+
+# Run the GUI
+python gui/app.py
+```
+
+#### Features
+
+- **Parse** — Paste raw TLV hex, validate format & structure, then parse (background-threaded for large payloads)
+- **Tree display** — Expandable/collapsible hierarchy with tags, names, lengths, and hex values
+- **Inline editing** — Double-click any leaf value, edit hex, auto-refresh display and re-serialize
+- **Bitmask drill-down** — Bitmask-format tags expand into byte-level and bit-level detail rows
+- **Parent validation warnings** — Invalid parent-child relationships are flagged with ⚠ indicators
+- **Generate Hex** — Serialize the edited tree back to BER-TLV hex
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  EMV TLV Parser                                             │
+│  ┌─────────────────────────────────────────────────────────┐│
+│  │ TLV Hex Payload:                                        ││
+│  │ [E0099F1A0228009F350122                          ]     ││
+│  └─────────────────────────────────────────────────────────┘│
+│  [Parse]  [Clear]  [Generate Hex]                           │
+│  ┌─────────────────────────────────────────────────────────┐│
+│  │ > [E0] (Zka Tm Terminal Config, len=0x09)               ││
+│  │     [9F1A] (Terminal Country Code, len=0x02, value="0280")││
+│  │     [9F35] (Terminal Type, len=0x01, value="22")        ││
+│  └─────────────────────────────────────────────────────────┘│
+│  Parsed 3 tag(s) successfully                               │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -337,6 +378,11 @@ emv-tool-python/
 │   ├── test_api.py                  # Public API integration tests
 │   ├── test_unknown_tags.py         # Unknown tag detection tests
 │   └── test_parent_validation.py    # Parent-child validation tests
+├── gui/
+│   ├── app.py                       # CustomTkinter desktop GUI
+│   ├── test1.py                     # Legacy prototype (for reference)
+│   ├── app_architecture.md          # GUI architecture documentation
+│   └── optimization_plan.md         # Performance optimization plan
 ├── parser/
 │   └── parse_tree.py                # Visual tree generator script
 ├── pyproject.toml

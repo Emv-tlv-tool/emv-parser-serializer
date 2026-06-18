@@ -153,8 +153,14 @@ def serialize(nodes):
     parts = []
     for node in nodes:
         if hasattr(node, "_raw_node"):
+            # ZVT adapter nodes have a _raw_node reference
             parts.append(TLVSerializer.serialize(node._raw_node))
+        elif isinstance(node, TLVNode):
+            # Optimization #5: TLVNode instances can be passed directly
+            # to the serializer without reconstruction
+            parts.append(TLVSerializer.serialize(node))
         else:
+            # Plain dict nodes need reconstruction into TLVNode
             tlv_node = _reconstruct_node(node)
             parts.append(TLVSerializer.serialize(tlv_node))
 

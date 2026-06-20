@@ -24,22 +24,21 @@ MONO_FONT = "courier"
 FONT_SIZE_TREE = 13
 
 COLORS = {
-    "bg":         "#0047AB",
-    "surface":    "#FFFFFF",
-    "border":     "#D6D8E0",
-    "accent":     "#0047AB",
+    "bg":           "#0047AB",
+    "surface":      "#FFFFFF",
+    "border":       "#D6D8E0",
+    "accent":       "#0047AB",
     "accent_hover": "#003A8C",
-    "accent_light": "#E8EEF9",
-    "text":       "#1A1F2E",
-    "text_muted": "#5B6278",
-    "danger":     "#C0392B",
-    "success":    "#1A7A4A",
-    "hover":      "#EDF0F7",
-    "select":     "#D0DCF5",
-    "header_bg":  "#0047AB",
-    "header_sub": "#93C5FD",
-    "input_bg":   "#003A8C",
-    "warn":       "#D97706",
+    "text":         "#1A1F2E",
+    "text_muted":   "#5B6278",
+    "danger":       "#C0392B",
+    "success":      "#1A7A4A",
+    "hover":        "#EDF0F7",
+    "select":       "#D0DCF5",
+    "header_bg":    "#0047AB",
+    "header_sub":   "#93C5FD",
+    "input_bg":     "#003A8C",
+    "warn":         "#D97706",
 }
 
 
@@ -75,10 +74,12 @@ class App(ctk.CTk):
         self.geometry("1200x800")
         self.configure(fg_color=COLORS["bg"])
 
-        self._root_nodes = []
-        self._node_map   = {}
-        self._edit_entry = None
-        self._edit_frame = None
+        self._root_nodes     = []
+        self._node_map       = {}
+        self._edit_entry     = None
+        self._edit_frame     = None
+        self._search_results = []
+        self._search_idx     = 0
 
         self._build_header()
         self._build_input_area()
@@ -99,11 +100,10 @@ class App(ctk.CTk):
         h.pack_propagate(False)
 
         left = ctk.CTkFrame(h, fg_color="transparent")
-        left.pack(side="left", padx=24, pady=20)
+        left.pack(side="left", padx=24, pady=10)
 
         ctk.CTkLabel(
-            left,
-            text="EMV TLV Parser",
+            left, text="EMV TLV Parser",
             font=ctk.CTkFont(UI_FONT, 22, "bold"),
             text_color="#FFFFFF",
         ).pack(anchor="w")
@@ -129,13 +129,11 @@ class App(ctk.CTk):
 
         self.entry_tlv = tk.Text(
             input_container,
-            height=1,
-            wrap="none",
+            height=1, wrap="none",
             font=(MONO_FONT, 13),
             fg=COLORS["text_muted"],
             bg="#F5F5F0",
-            bd=0,
-            relief="flat",
+            bd=0, relief="flat",
             highlightthickness=2,
             highlightbackground="#1A56DB",
             highlightcolor="#93C5FD",
@@ -148,10 +146,10 @@ class App(ctk.CTk):
 
         self._placeholder = "Entrez votre message TLV ici..."
         self.entry_tlv.insert("1.0", self._placeholder)
-        self.entry_tlv.bind("<FocusIn>", self._on_entry_focus_in)
+        self.entry_tlv.bind("<FocusIn>",  self._on_entry_focus_in)
         self.entry_tlv.bind("<FocusOut>", self._on_entry_focus_out)
-        self.entry_tlv.bind("<Key>", self._on_entry_key)
-        self.entry_tlv.bind("<Return>", lambda e: (self._do_parse(), "break"))
+        self.entry_tlv.bind("<Key>",      self._on_entry_key)
+        self.entry_tlv.bind("<Return>",   lambda e: (self._do_parse(), "break"))
 
     def _on_entry_focus_in(self, event):
         if self.entry_tlv.get("1.0", "end-1c") == self._placeholder:
@@ -174,15 +172,16 @@ class App(ctk.CTk):
         bar.pack(fill="x", padx=15, pady=(0, 6))
         bar.pack_propagate(False)
 
+        # ── Gauche : boutons principaux ───────────────────────────────
         ctk.CTkButton(
             bar, text="Parse", command=self._do_parse,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            fg_color="#800020", hover_color=COLORS["text_muted"],
+            fg_color="#800020", hover_color="#5C0015",
             text_color="#fff", width=110, height=34, corner_radius=7,
         ).pack(side="left", padx=(0, 6))
 
         ctk.CTkButton(
-            bar, text="Clear", command=self._do_clear,
+            bar, text="Effacer", command=self._do_clear,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
             fg_color=COLORS["surface"], border_color=COLORS["border"],
             border_width=1, hover_color=COLORS["hover"],
@@ -197,6 +196,101 @@ class App(ctk.CTk):
             text_color="#fff", width=130, height=34, corner_radius=7,
         ).pack(side="left", padx=6)
 
+        # ── Droite : barre de recherche simple, pas de bouton ─────────
+        self.entry_search = ctk.CTkEntry(
+            bar,
+            placeholder_text="🔍  Rechercher un tag...",
+            font=ctk.CTkFont(MONO_FONT, 15),
+            fg_color=COLORS["surface"],
+            border_color=COLORS["border"],
+            text_color=COLORS["text"],
+            height=34, corner_radius=7,
+            width=300,
+        )
+        self.entry_search.pack(side="right", padx=(0, 15))
+        self.entry_search.bind("<Return>", lambda e: self._do_search())
+        self.entry_search.bind("<KeyRelease>", self._on_search_key)
+
+    # ------------------------------------------------------------------ #
+    #  Recherche
+    # ------------------------------------------------------------------ #
+    def _on_search_key(self, event):
+        """Efface le surlignage si le champ est vidé."""
+        if not self.entry_search.get().strip():
+            self._clear_search_highlight()
+            self._search_results = []
+            self._search_idx = 0
+
+    def _do_search(self):
+        tag_query = self.entry_search.get().strip().upper()
+        if not tag_query:
+            return
+        if not self._node_map:
+            self._set_status("Parsez d'abord un message TLV", "error")
+            return
+
+        self._clear_search_highlight()
+        self._search_results = []
+
+        def walk(parent=""):
+            for item in self._tree.get_children(parent):
+                node = self._node_map.get(item)
+                if node and not isinstance(node, BitmaskPseudoNode):
+                    if node.tag.upper() == tag_query:
+                        self._search_results.append(item)
+                walk(item)
+        walk()
+
+        if not self._search_results:
+            self._set_status(f"Tag [{tag_query}] introuvable", "error")
+            return
+
+        self._tree.tag_configure(
+            "search_highlight",
+            background="#FDE68A",
+            foreground="#92400E",
+        )
+        for item in self._search_results:
+            cur = list(self._tree.item(item, "tags"))
+            if "search_highlight" not in cur:
+                cur.append("search_highlight")
+            self._tree.item(item, tags=tuple(cur))
+
+        self._search_idx = 0
+        self._tree.selection_set(self._search_results[0])
+        self._tree.see(self._search_results[0])
+        n = len(self._search_results)
+        self._set_status(f"{n} occurrence(s) de [{tag_query}]  —  Entrée pour naviguer", "ok")
+
+        # Naviguer entre occurrences avec Entrée
+        self.entry_search.bind("<Return>", lambda e: self._next_result())
+
+    def _next_result(self):
+        if not self._search_results:
+            return
+        self._search_idx = (self._search_idx + 1) % len(self._search_results)
+        item = self._search_results[self._search_idx]
+        self._tree.selection_set(item)
+        self._tree.see(item)
+        self._set_status(
+            f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok"
+        )
+
+    def _clear_search_highlight(self):
+        def walk(parent=""):
+            for item in self._tree.get_children(parent):
+                cur = list(self._tree.item(item, "tags"))
+                if "search_highlight" in cur:
+                    cur.remove("search_highlight")
+                    self._tree.item(item, tags=tuple(cur))
+                walk(item)
+        walk()
+        # Réinitialiser la liaison Enter pour relancer une recherche
+        self.entry_search.bind("<Return>", lambda e: self._do_search())
+
+    # ------------------------------------------------------------------ #
+    #  Tree zone
+    # ------------------------------------------------------------------ #
     def _build_tree_zone(self):
         outer = tk.Frame(self, bg=COLORS["accent"], bd=1, relief="flat")
         outer.pack(fill="both", expand=True, padx=15, pady=(0, 6))
@@ -215,8 +309,7 @@ class App(ctk.CTk):
             rowheight=40,
             font=(MONO_FONT, FONT_SIZE_TREE),
             fieldbackground=COLORS["surface"],
-            borderwidth=0,
-            relief="flat",
+            borderwidth=0, relief="flat",
             indent=28,
         )
         style.map("EMV.Treeview",
@@ -226,10 +319,8 @@ class App(ctk.CTk):
         style.configure("EMV.Treeview", arrowsize=13)
 
         self._tree = ttk.Treeview(
-            container,
-            style="EMV.Treeview",
-            show="tree",
-            selectmode="browse",
+            container, style="EMV.Treeview",
+            show="tree", selectmode="browse",
         )
         self._tree.column("#0", width=2000, minwidth=800, stretch=False)
 
@@ -300,15 +391,14 @@ class App(ctk.CTk):
         entry_width  = max(w - offset_x - 6, 160)
 
         self._edit_frame = tk.Frame(self._tree, bg=COLORS["accent"], bd=1)
-        self._edit_frame.place(x=x + offset_x, y=y + 1, width=entry_width, height=h - 2)
+        self._edit_frame.place(x=x + offset_x, y=y + 1,
+                               width=entry_width, height=h - 2)
 
         self._edit_entry = tk.Entry(
             self._edit_frame,
             font=(MONO_FONT, FONT_SIZE_TREE),
-            fg=COLORS["text"],
-            bg=COLORS["surface"],
-            bd=0,
-            relief="flat",
+            fg=COLORS["text"], bg=COLORS["surface"],
+            bd=0, relief="flat",
             insertbackground=COLORS["text"],
             selectbackground=COLORS["accent"],
             selectforeground="#FFFFFF",
@@ -335,8 +425,10 @@ class App(ctk.CTk):
             if hasattr(node, "_enhance"):
                 node._enhance()
             self._tree.item(item, text=self._format_node_text(node))
-            # Ne plus mettre à jour le champ TLV ici
-            self._set_status(f"Updated [{node.tag}] → {new_val}  (cliquez sur Generate pour mettre à jour le message TLV)", "ok")
+            self._set_status(
+                f"[{node.tag}] modifié → {new_val}  |  Clique sur Generate pour mettre à jour le message TLV",
+                "warn",
+            )
         except Exception as e:
             self._set_status(f"Erreur : {e}", "error")
 
@@ -349,9 +441,9 @@ class App(ctk.CTk):
     def _format_node_text(self, node) -> str:
         if isinstance(node, BitmaskPseudoNode):
             return f"  {node.text}"
-        tag    = node.tag
-        name   = node.description or node.name or "Tag inconnu"
-        length = node.length
+        tag       = node.tag
+        name      = node.description or node.name or "Tag inconnu"
+        length    = node.length
         if node.is_constructed:
             return f"[{tag}]  Name: {name}  —  Taille: {length}"
         else:
@@ -361,7 +453,6 @@ class App(ctk.CTk):
     def _populate_tree(self, nodes, parent=""):
         for node in nodes:
             text = self._format_node_text(node)
-
             if isinstance(node, BitmaskPseudoNode):
                 tags = ("pseudo",)
             elif not getattr(node, "is_valid_parent", True):
@@ -369,26 +460,20 @@ class App(ctk.CTk):
             else:
                 tags = ()
 
-            item = self._tree.insert(
-                parent, "end",
-                text=text,
-                tags=tags,
-                open=True,
-            )
+            item = self._tree.insert(parent, "end", text=text, tags=tags, open=True)
             self._node_map[item] = node
 
-            children = list(getattr(node, "children", []) or [])
+            children   = list(getattr(node, "children", []) or [])
             bitmask_ch = list(getattr(node, "_bitmask_children", []) or [])
-            all_children = children + bitmask_ch
-            if all_children:
-                self._populate_tree(all_children, item)
+            if children + bitmask_ch:
+                self._populate_tree(children + bitmask_ch, item)
 
     def _attach_bitmask_nodes(self, nodes):
         for node in nodes:
             bitmask = getattr(node, "_cached_bitmask", None) or getattr(node, "bitmask", None)
             if bitmask:
                 value_bytes = node.value
-                bytes_map = {}
+                bytes_map   = {}
                 for bit in bitmask:
                     byte_idx = bit.get("byte", 0)
                     if byte_idx not in bytes_map:
@@ -400,16 +485,18 @@ class App(ctk.CTk):
                 bitmask_children = []
                 for byte_idx in sorted(bytes_map):
                     byte_data = bytes_map[byte_idx]
-                    byte_text = f"Byte {byte_idx + 1} ({byte_data['value']:02X})"
-                    byte_node = BitmaskPseudoNode(byte_text, is_constructed=True)
+                    byte_node = BitmaskPseudoNode(
+                        f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
+                        is_constructed=True,
+                    )
                     for bit in byte_data["bits"]:
-                        mask = bit.get("mask", 0)
-                        label = bit.get("name", "")
-                        if mask:
-                            bit_val = byte_data["value"] & mask
-                            bit_text = f"Bit {bit.get('bit', 0)} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}"
-                        else:
-                            bit_text = label
+                        mask    = bit.get("mask", 0)
+                        label   = bit.get("name", "")
+                        bit_val = byte_data["value"] & mask if mask else 0
+                        bit_text = (
+                            f"Bit {bit.get('bit', 0)} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}"
+                            if mask else label
+                        )
                         byte_node.children.append(BitmaskPseudoNode(bit_text))
                     bitmask_children.append(byte_node)
                 node._bitmask_children = bitmask_children
@@ -435,12 +522,10 @@ class App(ctk.CTk):
             self._set_status(f"[STRUCTURE ERROR] {struct.errors[0].message}", "error")
             return
 
-        self._set_status("Parsing... (please wait)", "ready")
-
+        self._set_status("Parsing en cours...", "ready")
         cleaned = fmt.cleaned_hex
-        FAST_THRESHOLD = 4096
 
-        if len(cleaned) < FAST_THRESHOLD:
+        if len(cleaned) < 4096:
             try:
                 tree = parse(cleaned, "raw")
             except Exception:
@@ -453,18 +538,18 @@ class App(ctk.CTk):
         else:
             self._parse_result_queue = queue.Queue()
 
-            def _bg_parse():
+            def _bg():
                 try:
-                    tree = parse(cleaned, "raw")
+                    t = parse(cleaned, "raw")
                 except Exception:
                     try:
-                        tree = parse(cleaned, "config")
+                        t = parse(cleaned, "config")
                     except Exception as e2:
                         self._parse_result_queue.put(("error", str(e2)))
                         return
-                self._parse_result_queue.put(("ok", tree))
+                self._parse_result_queue.put(("ok", t))
 
-            threading.Thread(target=_bg_parse, daemon=True).start()
+            threading.Thread(target=_bg, daemon=True).start()
             self.after(50, self._poll_parse_result)
 
     def _poll_parse_result(self):
@@ -521,6 +606,9 @@ class App(ctk.CTk):
 
     def _do_clear(self):
         self._cancel_edit()
+        self._clear_search_highlight()
+        self._search_results = []
+        self._search_idx = 0
         self._tree.delete(*self._tree.get_children())
         self._node_map.clear()
         self._root_nodes = []
@@ -528,14 +616,14 @@ class App(ctk.CTk):
 
     def _do_generate(self):
         if not self._root_nodes:
-            self._set_status("Nothing to generate -- parse a payload first", "error")
+            self._set_status("Nothing to generate — parsez d'abord un message TLV", "error")
             return
         try:
             new_hex = serialize(self._root_nodes)
             self.entry_tlv.delete("1.0", "end")
             self.entry_tlv.insert("1.0", new_hex)
             self.entry_tlv.configure(fg=COLORS["text"])
-            self._set_status(f"Generated {len(new_hex) // 2} bytes -- input field updated", "ok")
+            self._set_status(f"Generated {len(new_hex) // 2} bytes — message TLV mis à jour", "ok")
         except Exception as e:
             self._set_status(f"Serialization error: {e}", "error")
 

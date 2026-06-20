@@ -1519,7 +1519,7 @@
   },
   {
     "id": 407,
-    "poseidon_tag": "",
+    "poseidon_tag": "DF04",
     "tai_tag": "DF04",
     "name": "Action Control",
     "group": "Payment System Keys",
@@ -1626,7 +1626,8 @@
       "DF42",
       "DF43",
       "DF44",
-      "DF45"
+      "DF45",
+      "F1"
     ],
     "child_tags": [],
     "value_format": "binary"

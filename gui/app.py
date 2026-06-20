@@ -362,7 +362,64 @@ class App(ctk.CTk):
         )
         self.entry_tlv.pack(fill="x", padx=14, pady=(0, 12))
         self.entry_tlv.bind("<Return>", lambda _e: self._do_parse())
+    def _toggle_search_zone(self):
+        """Affiche ou cache la zone de recherche sous la barre de boutons."""
+        if self._search_visible:
+            self._search_frame.pack_forget()
+            self._search_visible = False
+        else:
+            self._search_frame.pack(fill="x", padx=15, pady=(0, 5))
+            self._search_visible = True
+            self.entry_search.focus_set()
+    def _do_search(self, tag_query):
+        tag_query = tag_query.strip().upper()
 
+        if not tag_query:
+            self._set_status("Entrez un tag à rechercher", "warn")
+            return
+        if not self._rows:
+            self._set_status("Parsez d'abord un message TLV", "error")
+            return
+
+        self._clear_search_highlight()
+
+        found_count = 0
+        first_match = None
+        for row in self._rows:
+            if isinstance(row.node, BitmaskPseudoNode):
+                continue
+            if row.node.tag.upper() == tag_query:
+                row.highlight_tag(True)   # ← colore juste le tag
+            if first_match is None:
+                first_match = row
+                found_count += 1
+
+        if found_count == 0:
+            self._set_status(f"Tag '{tag_query}' introuvable", "error")
+            return
+
+        self._set_status(f" {found_count} occurrence(s) de [{tag_query}] trouvée(s)", "ok")
+        if first_match:
+            self._scroll_to_row(first_match)
+
+    def _clear_search_highlight(self):
+        for row in self._rows:
+            if isinstance(row.node, BitmaskPseudoNode):
+                continue
+            row.highlight_tag(False)
+    def highlight_tag(self, on: bool):
+        """Colore ou décolore uniquement le label du tag."""
+        if on:
+            self.lbl_tag.configure(
+            fg_color="#FDE68A",      # fond jaune autour du tag seulement
+            text_color="#92400E",    # texte brun
+            corner_radius=4,
+        )
+         else:
+            self.lbl_tag.configure(
+            fg_color="transparent",
+            text_color=COLORS["text"],
+        )       
     def _build_buttons(self):
         bar = ctk.CTkFrame(self, height=42, fg_color="transparent")
         bar.pack(fill="x", padx=15, pady=(0, 5))
@@ -373,7 +430,7 @@ class App(ctk.CTk):
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
             fg_color=COLORS["accent"], hover_color="#1D4ED8",
             text_color="#fff", width=110, height=32, corner_radius=6,
-        ).pack(side="left", padx=(0, 6))
+            ).pack(side="left", padx=(0, 6))
 
         ctk.CTkButton(
             bar, text="Clear", command=self._do_clear,
@@ -382,7 +439,7 @@ class App(ctk.CTk):
             border_width=1, hover_color=COLORS["hover"],
             text_color=COLORS["text_muted"],
             width=100, height=32, corner_radius=6,
-        ).pack(side="left", padx=6)
+            ).pack(side="left", padx=6)
 
         ctk.CTkButton(
             bar, text="Generate Hex", command=self._do_generate,
@@ -390,6 +447,28 @@ class App(ctk.CTk):
             fg_color=COLORS["success"], hover_color="#047857",
             text_color="#fff", width=130, height=32, corner_radius=6,
         ).pack(side="left", padx=6)
+        ctk.CTkButton(
+        bar, text="🔍 Rechercher", command=self._toggle_search_zone,
+        font=ctk.CTkFont(UI_FONT, 12, "bold"),
+        fg_color="#7C3AED", hover_color="#6D28D9",
+        text_color="#fff", width=130, height=32, corner_radius=6,
+        ).pack(side="left", padx=6)
+
+    # ── NOUVEAU : zone de recherche, cachée par défaut ──
+        self._search_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self._search_visible = False
+    
+
+        self.entry_search = ctk.CTkEntry(
+        self._search_frame,
+        placeholder_text="Tag à rechercher (ex: DF22)",
+        font=ctk.CTkFont(MONO_FONT, 12),
+        fg_color=COLORS["surface"], border_color=COLORS["border"],
+        text_color=COLORS["text"], height=32, corner_radius=6,
+    )
+        self.entry_search.pack(side="left", padx=(0, 6), fill="x", expand=True)
+        self.entry_search.bind("<Return>", lambda e: self._do_search(self.entry_search.get()))
+        self.entry_search.bind("<Escape>", lambda e: self._toggle_search_zone())
 
     def _build_tree_zone(self):
         outer = ctk.CTkFrame(

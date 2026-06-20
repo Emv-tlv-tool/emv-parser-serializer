@@ -6,6 +6,7 @@ import re
 import customtkinter as ctk
 from tkinter import ttk
 import tkinter as tk
+import tkinter.font as tkfont
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
@@ -20,18 +21,25 @@ def hex_bytes_to_decimals(value_hex: str) -> str:
 
 UI_FONT   = "helvetica"
 MONO_FONT = "courier"
+FONT_SIZE_TREE = 13
 
 COLORS = {
-    "bg":         "#F8F9FA",
+    "bg":         "#0047AB",
     "surface":    "#FFFFFF",
-    "border":     "#E5E7EB",
-    "accent":     "#2563EB",
-    "text":       "#1F2937",
-    "text_muted": "#6B7280",
-    "danger":     "#DC2626",
-    "success":    "#059669",
-    "hover":      "#F3F4F6",
-    "select":     "#DBEAFE",
+    "border":     "#D6D8E0",
+    "accent":     "#0047AB",
+    "accent_hover": "#003A8C",
+    "accent_light": "#E8EEF9",
+    "text":       "#1A1F2E",
+    "text_muted": "#5B6278",
+    "danger":     "#C0392B",
+    "success":    "#1A7A4A",
+    "hover":      "#EDF0F7",
+    "select":     "#D0DCF5",
+    "header_bg":  "#0047AB",
+    "header_sub": "#93C5FD",
+    "input_bg":   "#003A8C",
+    "warn":       "#D97706",
 }
 
 
@@ -86,72 +94,112 @@ class App(ctk.CTk):
         self.destroy()
 
     def _build_header(self):
-        h = ctk.CTkFrame(self, height=50, fg_color=COLORS["surface"], corner_radius=0)
+        h = ctk.CTkFrame(self, height=60, fg_color=COLORS["header_bg"], corner_radius=0)
         h.pack(fill="x")
         h.pack_propagate(False)
-        ctk.CTkFrame(h, height=1, fg_color=COLORS["border"]).pack(fill="x", side="bottom")
+
+        left = ctk.CTkFrame(h, fg_color="transparent")
+        left.pack(side="left", padx=24, pady=20)
+
         ctk.CTkLabel(
-            h, text="  EMV TLV Parser",
-            font=ctk.CTkFont(UI_FONT, 15, "bold"),
-            text_color=COLORS["accent"],
-        ).pack(side="left", padx=20)
+            left,
+            text="EMV TLV Parser",
+            font=ctk.CTkFont(UI_FONT, 22, "bold"),
+            text_color="#FFFFFF",
+        ).pack(anchor="w")
 
     def _build_input_area(self):
         card = ctk.CTkFrame(
             self, fg_color=COLORS["surface"],
-            corner_radius=8, border_color=COLORS["border"], border_width=1,
+            corner_radius=8, border_color="#1A56DB", border_width=1,
         )
-        card.pack(fill="x", padx=15, pady=(14, 5))
+        card.pack(fill="x", padx=15, pady=(16, 8))
 
         ctk.CTkLabel(
-            card, text="TLV Hex Payload:", anchor="w",
-            font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            text_color=COLORS["text_muted"],
-        ).pack(fill="x", padx=14, pady=(10, 2))
+            card, text="Message TLV (hex) :", anchor="w",
+            font=ctk.CTkFont(UI_FONT, 17, "bold"),
+            text_color=COLORS["bg"],
+        ).pack(fill="x", padx=20, pady=(14, 6))
 
-        self.entry_tlv = ctk.CTkEntry(
-            card,
-            placeholder_text="Paste raw TLV hex here (spaces allowed)...",
-            font=ctk.CTkFont(MONO_FONT, 12),
-            fg_color=COLORS["surface"],
-            border_color=COLORS["border"],
-            text_color=COLORS["text"],
-            height=34, corner_radius=6,
+        input_container = tk.Frame(card, bg=COLORS["input_bg"])
+        input_container.pack(fill="x", padx=20, pady=(0, 16))
+
+        h_scroll = ttk.Scrollbar(input_container, orient="horizontal")
+        h_scroll.pack(side="bottom", fill="x")
+
+        self.entry_tlv = tk.Text(
+            input_container,
+            height=1,
+            wrap="none",
+            font=(MONO_FONT, 13),
+            fg=COLORS["text_muted"],
+            bg="#F5F5F0",
+            bd=0,
+            relief="flat",
+            highlightthickness=2,
+            highlightbackground="#1A56DB",
+            highlightcolor="#93C5FD",
+            insertbackground=COLORS["text"],
+            xscrollcommand=h_scroll.set,
+            padx=10, pady=10,
         )
-        self.entry_tlv.pack(fill="x", padx=14, pady=(0, 12))
-        self.entry_tlv.bind("<Return>", lambda _e: self._do_parse())
+        self.entry_tlv.pack(side="top", fill="x")
+        h_scroll.config(command=self.entry_tlv.xview)
+
+        self._placeholder = "Entrez votre message TLV ici..."
+        self.entry_tlv.insert("1.0", self._placeholder)
+        self.entry_tlv.bind("<FocusIn>", self._on_entry_focus_in)
+        self.entry_tlv.bind("<FocusOut>", self._on_entry_focus_out)
+        self.entry_tlv.bind("<Key>", self._on_entry_key)
+        self.entry_tlv.bind("<Return>", lambda e: (self._do_parse(), "break"))
+
+    def _on_entry_focus_in(self, event):
+        if self.entry_tlv.get("1.0", "end-1c") == self._placeholder:
+            self.entry_tlv.delete("1.0", "end")
+            self.entry_tlv.configure(fg=COLORS["text"])
+
+    def _on_entry_focus_out(self, event):
+        if not self.entry_tlv.get("1.0", "end-1c").strip():
+            self.entry_tlv.delete("1.0", "end")
+            self.entry_tlv.insert("1.0", self._placeholder)
+            self.entry_tlv.configure(fg=COLORS["text_muted"])
+
+    def _on_entry_key(self, event):
+        if self.entry_tlv.get("1.0", "end-1c") == self._placeholder:
+            self.entry_tlv.delete("1.0", "end")
+            self.entry_tlv.configure(fg=COLORS["text"])
 
     def _build_buttons(self):
-        bar = ctk.CTkFrame(self, height=42, fg_color="transparent")
-        bar.pack(fill="x", padx=15, pady=(0, 5))
+        bar = ctk.CTkFrame(self, height=44, fg_color="transparent")
+        bar.pack(fill="x", padx=15, pady=(0, 6))
         bar.pack_propagate(False)
 
         ctk.CTkButton(
             bar, text="Parse", command=self._do_parse,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            fg_color=COLORS["accent"], hover_color="#1D4ED8",
-            text_color="#fff", width=110, height=32, corner_radius=6,
+            fg_color="#800020", hover_color=COLORS["text_muted"],
+            text_color="#fff", width=110, height=34, corner_radius=7,
         ).pack(side="left", padx=(0, 6))
 
         ctk.CTkButton(
             bar, text="Clear", command=self._do_clear,
-            font=ctk.CTkFont(UI_FONT, 12),
+            font=ctk.CTkFont(UI_FONT, 12, "bold"),
             fg_color=COLORS["surface"], border_color=COLORS["border"],
             border_width=1, hover_color=COLORS["hover"],
             text_color=COLORS["text_muted"],
-            width=100, height=32, corner_radius=6,
+            width=100, height=34, corner_radius=7,
         ).pack(side="left", padx=6)
 
         ctk.CTkButton(
             bar, text="Generate", command=self._do_generate,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            fg_color=COLORS["success"], hover_color="#047857",
-            text_color="#fff", width=130, height=32, corner_radius=6,
+            fg_color=COLORS["success"], hover_color="#145C38",
+            text_color="#fff", width=130, height=34, corner_radius=7,
         ).pack(side="left", padx=6)
 
     def _build_tree_zone(self):
-        outer = tk.Frame(self, bg=COLORS["border"], bd=1, relief="flat")
-        outer.pack(fill="both", expand=True, padx=15, pady=(0, 5))
+        outer = tk.Frame(self, bg=COLORS["accent"], bd=1, relief="flat")
+        outer.pack(fill="both", expand=True, padx=15, pady=(0, 6))
 
         container = tk.Frame(outer, bg=COLORS["surface"])
         container.pack(fill="both", expand=True, padx=1, pady=1)
@@ -161,12 +209,11 @@ class App(ctk.CTk):
         style = ttk.Style()
         style.theme_use("clam")
 
-        # --- Augmentation de rowheight pour plus d'espace ---
         style.configure("EMV.Treeview",
             background=COLORS["surface"],
             foreground=COLORS["text"],
-            rowheight=40,               # ← ESPACEMENT AUGMENTÉ (26 → 40)
-            font=(MONO_FONT, 11),
+            rowheight=40,
+            font=(MONO_FONT, FONT_SIZE_TREE),
             fieldbackground=COLORS["surface"],
             borderwidth=0,
             relief="flat",
@@ -176,7 +223,6 @@ class App(ctk.CTk):
             background=[("selected", COLORS["select"])],
             foreground=[("selected", COLORS["text"])],
         )
-
         style.configure("EMV.Treeview", arrowsize=13)
 
         self._tree = ttk.Treeview(
@@ -195,16 +241,14 @@ class App(ctk.CTk):
         vsb.grid(row=0, column=1, sticky="ns")
         hsb.grid(row=1, column=0, sticky="ew")
 
-        self._tree.tag_configure("warn",   foreground=COLORS["danger"])
+        self._tree.tag_configure("warn",   foreground=COLORS["danger"],
+                                 font=(MONO_FONT, FONT_SIZE_TREE))
         self._tree.tag_configure("pseudo", foreground=COLORS["text_muted"],
-                                 font=(MONO_FONT, 10))
+                                 font=(MONO_FONT, FONT_SIZE_TREE))
 
         self._tree.bind("<<TreeviewSelect>>", self._on_tree_select)
         self._tree.bind("<Double-1>",         self._on_double_click)
 
-    # ------------------------------------------------------------------ #
-    #  Events
-    # ------------------------------------------------------------------ #
     def _on_tree_select(self, event=None):
         sel = self._tree.selection()
         if not sel:
@@ -246,12 +290,21 @@ class App(ctk.CTk):
             return
         x, y, w, h = bbox
 
+        full_text    = self._tree.item(item, "text")
+        marker       = "Value: "
+        idx          = full_text.find(marker)
+        prefix_text  = full_text[: idx + len(marker)] if idx != -1 else full_text
+        tree_font    = tkfont.Font(font=(MONO_FONT, FONT_SIZE_TREE))
+        prefix_width = tree_font.measure(prefix_text)
+        offset_x     = prefix_width + 4
+        entry_width  = max(w - offset_x - 6, 160)
+
         self._edit_frame = tk.Frame(self._tree, bg=COLORS["accent"], bd=1)
-        self._edit_frame.place(x=x + 2, y=y + 1, width=max(w - 4, 520), height=h - 2)
+        self._edit_frame.place(x=x + offset_x, y=y + 1, width=entry_width, height=h - 2)
 
         self._edit_entry = tk.Entry(
             self._edit_frame,
-            font=(MONO_FONT, 11),
+            font=(MONO_FONT, FONT_SIZE_TREE),
             fg=COLORS["text"],
             bg=COLORS["surface"],
             bd=0,
@@ -282,10 +335,8 @@ class App(ctk.CTk):
             if hasattr(node, "_enhance"):
                 node._enhance()
             self._tree.item(item, text=self._format_node_text(node))
-            new_hex = serialize(self._root_nodes)
-            self.entry_tlv.delete(0, "end")
-            self.entry_tlv.insert(0, new_hex)
-            self._set_status(f"Updated [{node.tag}] → {new_val}", "ok")
+            # Ne plus mettre à jour le champ TLV ici
+            self._set_status(f"Updated [{node.tag}] → {new_val}  (cliquez sur Generate pour mettre à jour le message TLV)", "ok")
         except Exception as e:
             self._set_status(f"Erreur : {e}", "error")
 
@@ -295,26 +346,18 @@ class App(ctk.CTk):
             self._edit_frame = None
         self._edit_entry = None
 
-    # ------------------------------------------------------------------ #
-    #  Formatting — Ajout de "Name: " et réduction des espaces entre champs
-    # ------------------------------------------------------------------ #
     def _format_node_text(self, node) -> str:
         if isinstance(node, BitmaskPseudoNode):
-            # Pour les pseudo-nœuds, on affiche juste le texte (pas de "Name:")
             return f"  {node.text}"
         tag    = node.tag
         name   = node.description or node.name or "Tag inconnu"
         length = node.length
         if node.is_constructed:
-            # Ajout de "Name: " avant le nom
-            return f"[{tag}]  Name: {name}  —  taille: {length}"
+            return f"[{tag}]  Name: {name}  —  Taille: {length}"
         else:
             value_hex = node.value.hex().upper() if node.value else ""
-            return f"[{tag}]  Name: {name}  —  taille: {length}  —  value: {value_hex}"
+            return f"[{tag}]  Name: {name}  —  Taille: {length}  —  Value: {value_hex}"
 
-    # ------------------------------------------------------------------ #
-    #  Tree population
-    # ------------------------------------------------------------------ #
     def _populate_tree(self, nodes, parent=""):
         for node in nodes:
             text = self._format_node_text(node)
@@ -330,7 +373,7 @@ class App(ctk.CTk):
                 parent, "end",
                 text=text,
                 tags=tags,
-                open=False,
+                open=True,
             )
             self._node_map[item] = node
 
@@ -373,13 +416,10 @@ class App(ctk.CTk):
             if node.children:
                 self._attach_bitmask_nodes(node.children)
 
-    # ------------------------------------------------------------------ #
-    #  Parse pipeline
-    # ------------------------------------------------------------------ #
     def _do_parse(self):
-        raw = self.entry_tlv.get().strip()
-        if not raw:
-            self._set_status("Please enter a TLV hex payload", "error")
+        raw = self.entry_tlv.get("1.0", "end").strip()
+        if not raw or raw == self._placeholder:
+            self._set_status("Veuillez entrer un message TLV hexadécimal", "error")
             return
 
         self._do_clear()
@@ -460,25 +500,24 @@ class App(ctk.CTk):
                 self._cache_bitmasks(node.children)
 
     def _build_statusbar(self):
-        bar = ctk.CTkFrame(self, height=28, fg_color=COLORS["surface"], corner_radius=0)
+        bar = ctk.CTkFrame(self, height=30, fg_color=COLORS["accent"], corner_radius=0)
         bar.pack(fill="x", side="bottom")
         bar.pack_propagate(False)
-        ctk.CTkFrame(bar, height=1, fg_color=COLORS["border"]).pack(fill="x", side="top")
         self._lbl_status = ctk.CTkLabel(
             bar, text="Ready",
             font=ctk.CTkFont(UI_FONT, 11),
-            text_color=COLORS["text_muted"], anchor="w",
+            text_color="#93C5FD", anchor="w",
         )
         self._lbl_status.pack(side="left", padx=16, pady=4)
 
     def _set_status(self, msg: str, level: str = "ready"):
         palette = {
-            "ready": COLORS["text_muted"],
-            "ok":    COLORS["success"],
-            "error": COLORS["danger"],
-            "warn":  "#D97706",
+            "ready": "#93C5FD",
+            "ok":    "#6EE7B7",
+            "error": "#FCA5A5",
+            "warn":  "#FCD34D",
         }
-        self._lbl_status.configure(text=msg, text_color=palette.get(level, COLORS["text_muted"]))
+        self._lbl_status.configure(text=msg, text_color=palette.get(level, "#93C5FD"))
 
     def _do_clear(self):
         self._cancel_edit()
@@ -493,8 +532,9 @@ class App(ctk.CTk):
             return
         try:
             new_hex = serialize(self._root_nodes)
-            self.entry_tlv.delete(0, "end")
-            self.entry_tlv.insert(0, new_hex)
+            self.entry_tlv.delete("1.0", "end")
+            self.entry_tlv.insert("1.0", new_hex)
+            self.entry_tlv.configure(fg=COLORS["text"])
             self._set_status(f"Generated {len(new_hex) // 2} bytes -- input field updated", "ok")
         except Exception as e:
             self._set_status(f"Serialization error: {e}", "error")

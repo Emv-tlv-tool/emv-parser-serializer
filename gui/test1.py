@@ -26,6 +26,8 @@ COLORS = {
     "border":   "#CCCCCC",
     "accent":   "#1E88E5",
     "text":     "#000000",
+    "search_bg":   "#FDE68A",   
+    "search_text": "#92400E"
 }
 
 def tag_color(tag: str) -> str:
@@ -76,6 +78,7 @@ class TreeRow(ctk.CTkFrame):
         self._entry       = None
         self.selected     = False
 
+        self._search_highlighted = False
         self._build()
         self.bind("<Button-1>", self._on_click)
 
@@ -109,6 +112,8 @@ class TreeRow(ctk.CTkFrame):
             text=f"[{self.node.tag}]",
             font=ctk.CTkFont("Courier", 15, "bold"),
             text_color=tag_color(self.node.tag),
+            fg_color="transparent",
+            corner_radius=4,
             width=70,
             anchor="w"
         )
@@ -163,7 +168,19 @@ class TreeRow(ctk.CTkFrame):
     def set_selected(self, sel: bool):
         self.selected = sel
         self._inner.configure(fg_color="#BBDEFB" if sel else "transparent")
-
+    def highlight_tag(self, on: bool):
+        if on:
+            self.lbl_tag.configure(
+                fg_color=COLORS["search_bg"],
+                text_color=COLORS["search_text"],
+            )
+            self._search_highlighted = True
+        else:
+            self.lbl_tag.configure(
+                fg_color="transparent",
+                text_color=tag_color(self.node.tag),
+            )
+            self._search_highlighted = False
     def _start_edit(self):
         if self._entry:
             return
@@ -261,10 +278,11 @@ class App(ctk.CTk):
         self._rows         = []
         self._selected_row = None
         self._root_nodes   = []
-
+        self._search_visible = False
         self._build_header()
         self._build_input_area()
         self._build_buttons()
+        self._build_search_zone()
         self._build_tree_zone()
         self._build_statusbar()
 
@@ -315,7 +333,40 @@ class App(ctk.CTk):
                       fg_color="#238636", hover_color="#2EA043",
                       width=150, height=34,
                       command=self._do_generate).pack(side="left", padx=6, pady=8)
+        ctk.CTkButton(bar, text="  🔍 Rechercher",
+                      font=ctk.CTkFont("Helvetica", 12, "bold"),
+                      fg_color="#7C3AED", hover_color="#6D28D9",
+                      width=150, height=34,
+                      command=self._toggle_search_zone).pack(side="left", padx=6, pady=8)
+    def _build_search_zone(self):
+ 
+        self._search_frame = ctk.CTkFrame(self, fg_color="red", corner_radius=0)
 
+ 
+        ctk.CTkLabel(
+            self._search_frame, text="Tag à rechercher :",
+            font=ctk.CTkFont("Helvetica", 11),
+        ).pack(side="left", padx=(14, 6), pady=8)
+ 
+        self.entry_search = ctk.CTkEntry(
+            self._search_frame,
+            placeholder_text="ex: DF22 — Entrée pour chercher",
+            font=("Courier", 12),
+            width=220,
+        )
+        self.entry_search.pack(side="left", padx=(0, 6), pady=8)
+        self.entry_search.bind("<Return>", lambda e: self._do_search(self.entry_search.get()))
+        self.entry_search.bind("<Escape>", lambda e: self._toggle_search_zone())
+    def _toggle_search_zone(self):
+        
+        if self._search_visible:
+            self._search_frame.pack_forget()
+            self._search_visible = False
+        else:
+        
+            self._search_frame.pack(fill="x", pady=(0, 0))
+            self._search_visible = True
+            self.entry_search.focus_set()
     def _build_tree_zone(self):
         outer = ctk.CTkFrame(self, fg_color=COLORS["bg"], corner_radius=0)
         outer.pack(fill="both", expand=True, pady=(1, 0))
@@ -511,6 +562,57 @@ class App(ctk.CTk):
         for n in nodes:
             yield n
             yield from self._flatten(n.children)
+
+    def _do_search(self, tag_query):
+        tag_query = tag_query.strip().upper()
+ 
+        if not tag_query:
+            self._set_status("⚠  Entrez un tag à rechercher", "warn")
+            return
+ 
+        if not self._rows:
+            self._set_status("⚠  Parsez d'abord un message TLV", "error")
+            return
+ 
+        # Réinitialise toute mise en évidence précédente
+        self._clear_search_highlight()
+ 
+        found_count = 0
+        first_match = None
+ 
+        for row in self._rows:
+            if row.node.tag.upper() == tag_query:
+                row.highlight_tag(True)
+                if first_match is None:
+                    first_match = row
+                found_count += 1
+ 
+        if found_count == 0:
+            self._set_status(f"  Tag '{tag_query}' introuvable", "error")
+            return
+ 
+        self._set_status(
+            f" {found_count} occurrence(s) de [{tag_query}] trouvée(s)", "ok"
+        )
+ 
+        if first_match:
+            self._scroll_to_row(first_match)
+ 
+    def _clear_search_highlight(self):
+        """Retire la mise en évidence de toutes les lignes avant une nouvelle recherche."""
+        for row in self._rows:
+            if row._search_highlighted:
+                row.highlight_tag(False)
+ 
+    def _scroll_to_row(self, row):
+        """Scrolle automatiquement la vue vers la première ligne trouvée."""
+        self.update_idletasks()
+        y             = row.winfo_y()
+        canvas_height = self._canvas.winfo_height()
+        total_height  = self._tree_frame.winfo_height()
+        if total_height > 0:
+            fraction = max(0.0, min(1.0, (y - canvas_height // 2) / total_height))
+            self._canvas.yview_moveto(fraction)
 
 
 if __name__ == "__main__":

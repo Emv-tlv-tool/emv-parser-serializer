@@ -74,12 +74,14 @@ class App(ctk.CTk):
         self.geometry("1200x800")
         self.configure(fg_color=COLORS["bg"])
 
-        self._root_nodes     = []
-        self._node_map       = {}
-        self._edit_entry     = None
-        self._edit_frame     = None
-        self._search_results = []
-        self._search_idx     = 0
+        self._root_nodes         = []
+        self._node_map           = {}
+        self._edit_entry         = None
+        self._edit_frame         = None
+        self._search_results     = []
+        self._search_idx         = 0
+        self._highlight_overlays = []
+        self._tree_indent        = 28
 
         self._build_header()
         self._build_input_area()
@@ -141,133 +143,60 @@ class App(ctk.CTk):
             xscrollcommand=h_scroll.set,
             padx=10, pady=10,
         )
-        self.entry_tlv.pack(fill="x", padx=14, pady=(0, 12))
-        self.entry_tlv.bind("<Return>", lambda _e: self._do_parse())
-    def _toggle_search_zone(self):
-        """Affiche ou cache la zone de recherche sous la barre de boutons."""
-        if self._search_visible:
-            self._search_frame.pack_forget()
-            self._search_visible = False
-        else:
-            self._search_frame.pack(fill="x", padx=15, pady=(0, 5))
-            self._search_visible = True
-            self.entry_search.focus_set()
-    def _do_search(self, tag_query):
-        tag_query = tag_query.strip().upper()
+        self.entry_tlv.pack(side="top", fill="x")
+        h_scroll.config(command=self.entry_tlv.xview)
 
-<<<<<<< HEAD
         self._placeholder = "Entrez votre message TLV ici..."
         self.entry_tlv.insert("1.0", self._placeholder)
         self.entry_tlv.bind("<FocusIn>",  self._on_entry_focus_in)
         self.entry_tlv.bind("<FocusOut>", self._on_entry_focus_out)
         self.entry_tlv.bind("<Key>",      self._on_entry_key)
         self.entry_tlv.bind("<Return>",   lambda e: (self._do_parse(), "break"))
-=======
-        if not tag_query:
-            self._set_status("Entrez un tag à rechercher", "warn")
-            return
-        if not self._rows:
-            self._set_status("Parsez d'abord un message TLV", "error")
-            return
->>>>>>> 2c1c57e3a162a75fa4031853aee7a8f790e8af9d
 
-        self._clear_search_highlight()
+    def _on_entry_focus_in(self, event):
+        if self.entry_tlv.get("1.0", "end-1c") == self._placeholder:
+            self.entry_tlv.delete("1.0", "end")
+            self.entry_tlv.configure(fg=COLORS["text"])
 
-        found_count = 0
-        first_match = None
-        for row in self._rows:
-            if isinstance(row.node, BitmaskPseudoNode):
-                continue
-            if row.node.tag.upper() == tag_query:
-                row.highlight_tag(True)   # ← colore juste le tag
-            if first_match is None:
-                first_match = row
-                found_count += 1
+    def _on_entry_focus_out(self, event):
+        if not self.entry_tlv.get("1.0", "end-1c").strip():
+            self.entry_tlv.delete("1.0", "end")
+            self.entry_tlv.insert("1.0", self._placeholder)
+            self.entry_tlv.configure(fg=COLORS["text_muted"])
 
-        if found_count == 0:
-            self._set_status(f"Tag '{tag_query}' introuvable", "error")
-            return
+    def _on_entry_key(self, event):
+        if self.entry_tlv.get("1.0", "end-1c") == self._placeholder:
+            self.entry_tlv.delete("1.0", "end")
+            self.entry_tlv.configure(fg=COLORS["text"])
 
-        self._set_status(f" {found_count} occurrence(s) de [{tag_query}] trouvée(s)", "ok")
-        if first_match:
-            self._scroll_to_row(first_match)
-
-    def _clear_search_highlight(self):
-        for row in self._rows:
-            if isinstance(row.node, BitmaskPseudoNode):
-                continue
-            row.highlight_tag(False)
-    def highlight_tag(self, on: bool):
-        """Colore ou décolore uniquement le label du tag."""
-        if on:
-            self.lbl_tag.configure(
-            fg_color="#FDE68A",      # fond jaune autour du tag seulement
-            text_color="#92400E",    # texte brun
-            corner_radius=4,
-        )
-         else:
-            self.lbl_tag.configure(
-            fg_color="transparent",
-            text_color=COLORS["text"],
-        )       
     def _build_buttons(self):
         bar = ctk.CTkFrame(self, height=44, fg_color="transparent")
         bar.pack(fill="x", padx=15, pady=(0, 6))
         bar.pack_propagate(False)
 
-        # ── Gauche : boutons principaux ───────────────────────────────
         ctk.CTkButton(
             bar, text="Parse", command=self._do_parse,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-<<<<<<< HEAD
             fg_color="#800020", hover_color="#5C0015",
             text_color="#fff", width=110, height=34, corner_radius=7,
         ).pack(side="left", padx=(0, 6))
-=======
-            fg_color=COLORS["accent"], hover_color="#1D4ED8",
-            text_color="#fff", width=110, height=32, corner_radius=6,
-            ).pack(side="left", padx=(0, 6))
->>>>>>> 2c1c57e3a162a75fa4031853aee7a8f790e8af9d
 
         ctk.CTkButton(
-            bar, text="Effacer", command=self._do_clear,
+            bar, text="Clear", command=self._do_clear,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
             fg_color=COLORS["surface"], border_color=COLORS["border"],
             border_width=1, hover_color=COLORS["hover"],
             text_color=COLORS["text_muted"],
-            width=100, height=32, corner_radius=6,
-            ).pack(side="left", padx=6)
+            width=100, height=34, corner_radius=7,
+        ).pack(side="left", padx=6)
 
         ctk.CTkButton(
             bar, text="Generate", command=self._do_generate,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            fg_color=COLORS["success"], hover_color="#047857",
-            text_color="#fff", width=130, height=32, corner_radius=6,
-        ).pack(side="left", padx=6)
-        ctk.CTkButton(
-        bar, text="🔍 Rechercher", command=self._toggle_search_zone,
-        font=ctk.CTkFont(UI_FONT, 12, "bold"),
-        fg_color="#7C3AED", hover_color="#6D28D9",
-        text_color="#fff", width=130, height=32, corner_radius=6,
+            fg_color=COLORS["success"], hover_color="#145C38",
+            text_color="#fff", width=130, height=34, corner_radius=7,
         ).pack(side="left", padx=6)
 
-    # ── NOUVEAU : zone de recherche, cachée par défaut ──
-        self._search_frame = ctk.CTkFrame(self, fg_color="transparent")
-        self._search_visible = False
-    
-
-        self.entry_search = ctk.CTkEntry(
-        self._search_frame,
-        placeholder_text="Tag à rechercher (ex: DF22)",
-        font=ctk.CTkFont(MONO_FONT, 12),
-        fg_color=COLORS["surface"], border_color=COLORS["border"],
-        text_color=COLORS["text"], height=32, corner_radius=6,
-    )
-        self.entry_search.pack(side="left", padx=(0, 6), fill="x", expand=True)
-        self.entry_search.bind("<Return>", lambda e: self._do_search(self.entry_search.get()))
-        self.entry_search.bind("<Escape>", lambda e: self._toggle_search_zone())
-
-        # ── Droite : barre de recherche simple, pas de bouton ─────────
         self.entry_search = ctk.CTkEntry(
             bar,
             placeholder_text="🔍  Rechercher un tag...",
@@ -282,9 +211,6 @@ class App(ctk.CTk):
         self.entry_search.bind("<Return>", lambda e: self._do_search())
         self.entry_search.bind("<KeyRelease>", self._on_search_key)
 
-    # ------------------------------------------------------------------ #
-    #  Recherche
-    # ------------------------------------------------------------------ #
     def _on_search_key(self, event):
         """Efface le surlignage si le champ est vidé."""
         if not self.entry_search.get().strip():
@@ -316,25 +242,59 @@ class App(ctk.CTk):
             self._set_status(f"Tag [{tag_query}] introuvable", "error")
             return
 
-        self._tree.tag_configure(
-            "search_highlight",
-            background="#FDE68A",
-            foreground="#92400E",
-        )
-        for item in self._search_results:
-            cur = list(self._tree.item(item, "tags"))
-            if "search_highlight" not in cur:
-                cur.append("search_highlight")
-            self._tree.item(item, tags=tuple(cur))
-
         self._search_idx = 0
         self._tree.selection_set(self._search_results[0])
         self._tree.see(self._search_results[0])
+
+        self.after(60, self._draw_search_highlights)
+
         n = len(self._search_results)
         self._set_status(f"{n} occurrence(s) de [{tag_query}]  —  Entrée pour naviguer", "ok")
-
-        # Naviguer entre occurrences avec Entrée
         self.entry_search.bind("<Return>", lambda e: self._next_result())
+
+    def _draw_search_highlights(self):
+        """
+        Dessine un petit Label jaune SEULEMENT sur le texte '[TAG]',
+        en le décalant de self._tree_indent pour éviter le triangle.
+        """
+        if not self._search_results:
+            return
+
+        self._clear_highlight_overlays()
+        tree_font = tkfont.Font(font=(MONO_FONT, FONT_SIZE_TREE))
+
+        for item in self._search_results:
+            bbox = self._tree.bbox(item, column="#0")
+            if not bbox:
+                continue
+            x, y, w, h = bbox
+
+            full_text = self._tree.item(item, "text")
+            m = re.match(r"^(\s*\[[0-9A-Fa-f]+\])", full_text)
+            if not m:
+                continue
+            tag_text  = m.group(1)
+            tag_width = tree_font.measure(tag_text)
+
+            overlay = tk.Label(
+                self._tree,
+                text=tag_text,
+                font=(MONO_FONT, FONT_SIZE_TREE),
+                bg="#FDE68A",
+                fg="#800020",
+                anchor="w",
+                justify="left",
+                bd=0,
+                padx=0, pady=0,
+            )
+            x_offset = x + self._tree_indent
+            overlay.place(x=x_offset, y=y, width=tag_width, height=h)
+            self._highlight_overlays.append(overlay)
+
+    def _clear_highlight_overlays(self):
+        for ov in self._highlight_overlays:
+            ov.destroy()
+        self._highlight_overlays = []
 
     def _next_result(self):
         if not self._search_results:
@@ -343,25 +303,15 @@ class App(ctk.CTk):
         item = self._search_results[self._search_idx]
         self._tree.selection_set(item)
         self._tree.see(item)
+        self.after(60, self._draw_search_highlights)
         self._set_status(
             f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok"
         )
 
     def _clear_search_highlight(self):
-        def walk(parent=""):
-            for item in self._tree.get_children(parent):
-                cur = list(self._tree.item(item, "tags"))
-                if "search_highlight" in cur:
-                    cur.remove("search_highlight")
-                    self._tree.item(item, tags=tuple(cur))
-                walk(item)
-        walk()
-        # Réinitialiser la liaison Enter pour relancer une recherche
+        self._clear_highlight_overlays()
         self.entry_search.bind("<Return>", lambda e: self._do_search())
 
-    # ------------------------------------------------------------------ #
-    #  Tree zone
-    # ------------------------------------------------------------------ #
     def _build_tree_zone(self):
         outer = tk.Frame(self, bg=COLORS["accent"], bd=1, relief="flat")
         outer.pack(fill="both", expand=True, padx=15, pady=(0, 6))
@@ -395,9 +345,12 @@ class App(ctk.CTk):
         )
         self._tree.column("#0", width=2000, minwidth=800, stretch=False)
 
-        vsb = ttk.Scrollbar(container, orient="vertical",   command=self._tree.yview)
-        hsb = ttk.Scrollbar(container, orient="horizontal", command=self._tree.xview)
-        self._tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+        vsb = ttk.Scrollbar(container, orient="vertical",   command=self._on_vscroll)
+        hsb = ttk.Scrollbar(container, orient="horizontal", command=self._on_hscroll)
+        self._tree.configure(yscrollcommand=self._on_yscroll_event,
+                             xscrollcommand=self._on_xscroll_event)
+        self._vsb = vsb
+        self._hsb = hsb
 
         self._tree.grid(row=0, column=0, sticky="nsew")
         vsb.grid(row=0, column=1, sticky="ns")
@@ -410,6 +363,26 @@ class App(ctk.CTk):
 
         self._tree.bind("<<TreeviewSelect>>", self._on_tree_select)
         self._tree.bind("<Double-1>",         self._on_double_click)
+        self._tree.bind("<<TreeviewOpen>>",  lambda e: self.after(50, self._draw_search_highlights))
+        self._tree.bind("<<TreeviewClose>>", lambda e: self.after(50, self._draw_search_highlights))
+
+        self._tree_indent = 28
+
+    def _on_vscroll(self, *args):
+        self._tree.yview(*args)
+        self._draw_search_highlights()
+
+    def _on_hscroll(self, *args):
+        self._tree.xview(*args)
+        self._draw_search_highlights()
+
+    def _on_yscroll_event(self, *args):
+        self._vsb.set(*args)
+        self._draw_search_highlights()
+
+    def _on_xscroll_event(self, *args):
+        self._hsb.set(*args)
+        self._draw_search_highlights()
 
     def _on_tree_select(self, event=None):
         sel = self._tree.selection()
@@ -655,16 +628,20 @@ class App(ctk.CTk):
             if node.children:
                 self._cache_bitmasks(node.children)
 
+    
     def _build_statusbar(self):
-        bar = ctk.CTkFrame(self, height=30, fg_color=COLORS["accent"], corner_radius=0)
+        bar = ctk.CTkFrame(self, height=40, fg_color=COLORS["accent"], corner_radius=0)
         bar.pack(fill="x", side="bottom")
         bar.pack_propagate(False)
+
         self._lbl_status = ctk.CTkLabel(
-            bar, text="Ready",
-            font=ctk.CTkFont(UI_FONT, 11),
-            text_color="#93C5FD", anchor="w",
+            bar,
+            text="Ready",
+            font=ctk.CTkFont(UI_FONT, 16, "bold"),   
+            text_color="#FFFFFF",                    
+            anchor="w",
         )
-        self._lbl_status.pack(side="left", padx=16, pady=4)
+        self._lbl_status.pack(side="left", padx=16, pady=6)
 
     def _set_status(self, msg: str, level: str = "ready"):
         palette = {
@@ -673,6 +650,7 @@ class App(ctk.CTk):
             "error": "#FCA5A5",
             "warn":  "#FCD34D",
         }
+        
         self._lbl_status.configure(text=msg, text_color=palette.get(level, "#93C5FD"))
 
     def _do_clear(self):

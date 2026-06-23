@@ -125,13 +125,17 @@ class App(ctk.CTk):
 
         input_container = tk.Frame(card, bg=COLORS["input_bg"])
         input_container.pack(fill="x", padx=20, pady=(0, 16))
+        input_container.rowconfigure(0, weight=1)
+        input_container.columnconfigure(0, weight=1)
 
-        h_scroll = ttk.Scrollbar(input_container, orient="horizontal")
-        h_scroll.pack(side="bottom", fill="x")
+
+        v_scroll = ttk.Scrollbar(input_container, orient="vertical")
+        v_scroll.grid(row=0, column=1, sticky="ns")
 
         self.entry_tlv = tk.Text(
             input_container,
-            height=1, wrap="none",
+            height=4,
+            wrap="word",                  
             font=(MONO_FONT, 13),
             fg=COLORS["text_muted"],
             bg="#F5F5F0",
@@ -140,12 +144,12 @@ class App(ctk.CTk):
             highlightbackground="#1A56DB",
             highlightcolor="#93C5FD",
             insertbackground=COLORS["text"],
-            xscrollcommand=h_scroll.set,
+            yscrollcommand=v_scroll.set,    # vertical seulement
             padx=10, pady=10,
         )
-        self.entry_tlv.pack(side="top", fill="x")
-        h_scroll.config(command=self.entry_tlv.xview)
-
+        self.entry_tlv.grid(row=0, column=0, sticky="nsew")
+        v_scroll.config(command=self.entry_tlv.yview)
+      
         self._placeholder = "Enter your TLV message here..."
         self.entry_tlv.insert("1.0", self._placeholder)
         self.entry_tlv.bind("<FocusIn>",  self._on_entry_focus_in)
@@ -169,7 +173,6 @@ class App(ctk.CTk):
             self.entry_tlv.delete("1.0", "end")
             self.entry_tlv.configure(fg=COLORS["text"])
 
-   
     def _build_buttons(self):
         bar = ctk.CTkFrame(self, height=44, fg_color="transparent")
         bar.pack(fill="x", padx=15, pady=(0, 6))
@@ -198,6 +201,7 @@ class App(ctk.CTk):
             text_color="#fff", width=130, height=34, corner_radius=7,
         ).pack(side="left", padx=6)
 
+     
         search_card = ctk.CTkFrame(
             bar, fg_color=COLORS["surface"],
             corner_radius=7, border_color=COLORS["border"], border_width=1,
@@ -229,12 +233,11 @@ class App(ctk.CTk):
         self.entry_search.bind("<Return>", self._on_search_return)
         self.entry_search.bind("<KeyRelease>", self._on_search_key)
 
-   
+        # Navigation frame (caché par défaut)
         self._nav_frame = ctk.CTkFrame(inner, fg_color="transparent")
         self._nav_frame.pack(side="left", padx=(2, 0))
         self._nav_frame.pack_forget()
 
-        # Counter "2/5"
         self._lbl_search_count = ctk.CTkLabel(
             self._nav_frame, text="",
             font=ctk.CTkFont(UI_FONT, 11, "bold"),
@@ -261,7 +264,6 @@ class App(ctk.CTk):
             command=self._next_result,
         ).pack(side="left", padx=1)
 
-      
         ctk.CTkButton(
             self._nav_frame, text="✕", width=22, height=22,
             font=ctk.CTkFont(UI_FONT, 11),
@@ -270,9 +272,7 @@ class App(ctk.CTk):
             command=self._clear_search_field,
         ).pack(side="left", padx=(1, 0))
 
-    # ── Gestion de la touche Entrée ──────────────────────────────────
     def _on_search_return(self, event):
-        """Appelé quand on presse Entrée dans le champ de recherche."""
         if self._search_results:
             self._next_result()
         else:
@@ -280,7 +280,6 @@ class App(ctk.CTk):
         return "break"
 
     def _on_search_key(self, event):
-        """Handle key releases: if field is emptied, clear everything and hide nav."""
         if not self.entry_search.get().strip():
             self._clear_search_highlight()
             self._search_results = []
@@ -291,7 +290,6 @@ class App(ctk.CTk):
             self.entry_search.bind("<Return>", lambda e: self._do_search())
 
     def _clear_search_field(self):
-        """✕ button: clear the field, remove highlights, hide nav."""
         self.entry_search.delete(0, "end")
         self._clear_search_highlight()
         self._search_results = []
@@ -303,7 +301,6 @@ class App(ctk.CTk):
         self.entry_search.bind("<Return>", lambda e: self._do_search())
 
     def _update_search_count(self):
-        """Update the counter '2/5' displayed in the bar."""
         if self._search_results:
             self._lbl_search_count.configure(
                 text=f"{self._search_idx + 1}/{len(self._search_results)}"
@@ -351,10 +348,6 @@ class App(ctk.CTk):
         self.entry_search.bind("<Return>", self._on_search_return)
 
     def _draw_search_highlights(self):
-        """
-        Draw a small yellow Label ONLY on the '[TAG]' text,
-        shifted by self._tree_indent to avoid the tree toggle triangle.
-        """
         if not self._search_results:
             return
 
@@ -395,7 +388,6 @@ class App(ctk.CTk):
         self._highlight_overlays = []
 
     def _prev_result(self):
-        """▲ button: navigate to previous result."""
         if not self._search_results:
             return
         self._search_idx = (self._search_idx - 1) % len(self._search_results)
@@ -409,7 +401,6 @@ class App(ctk.CTk):
         )
 
     def _next_result(self):
-        """▼ button or Enter: navigate to next result."""
         if not self._search_results:
             return
         self._search_idx = (self._search_idx + 1) % len(self._search_results)
@@ -424,11 +415,10 @@ class App(ctk.CTk):
 
     def _clear_search_highlight(self):
         self._clear_highlight_overlays()
-  
         self.entry_search.bind("<Return>", self._on_search_return)
-        # Hide nav frame if no results
         if self._nav_frame.winfo_ismapped():
             self._nav_frame.pack_forget()
+
     def _build_tree_zone(self):
         outer = tk.Frame(self, bg=COLORS["accent"], bd=1, relief="flat")
         outer.pack(fill="both", expand=True, padx=15, pady=(0, 6))
@@ -745,7 +735,7 @@ class App(ctk.CTk):
             if node.children:
                 self._cache_bitmasks(node.children)
 
-    # ── BARRE DE STATUT AVEC PASTILLE ──────────────────────────────
+
     def _build_statusbar(self):
         bar = ctk.CTkFrame(self, height=42, fg_color=COLORS["bg"], corner_radius=0)
         bar.pack(fill="x", side="bottom")
@@ -754,7 +744,6 @@ class App(ctk.CTk):
         left = ctk.CTkFrame(bar, fg_color="transparent")
         left.pack(side="left", fill="y", padx=20)
 
-        # Pastille (cercle)
         self._status_dot = ctk.CTkFrame(
             left, width=8, height=8, corner_radius=4,
             fg_color="#93C5FD",

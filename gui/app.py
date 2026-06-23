@@ -146,7 +146,7 @@ class App(ctk.CTk):
         self.entry_tlv.pack(side="top", fill="x")
         h_scroll.config(command=self.entry_tlv.xview)
 
-        self._placeholder = "Entrez votre message TLV ici..."
+        self._placeholder = "Enter your TLV message here..."
         self.entry_tlv.insert("1.0", self._placeholder)
         self.entry_tlv.bind("<FocusIn>",  self._on_entry_focus_in)
         self.entry_tlv.bind("<FocusOut>", self._on_entry_focus_out)
@@ -169,6 +169,7 @@ class App(ctk.CTk):
             self.entry_tlv.delete("1.0", "end")
             self.entry_tlv.configure(fg=COLORS["text"])
 
+   
     def _build_buttons(self):
         bar = ctk.CTkFrame(self, height=44, fg_color="transparent")
         bar.pack(fill="x", padx=15, pady=(0, 6))
@@ -197,33 +198,125 @@ class App(ctk.CTk):
             text_color="#fff", width=130, height=34, corner_radius=7,
         ).pack(side="left", padx=6)
 
-        self.entry_search = ctk.CTkEntry(
-            bar,
-            placeholder_text="🔍  Rechercher un tag...",
-            font=ctk.CTkFont(MONO_FONT, 15),
-            fg_color=COLORS["surface"],
-            border_color=COLORS["border"],
-            text_color=COLORS["text"],
-            height=34, corner_radius=7,
-            width=300,
+        search_card = ctk.CTkFrame(
+            bar, fg_color=COLORS["surface"],
+            corner_radius=7, border_color=COLORS["border"], border_width=1,
+            height=34, width=340,
         )
-        self.entry_search.pack(side="right", padx=(0, 15))
-        self.entry_search.bind("<Return>", lambda e: self._do_search())
+        search_card.pack(side="right", padx=(0, 15))
+        search_card.pack_propagate(False)
+
+        inner = ctk.CTkFrame(search_card, fg_color="transparent")
+        inner.pack(fill="both", expand=True, padx=8)
+
+        ctk.CTkLabel(
+            inner, text="🔍",
+            font=ctk.CTkFont(UI_FONT, 12),
+            text_color=COLORS["text_muted"],
+            width=18,
+        ).pack(side="left", padx=(0, 4))
+
+        self.entry_search = ctk.CTkEntry(
+            inner,
+            placeholder_text="Search tag...",
+            font=ctk.CTkFont(MONO_FONT, 14),
+            fg_color="transparent",
+            border_width=0,
+            text_color=COLORS["text"],
+            height=30,
+        )
+        self.entry_search.pack(side="left", fill="both", expand=True)
+        self.entry_search.bind("<Return>", self._on_search_return)
         self.entry_search.bind("<KeyRelease>", self._on_search_key)
 
+   
+        self._nav_frame = ctk.CTkFrame(inner, fg_color="transparent")
+        self._nav_frame.pack(side="left", padx=(2, 0))
+        self._nav_frame.pack_forget()
+
+        # Counter "2/5"
+        self._lbl_search_count = ctk.CTkLabel(
+            self._nav_frame, text="",
+            font=ctk.CTkFont(UI_FONT, 11, "bold"),
+            text_color=COLORS["accent"],
+            width=36,
+        )
+        self._lbl_search_count.pack(side="left", padx=(2, 2))
+
+        ctk.CTkFrame(self._nav_frame, width=1, height=18, fg_color=COLORS["border"]).pack(side="left", padx=4)
+
+        ctk.CTkButton(
+            self._nav_frame, text="▲", width=22, height=22,
+            font=ctk.CTkFont(UI_FONT, 10),
+            fg_color="transparent", hover_color=COLORS["hover"],
+            text_color=COLORS["text_muted"], corner_radius=4,
+            command=self._prev_result,
+        ).pack(side="left", padx=1)
+
+        ctk.CTkButton(
+            self._nav_frame, text="▼", width=22, height=22,
+            font=ctk.CTkFont(UI_FONT, 10),
+            fg_color="transparent", hover_color=COLORS["hover"],
+            text_color=COLORS["text_muted"], corner_radius=4,
+            command=self._next_result,
+        ).pack(side="left", padx=1)
+
+      
+        ctk.CTkButton(
+            self._nav_frame, text="✕", width=22, height=22,
+            font=ctk.CTkFont(UI_FONT, 11),
+            fg_color="transparent", hover_color=COLORS["hover"],
+            text_color=COLORS["text_muted"], corner_radius=4,
+            command=self._clear_search_field,
+        ).pack(side="left", padx=(1, 0))
+
+    # ── Gestion de la touche Entrée ──────────────────────────────────
+    def _on_search_return(self, event):
+        """Appelé quand on presse Entrée dans le champ de recherche."""
+        if self._search_results:
+            self._next_result()
+        else:
+            self._do_search()
+        return "break"
+
     def _on_search_key(self, event):
-        """Efface le surlignage si le champ est vidé."""
+        """Handle key releases: if field is emptied, clear everything and hide nav."""
         if not self.entry_search.get().strip():
             self._clear_search_highlight()
             self._search_results = []
             self._search_idx = 0
+            self._lbl_search_count.configure(text="")
+            if self._nav_frame.winfo_ismapped():
+                self._nav_frame.pack_forget()
+            self.entry_search.bind("<Return>", lambda e: self._do_search())
+
+    def _clear_search_field(self):
+        """✕ button: clear the field, remove highlights, hide nav."""
+        self.entry_search.delete(0, "end")
+        self._clear_search_highlight()
+        self._search_results = []
+        self._search_idx = 0
+        self._lbl_search_count.configure(text="")
+        if self._nav_frame.winfo_ismapped():
+            self._nav_frame.pack_forget()
+        self._set_status("Ready", "ready")
+        self.entry_search.bind("<Return>", lambda e: self._do_search())
+
+    def _update_search_count(self):
+        """Update the counter '2/5' displayed in the bar."""
+        if self._search_results:
+            self._lbl_search_count.configure(
+                text=f"{self._search_idx + 1}/{len(self._search_results)}"
+            )
+        else:
+            self._lbl_search_count.configure(text="")
 
     def _do_search(self):
         tag_query = self.entry_search.get().strip().upper()
         if not tag_query:
             return
         if not self._node_map:
-            self._set_status("Parsez d'abord un message TLV", "error")
+            self._set_status("Parse a TLV message first", "error")
             return
 
         self._clear_search_highlight()
@@ -237,25 +330,30 @@ class App(ctk.CTk):
                         self._search_results.append(item)
                 walk(item)
         walk()
-
         if not self._search_results:
-            self._set_status(f"Tag [{tag_query}] introuvable", "error")
+            self._set_status(f"Tag [{tag_query}] not found", "error")
+            self._lbl_search_count.configure(text="")
+            if self._nav_frame.winfo_ismapped():
+                self._nav_frame.pack_forget()
             return
+        if not self._nav_frame.winfo_ismapped():
+            self._nav_frame.pack(side="left", padx=(2, 0))
 
         self._search_idx = 0
         self._tree.selection_set(self._search_results[0])
         self._tree.see(self._search_results[0])
 
         self.after(60, self._draw_search_highlights)
+        self._update_search_count()
 
         n = len(self._search_results)
-        self._set_status(f"{n} occurrence(s) de [{tag_query}]  —  Entrée pour naviguer", "ok")
-        self.entry_search.bind("<Return>", lambda e: self._next_result())
+        self._set_status(f"{n} occurrence(s) of [{tag_query}]  —  Press Enter to navigate", "ok")
+        self.entry_search.bind("<Return>", self._on_search_return)
 
     def _draw_search_highlights(self):
         """
-        Dessine un petit Label jaune SEULEMENT sur le texte '[TAG]',
-        en le décalant de self._tree_indent pour éviter le triangle.
+        Draw a small yellow Label ONLY on the '[TAG]' text,
+        shifted by self._tree_indent to avoid the tree toggle triangle.
         """
         if not self._search_results:
             return
@@ -296,7 +394,22 @@ class App(ctk.CTk):
             ov.destroy()
         self._highlight_overlays = []
 
+    def _prev_result(self):
+        """▲ button: navigate to previous result."""
+        if not self._search_results:
+            return
+        self._search_idx = (self._search_idx - 1) % len(self._search_results)
+        item = self._search_results[self._search_idx]
+        self._tree.selection_set(item)
+        self._tree.see(item)
+        self.after(60, self._draw_search_highlights)
+        self._update_search_count()
+        self._set_status(
+            f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok"
+        )
+
     def _next_result(self):
+        """▼ button or Enter: navigate to next result."""
         if not self._search_results:
             return
         self._search_idx = (self._search_idx + 1) % len(self._search_results)
@@ -304,14 +417,18 @@ class App(ctk.CTk):
         self._tree.selection_set(item)
         self._tree.see(item)
         self.after(60, self._draw_search_highlights)
+        self._update_search_count()
         self._set_status(
             f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok"
         )
 
     def _clear_search_highlight(self):
         self._clear_highlight_overlays()
-        self.entry_search.bind("<Return>", lambda e: self._do_search())
-
+  
+        self.entry_search.bind("<Return>", self._on_search_return)
+        # Hide nav frame if no results
+        if self._nav_frame.winfo_ismapped():
+            self._nav_frame.pack_forget()
     def _build_tree_zone(self):
         outer = tk.Frame(self, bg=COLORS["accent"], bd=1, relief="flat")
         outer.pack(fill="both", expand=True, padx=15, pady=(0, 6))
@@ -462,7 +579,7 @@ class App(ctk.CTk):
         new_val = self._edit_entry.get().strip().upper()
         self._cancel_edit()
         if not re.fullmatch(r"[0-9A-F]*", new_val) or len(new_val) % 2 != 0:
-            self._set_status("Hex invalide — longueur paire, chiffres 0-9 A-F uniquement", "error")
+            self._set_status("Invalid hex — even length, digits 0-9 A-F only", "error")
             return
         try:
             node.value = bytes.fromhex(new_val)
@@ -470,11 +587,11 @@ class App(ctk.CTk):
                 node._enhance()
             self._tree.item(item, text=self._format_node_text(node))
             self._set_status(
-                f"[{node.tag}] modifié → {new_val}  |  Clique sur Generate pour mettre à jour le message TLV",
+                f"[{node.tag}] modified → {new_val}  |  Click Generate to update the TLV message",
                 "warn",
             )
         except Exception as e:
-            self._set_status(f"Erreur : {e}", "error")
+            self._set_status(f"Error: {e}", "error")
 
     def _cancel_edit(self):
         if self._edit_frame:
@@ -486,13 +603,13 @@ class App(ctk.CTk):
         if isinstance(node, BitmaskPseudoNode):
             return f"  {node.text}"
         tag       = node.tag
-        name      = node.description or node.name or "Tag inconnu"
+        name      = node.description or node.name or "Unknown tag"
         length    = node.length
         if node.is_constructed:
-            return f"[{tag}]  Name: {name}  —  Taille: {length}"
+            return f"[{tag}]  Name: {name}  —  Length: {length}"
         else:
             value_hex = node.value.hex().upper() if node.value else ""
-            return f"[{tag}]  Name: {name}  —  Taille: {length}  —  Value: {value_hex}"
+            return f"[{tag}]  Name: {name}  —  Length: {length}  —  Value: {value_hex}"
 
     def _populate_tree(self, nodes, parent=""):
         for node in nodes:
@@ -550,7 +667,7 @@ class App(ctk.CTk):
     def _do_parse(self):
         raw = self.entry_tlv.get("1.0", "end").strip()
         if not raw or raw == self._placeholder:
-            self._set_status("Veuillez entrer un message TLV hexadécimal", "error")
+            self._set_status("Please enter a hexadecimal TLV message", "error")
             return
 
         self._do_clear()
@@ -566,7 +683,7 @@ class App(ctk.CTk):
             self._set_status(f"[STRUCTURE ERROR] {struct.errors[0].message}", "error")
             return
 
-        self._set_status("Parsing en cours...", "ready")
+        self._set_status("Parsing in progress...", "ready")
         cleaned = fmt.cleaned_hex
 
         if len(cleaned) < 4096:
@@ -628,20 +745,30 @@ class App(ctk.CTk):
             if node.children:
                 self._cache_bitmasks(node.children)
 
-    
+    # ── BARRE DE STATUT AVEC PASTILLE ──────────────────────────────
     def _build_statusbar(self):
-        bar = ctk.CTkFrame(self, height=40, fg_color=COLORS["accent"], corner_radius=0)
+        bar = ctk.CTkFrame(self, height=42, fg_color=COLORS["bg"], corner_radius=0)
         bar.pack(fill="x", side="bottom")
         bar.pack_propagate(False)
 
+        left = ctk.CTkFrame(bar, fg_color="transparent")
+        left.pack(side="left", fill="y", padx=20)
+
+        # Pastille (cercle)
+        self._status_dot = ctk.CTkFrame(
+            left, width=8, height=8, corner_radius=4,
+            fg_color="#93C5FD",
+        )
+        self._status_dot.pack(side="left", padx=(0, 10), pady=17)
+
         self._lbl_status = ctk.CTkLabel(
-            bar,
+            left,
             text="Ready",
-            font=ctk.CTkFont(UI_FONT, 16, "bold"),   
-            text_color="#FFFFFF",                    
+            font=ctk.CTkFont(UI_FONT, 15, "bold"),
+            text_color="#FFFFFF",
             anchor="w",
         )
-        self._lbl_status.pack(side="left", padx=16, pady=6)
+        self._lbl_status.pack(side="left", pady=10)
 
     def _set_status(self, msg: str, level: str = "ready"):
         palette = {
@@ -650,8 +777,9 @@ class App(ctk.CTk):
             "error": "#FCA5A5",
             "warn":  "#FCD34D",
         }
-        
-        self._lbl_status.configure(text=msg, text_color=palette.get(level, "#93C5FD"))
+        color = palette.get(level, "#93C5FD")
+        self._lbl_status.configure(text=msg, text_color=color)
+        self._status_dot.configure(fg_color=color)
 
     def _do_clear(self):
         self._cancel_edit()
@@ -665,14 +793,14 @@ class App(ctk.CTk):
 
     def _do_generate(self):
         if not self._root_nodes:
-            self._set_status("Nothing to generate — parsez d'abord un message TLV", "error")
+            self._set_status("Nothing to generate — parse a TLV message first", "error")
             return
         try:
             new_hex = serialize(self._root_nodes)
             self.entry_tlv.delete("1.0", "end")
             self.entry_tlv.insert("1.0", new_hex)
             self.entry_tlv.configure(fg=COLORS["text"])
-            self._set_status(f"Generated {len(new_hex) // 2} bytes — message TLV mis à jour", "ok")
+            self._set_status(f"Generated {len(new_hex) // 2} bytes — TLV message updated", "ok")
         except Exception as e:
             self._set_status(f"Serialization error: {e}", "error")
 

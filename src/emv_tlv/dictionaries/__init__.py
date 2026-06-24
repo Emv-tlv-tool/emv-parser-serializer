@@ -1,24 +1,24 @@
 """
-Tag Dictionaries Index
-
-Merges EMVCo and ZKA tag dictionaries for unified lookup.
-Provides functions to lookup tag metadata by tag hex or name.
+Tag Dictionary — charge un seul fichier JSON (tags(4).json)
+et fournit des fonctions de recherche par tag ou par nom.
 """
 
 import json
 import os
 
-# Load dictionaries from JSON files
 _dict_dir = os.path.dirname(os.path.abspath(__file__))
+JSON_FILE = "tags (4).json"  # adaptez si le nom diffère
 
-with open(os.path.join(_dict_dir, "emvco_tags.json")) as f:
-    _emvco_tags = json.load(f)
+# Charger la liste d'objets JSON et la transformer en dict tag -> métadonnées
+with open(os.path.join(_dict_dir, JSON_FILE), encoding="utf-8") as f:
+    _tags_list = json.load(f)
 
-with open(os.path.join(_dict_dir, "zka_tags.json")) as f:
-    _zka_tags = json.load(f)
-
-# Combined dictionary (ZKA tags take precedence for overlapping entries)
-_all_tags = {**_emvco_tags, **_zka_tags}
+# Indexation par "poseidon_tag" (prioritaire) ou "tai_tag"
+_all_tags = {}
+for entry in _tags_list:
+    tag = entry.get("poseidon_tag") 
+    if tag:
+        _all_tags[tag] = entry
 
 
 class Dictionary:
@@ -26,80 +26,38 @@ class Dictionary:
 
     @staticmethod
     def lookup_by_tag(tag: str) -> dict | None:
-        """
-        Lookup tag information by tag hex value.
-
-        Args:
-            tag: Tag identifier in uppercase hex (e.g., '9A', 'DF11')
-
-        Returns:
-            Tag metadata dict or None if not found
-        """
+        """Retourne les métadonnées du tag (ou None)."""
         return _all_tags.get(tag)
 
     @staticmethod
     def lookup_by_name(name: str) -> dict | None:
-        """
-        Lookup tag information by tag name.
-
-        Args:
-            name: Tag name (e.g., 'PAN', 'TAC Default')
-
-        Returns:
-            Tag metadata dict with 'tag' key or None if not found
-        """
+        """Recherche un tag par son nom (insensible à la casse)."""
         for tag_hex, metadata in _all_tags.items():
             if metadata.get("name", "").lower() == name.lower():
                 return {"tag": tag_hex, **metadata}
         return None
 
     @staticmethod
-    def get_tags_by_source(source: str) -> dict:
-        """
-        Get all tags from a specific source.
-
-        Args:
-            source: Source identifier ('EMVCo' or 'ZKA')
-
-        Returns:
-            Dictionary of tags from that source
-        """
-        return {
-            tag_hex: metadata
-            for tag_hex, metadata in _all_tags.items()
-            if metadata.get("source") == source
-        }
-
-    @staticmethod
-    def get_emvco_tags() -> dict:
-        """Get all EMVCo tags."""
-        return dict(_emvco_tags)
-
-    @staticmethod
-    def get_zka_tags() -> dict:
-        """Get all ZKA tags."""
-        return dict(_zka_tags)
-
-    @staticmethod
     def has_tag(tag: str) -> bool:
-        """Check if a tag exists in the dictionary."""
         return tag in _all_tags
 
     @staticmethod
     def get_all_tags() -> list[str]:
-        """Get all tag hex values."""
         return list(_all_tags.keys())
 
     @staticmethod
     def enhance_node(node: dict) -> dict:
-        """Enhance a TLV node dict with tag metadata."""
+        """Enrichit un nœud TLV avec les métadonnées du tag."""
         metadata = Dictionary.lookup_by_tag(node.get("tag", ""))
         if metadata:
+            # On conserve toutes les clés utiles
             return {
                 **node,
-                "name": metadata["name"],
+                "name": metadata.get("name", ""),
                 "description": metadata.get("description", ""),
-                "format": metadata.get("format", ""),
+                "format": metadata.get("value_format") or metadata.get("format", ""),
                 "source": metadata.get("source", ""),
+                "bytes": metadata.get("bytes"),          # pour les bitmasks
+                "bitmask": metadata.get("bitmask"),      # ancien format
             }
         return node

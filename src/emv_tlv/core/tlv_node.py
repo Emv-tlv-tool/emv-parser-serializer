@@ -104,6 +104,18 @@ class TLVNode(dict):
         elif "name" in self:
             del self["name"]
 
+    # --- NOUVELLE PROPRIÉTÉ tech_name ---
+    @property
+    def tech_name(self) -> str:
+        return self.get("tech_name", "")
+
+    @tech_name.setter
+    def tech_name(self, val: str) -> None:
+        if val:
+            self["tech_name"] = val
+        elif "tech_name" in self:
+            del self["tech_name"]
+
     @property
     def description(self) -> str:
         return self.get("description", "")
@@ -197,7 +209,8 @@ class TLVNode(dict):
 
         metadata = Dictionary.lookup_by_tag(self.tag)
         if metadata:
-            self["name"] = metadata["name"]
+            self["name"] = metadata.get("name", "")
+            self["tech_name"] = metadata.get("tech_name", "")  # ← ici
             self["description"] = metadata.get("description", "")
             self["format"] = metadata.get("format", "")
             self["source"] = metadata.get("source", "")

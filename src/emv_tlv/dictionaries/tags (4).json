@@ -394,7 +394,13 @@
       "F0"
     ],
     "child_tags": [],
-    "value_format": "binary"
+    "value_format": "binary",
+    "mapping": {
+  "A0000000031010": "Visa",
+  "A0000000041010": "Mastercard",
+  "A00000002501": "American Express",
+  "A0000000651010": "JCB"
+}
   },
   {
     "id": 203,
@@ -1652,18 +1658,7 @@
     "child_tags": [],
     "value_format": "binary"
   },
-  {
-    "id": 508,
-    "poseidon_tag": "DF03",
-    "tai_tag": "DF03",
-    "name": "Zero Amount Allowed",
-    "group": "Contactless Application",
-    "tech_name": null,
-    "typical_length": null,
-    "parent_tags": [],
-    "child_tags": [],
-    "value_format": "binary"
-  },
+  
   {
     "id": 509,
     "poseidon_tag": "DF04",
@@ -3275,173 +3270,8 @@
       "DF71",
       "F1"
     ],
-    "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "E0",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Manual key entry",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Magnetic stripe",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "IC with contacts",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "F8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Plaintext PIN for ICC verification",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Enciphered PIN for online verification",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Signature (paper)",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Enciphered PIN for offline verification",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "No CVM required",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "C8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "SDA",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "DDA",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "CDA",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 1,
-        "hex_value": "E0",
-        "label": "Transaction Type Capability",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Cash",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Goods",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Services",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "00",
-        "label": "Transaction Type Capability",
-        "bits": []
-      },
-      {
-        "index": 3,
-        "hex_value": "F0",
-        "label": "Terminal Data Input Capability",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Numeric keys",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Alphabetic and special characters keys",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Command keys",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Function keys",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 4,
-        "hex_value": "F0",
-        "label": "Term. Data Output Capability",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Print, attendant",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Print, cardholder",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Display, attendant",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Display, cardholder",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 5,
-        "hex_value": "00",
-        "label": "Term. Data Output Capability",
-        "bits": []
-      }
-    ]
+    "value_format": "bitmask"
+   
   },
   {
     "id": null,

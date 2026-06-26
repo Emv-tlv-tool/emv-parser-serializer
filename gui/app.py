@@ -283,7 +283,10 @@ class App(ctk.CTk):
         return "break"
 
     def _on_search_key(self, event):
-        if not self.entry_search.get().strip():
+        query = self.entry_search.get().strip()
+    
+        if not query:
+        # champ vide → tout réinitialiser
             self._clear_search_highlight()
             self._search_results = []
             self._search_idx = 0
@@ -291,6 +294,9 @@ class App(ctk.CTk):
             if self._nav_frame.winfo_ismapped():
                 self._nav_frame.pack_forget()
             self.entry_search.bind("<Return>", lambda e: self._do_search())
+        else:
+        # champ non vide → relancer la recherche live
+            self._do_search()
 
     def _clear_search_field(self):
         self.entry_search.delete(0, "end")
@@ -578,7 +584,7 @@ class App(ctk.CTk):
             node.value = bytes.fromhex(new_val)
             if hasattr(node, "_enhance"):
                 node._enhance()
-            self._tree.item(item, text=self._format_node_text(node))
+            self._tree.item(item, text=self.p(node))
             self._set_status(
                 f"[{node.tag}] modified → {new_val}  |  Click Generate to update the TLV message",
                 "warn",
@@ -621,9 +627,10 @@ class App(ctk.CTk):
             bitmask_ch = list(getattr(node, "_bitmask_children", []) or [])
             dol_ch     = list(getattr(node, "_dol_children", []) or [])
             mapped_ch  = list(getattr(node, "_mapped_children", []) or [])   # ← ajout
+            position_ch = list(getattr(node, "_position_children", []) or [])
 
-            if children + bitmask_ch + dol_ch + mapped_ch:
-                self._populate_tree(children + bitmask_ch + dol_ch + mapped_ch, item)
+            if children + bitmask_ch + dol_ch + mapped_ch + position_ch:
+                self._populate_tree(children + bitmask_ch + dol_ch + mapped_ch + position_ch, item)
 
     # ==============================================================
     #  MÉTHODES MODIFIÉES POUR LE BITMASK (JSON "bytes")
@@ -638,15 +645,16 @@ class App(ctk.CTk):
                 node.tech_name = metadata.get("tech_name", "")
                 node.display_name = node.tech_name or metadata.get("name", node.name)
 
-                # Bitmask : format "bytes" (nouveau) ou "bitmask" (ancien)
-                if "bytes" in metadata:
+  #  Ajout de la détection du format "position"
+                if metadata.get("value_format") == "position" or "positions" in metadata:
+                    node._cached_bitmask = {"format": "position", "positions": metadata.get("positions", [])}
+                elif "bytes" in metadata:
                     node._cached_bitmask = {"bytes": metadata["bytes"]}
                 elif "bitmask" in metadata:
                     node._cached_bitmask = metadata["bitmask"]
                 else:
                     node._cached_bitmask = None
             else:
-                # Fallback : on garde les attributs existants
                 node.tech_name = ""
                 node.display_name = node.name or "Unknown tag"
                 node._cached_bitmask = getattr(node, "bitmask", None)
@@ -770,7 +778,51 @@ class App(ctk.CTk):
                         node._mapped_children.append(child_node)
             if node.children:
                 self._attach_mapped_children(node.children)
+ # ==============================================================
+ #    FORMAT POSITIONNEL (DF22, DF25...) 
+ # ==============================================================
+    def _attach_position_children(self, nodes):
+        """Décode dynamiquement tous les tags au format positionnel."""
+        for node in nodes:
+            bitmask = getattr(node, "_cached_bitmask", None)
+            if bitmask and isinstance(bitmask, dict) and bitmask.get("format") == "position":
+                positions_config = bitmask.get("positions", [])
+                
+                if isinstance(node.value, bytes):
+                    raw_value = node.value.hex().upper()
+                else:
+                    raw_value = str(node.value).upper()
 
+                if raw_value and positions_config:
+                    position_children = []
+                    for index, char in enumerate(raw_value):
+                        position_num = index + 1
+                        val_int = int(char, 16)
+
+                        pos_meta = next((p for p in positions_config if p.get("position") == position_num), None)
+                        if pos_meta:
+                            parent_label = pos_meta.get("label", f"Position {position_num}")
+                            values_mapping = pos_meta.get("values", {})
+                        else:
+                            parent_label = "RFU"
+                            values_mapping = {}
+
+                        description = values_mapping.get(str(val_int))
+                        if not description:
+                            description = "0" if val_int == 0 else f"Value {val_int}"
+
+                        pos_node = BitmaskPseudoNode(
+                            f"Position {position_num} : {parent_label}",
+                            is_constructed=True,
+                        )
+                        child_text = f"{val_int}: {description}"
+                        pos_node.children.append(BitmaskPseudoNode(child_text))
+                        position_children.append(pos_node)
+                        
+                    node._position_children = position_children
+
+            if node.children:
+                self._attach_position_children(node.children)
     # ==============================================================
     #  FIN des modifications bitmask / DOL / Mapping
     # ==============================================================
@@ -849,6 +901,7 @@ class App(ctk.CTk):
         self._attach_bitmask_nodes(self._root_nodes)
         self._attach_dol_children(self._root_nodes)
         self._attach_mapped_children(self._root_nodes)   # ← ajout
+        self._attach_position_children(self._root_nodes)
         self._populate_tree(self._root_nodes)
         self._set_status(f"Parsed {total} tag(s) successfully", "ok")
 

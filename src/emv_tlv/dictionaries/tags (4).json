@@ -1162,42 +1162,52 @@
       {
         "position": 1,
         "label": "Merchant receipt configuration",
-        "values": {}
+        "values": {"0 ": "No merchant receipts",
+                    "1" : "Merchant receipts for all authorized transactions",
+                    "2" : "Merchant receipts for all authorized, rejected or aborted transactions",
+                    "3" : "Merchant receipts for authorized transactions with signature on paper as CVM",
+                    "4" : "Merchant receipts for authorized transactions with signature on paper as CVM and for all rejected or aborted transactions"}
+                  
       },
       {
         "position": 2,
         "label": "Customer receipt configuration",
-        "values": {}
+        "values": {"0" :"No customer receipts",
+                    "1" : "Customer receipts for authorized transactions, printing may be aborted",
+                    "2" : "Customer receipts for authorized, rejected or aborted transactions, printing may be aborted",
+                    "3" :"Customer receipts for authorized transactions, printing may NOT be aborted",
+                    "4" : "Customer receipts for authorized, rejected or aborted transactions, printing may NOT be aborted"}
       },
       {
         "position": 3,
         "label": "Additional merchant receipt configuration",
-        "values": {}
+        "values": {"0":"Print masked PAN, don't print card expiry date",
+                   "1": "Print masked PAN and card expiry date"}
       },
       {
         "position": 4,
         "label": "RFU",
-        "values": {}
+        "values": {"0": "0"}
       },
       {
         "position": 5,
         "label": "RFU",
-        "values": {}
+        "values": {" 0": "0"}
       },
       {
         "position": 6,
         "label": "RFU",
-        "values": {}
+        "values": {" 0": "0"}
       },
       {
         "position": 7,
         "label": "RFU",
-        "values": {}
+        "values": {" 0": "0"}
       },
       {
         "position": 8,
         "label": "RFU",
-        "values": {}
+        "values": {"0": "0"}
       }
     ]
   },
@@ -1218,82 +1228,94 @@
       {
         "position": 1,
         "label": "Manual Reversal",
-        "values": {}
+        "values":{ "2": "Variant B allowed" }
       },
       {
         "position": 2,
         "label": "Refund",
-        "values": {}
+        "values": {"1": "Allowed",
+                  "0": "Not Allowed"}
       },
       {
         "position": 3,
         "label": "Reservation",
-        "values": {}
+        "values": { "2": "Online A, with supplementary",
+                   "0": "Not Allowed",
+                   "1": "Online A, no supplementary",
+                  "3": "Online B, no supplementary"}
       },
       {
         "position": 4,
         "label": "Tip",
-        "values": {}
+        "values": { "3": "DC POS 2.5: TIP transaction",
+                    "1": "Tippable + TIP-Update",
+                   "0": "Not Allowed"}
       },
       {
         "position": 5,
         "label": "Referral",
-        "values": {}
+        "values": {"1": "Required",
+                   "0": "Not Allowed"}
       },
       {
         "position": 6,
         "label": "Voice authorization",
-        "values": {}
+        "values": {"1": "Required",
+                   "0": "Not Allowed"}
       },
       {
         "position": 7,
         "label": "DC POS 2.5: CDA Mode configuration",
-        "values": {}
+        "values": {"0": "Mode 1: 1st GAC: CDA for ARQC, 2nd GAC: CDA for TC"}
       },
       {
         "position": 8,
         "label": "DC POS 2.5: Extended Fallback rules",
-        "values": {}
+        "values": {"0": "Fall back after CV or PIN entry not allowed",
+                   "1": "Fall back after CV or PIN entry required"}
       },
       {
         "position": 9,
         "label": "DC POS 2.5: Treatment of card errors after online sucess",
-        "values": {}
+        "values": {"0": "Don't ignore card errors"}
       },
       {
         "position": 10,
         "label": "DC POS 3.0: DCC cless",
-        "values": {}
+        "values": {
+                   "0": "DCC cless not allowed",
+                   "1": "DCC cless allowed if amount > CVM limit and online auth"}
       },
       {
         "position": 11,
         "label": "DC POS 3.0: Voice referral cless",
-        "values": {}
+        "values": {"0": "Referral not allowed"}
       },
       {
         "position": 12,
         "label": "DC POS 3.0: Cardholder Authentication",
-        "values": {}
+        "values": {"0": "0"}
       },
       {
         "position": 13,
         "label": "DC POS 3.0: Response Code 65 handling",
-        "values": {}
+        "values": {"0": "Standard display text, no fall-back to technology selection",
+                  "1":" Request to use contact reader (display text #2) and return to technology selection if PIN input is possible. Otherwise inform that PIN is not possible (display text #3) and no fall-back to technology selection"}
       },
       {
         "position": 14,
         "label": "RFU",
-        "values": {}
+        "values": {"0": "0"}
       },
       {
         "position": 15,
         "label": "RFU",
-        "values": {}
+        "values": {"0": "0"}
       },
       {
         "position": 16,
         "label": "RFU",
-        "values": {}
+        "values": {" 0": "0"}
       }
     ]
   },

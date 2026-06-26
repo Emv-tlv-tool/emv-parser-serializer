@@ -88,6 +88,8 @@ _CURRENCY_CODES: dict[str, str] = {
     "986": "BRL",
 }
 
+
+
 # CVM (Cardholder Verification Method) types
 _CVM_TYPES: dict[int, str] = {
     0x00: "No CVM",
@@ -130,6 +132,8 @@ class ValueDecoder:
             "9F1A": ValueDecoder._decode_country_code,
             "5F28": ValueDecoder._decode_country_code,
             "49": ValueDecoder._decode_currency_code,
+            "9F06": ValueDecoder._decode_aid,      # ← AJOUT
+            "4F": ValueDecoder._decode_aid,        # ← AJOUT (si utilisé)
         }
 
         decoder = decoders.get(tag)
@@ -253,6 +257,16 @@ class ValueDecoder:
 
         name = _CURRENCY_CODES.get(code, "Unknown")
         return f"{name} ({code})"
+
+    # ─── NOUVELLE MÉTHODE DE DÉCODAGE POUR AID ──────────────────────────
+    @staticmethod
+    def _decode_aid(value: bytes) -> str:
+        """
+        Decode AID (Application Identifier) to network name.
+        """
+        aid_hex = value.hex().upper()
+        name = _AID_MAPPING.get(aid_hex, "Unknown")
+        return f"{aid_hex} ({name})"
 
     @staticmethod
     def _bcd_to_number(byte: int) -> int:

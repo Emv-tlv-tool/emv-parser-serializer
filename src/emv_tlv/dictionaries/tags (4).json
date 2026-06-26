@@ -30,85 +30,48 @@
     ],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "E0",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Manual key entry",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Magnetic stripe",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "IC with contacts",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "F8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Plaintext PIN for ICC verification",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Enciphered PIN for online verification",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Signature (paper)",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Enciphered PIN for offline verification",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "No CVM required",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "C8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "SDA",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "DDA",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "CDA",
-            "set": true
-          }
-        ]
-      }
-    ]
-  },
+      "bytes": [
+    {
+      "index": 1,
+      "bits": [
+        { "bit": 8, "label": "Manual key entry" },
+        { "bit": 7, "label": "Magnetic stripe" },
+        { "bit": 6, "label": "IC with contacts" },
+        { "bit": 5, "label": "RFU" },
+        { "bit": 4, "label": "RFU" },
+        { "bit": 3, "label": "RFU" },
+        { "bit": 2, "label": "RFU" },
+        { "bit": 1, "label": "RFU" }
+      ]
+    },
+    {
+      "index": 2,
+      "bits": [
+        { "bit": 8, "label": "Plaintext PIN for ICC verification" },
+        { "bit": 7, "label": "Enciphered PIN for online verification" },
+        { "bit": 6, "label": "Signature (paper)" },
+        { "bit": 5, "label": "Enciphered PIN for offline verification" },
+        { "bit": 4, "label": "No CVM required" },
+        { "bit": 3, "label": "RFU" },
+        { "bit": 2, "label": "RFU" },
+        { "bit": 1, "label": "RFU" }
+      ]
+    },
+    {
+      "index": 3,
+      "bits": [
+        { "bit": 8, "label": "SDA" },
+        { "bit": 7, "label": "DDA" },
+        { "bit": 6, "label": "card capture" },
+        { "bit": 5, "label": "RFU" },
+        { "bit": 4, "label": "CDA" },
+        { "bit": 3, "label": "RFU" },
+        { "bit": 2, "label": "RFU" },
+        { "bit": 1, "label": "RFU" }
+      ]
+    }
+  ]
+},
   {
     "id": 102,
     "poseidon_tag": "9F40",
@@ -122,98 +85,66 @@
     ],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "60",
-        "label": "Transaction Type Capability",
-        "bits": [
-          {
-            "bit": 7,
-            "label": "Goods",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Services",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "00",
-        "label": "Transaction Type Capability",
-        "bits": []
-      },
-      {
-        "index": 3,
-        "hex_value": "F0",
-        "label": "Terminal Data Input Capability",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Numeric keys",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Alphabetic and special characters keys",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Command keys",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Function keys",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 4,
-        "hex_value": "F0",
-        "label": "Term. Data Output Capability",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Print, attendant",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Print, cardholder",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Display, attendant",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Display, cardholder",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 5,
-        "hex_value": "01",
-        "label": "Term. Data Output Capability",
-        "bits": [
-          {
-            "bit": 1,
-            "label": "Code table 1",
-            "set": true
-          }
-        ]
-      }
-    ]
-  },
+   "bytes": [
+    {
+      "index": 1,
+      "label": "Transaction Type Capability",
+      "bits": [
+        { "bit": 8, "label": "Cash" },
+        { "bit": 7, "label": "Goods" },
+        { "bit": 6, "label": "Services" },
+        { "bit": 5, "label": "Cashback" },
+        { "bit": 4, "label": "Inquiry" },
+        { "bit": 3, "label": "Transfer" },
+        { "bit": 2, "label": "Payment" },
+        { "bit": 1, "label": "Administrative" }
+      ]
+    },
+    {
+      "index": 2,
+      "label": "Transaction Type Capability",
+      "bits": [
+        { "bit": 8, "label": "Cash Deposit" }
+      ]
+    },
+    {
+      "index": 3,
+      "label": "Terminal Data Input Capability",
+      "bits": [
+        { "bit": 8, "label": "Numeric keys" },
+        { "bit": 7, "label": "Alphabetic and special characters keys" },
+        { "bit": 6, "label": "Command keys" },
+        { "bit": 5, "label": "Function keys" }
+      ]
+    },
+    {
+      "index": 4,
+      "label": "Term. Data Output Capability",
+      "bits": [
+        { "bit": 8, "label": "Print, attendant" },
+        { "bit": 7, "label": "Print, cardholder" },
+        { "bit": 6, "label": "Display, attendant" },
+        { "bit": 5, "label": "Display, cardholder" },
+        { "bit": 2, "label": "Code table 10" },
+        { "bit": 1, "label": "Code table 9" }
+      ]
+    },
+    {
+      "index": 5,
+      "label": "Term. Data Output Capability",
+      "bits": [
+        { "bit": 8, "label": "Code table 8" },
+        { "bit": 7, "label": "Code table 7" },
+        { "bit": 6, "label": "Code table 6" },
+        { "bit": 5, "label": "Code table 5" },
+        { "bit": 4, "label": "Code table 4" },
+        { "bit": 3, "label": "Code table 3" },
+        { "bit": 2, "label": "Code table 2" },
+        { "bit": 1, "label": "Code table 1" }
+      ]
+    }
+  ]
+},
   {
     "id": 103,
     "poseidon_tag": "9F1A",
@@ -228,8 +159,52 @@
       "E0"
     ],
     "child_tags": [],
-    "value_format": "numeric"
-  },
+    "value_format": "numeric",
+     "mapping": {
+    "0040": "Austria",
+    "0056": "Belgium",
+    "0250": "France",
+    "0276": "Germany",
+    "0280": "Germany",
+    "0380": "Italy",
+    "0528": "Netherlands",
+    "0724": "Spain",
+    "0826": "United Kingdom",
+    "0840": "United States",
+    "0756": "Switzerland",
+    "0036": "Australia",
+    "0124": "Canada",
+    "0392": "Japan",
+    "0410": "South Korea",
+    "0156": "China",
+    "0356": "India",
+    "0076": "Brazil",
+    "0643": "Russia",
+    "0554": "New Zealand",
+    "0012": "Algeria",
+    "0484": "Mexico",
+    "0702": "Singapore",
+    "0158": "Taiwan",
+    "0360": "Indonesia",
+    "0458": "Malaysia",
+    "0608": "Philippines",
+    "0764": "Thailand",
+    "0414": "Kuwait",
+    "0784": "United Arab Emirates",
+    "0682": "Saudi Arabia",
+    "0422": "Lebanon",
+    "0504": "Morocco",
+    "0818": "Egypt",
+    "0710": "South Africa",
+    "0011": "Benin",
+    "0204": "Cameroon",
+    "0388": "Jamaica",
+    "0591": "Panama",
+    "0340": "Honduras",
+    "0188": "Costa Rica",
+    "0320": "Guatemala"
+  }
+},
   {
     "id": 104,
     "poseidon_tag": "DF47",
@@ -396,10 +371,22 @@
     "child_tags": [],
     "value_format": "binary",
     "mapping": {
-  "A0000000031010": "Visa",
-  "A0000000041010": "Mastercard",
-  "A00000002501": "American Express",
-  "A0000000651010": "JCB"
+   "A0000000031010": "Visa",
+    "A0000000041010": "Mastercard",
+    "A00000002501": "American Express",
+    "A0000000651010": "JCB Credit",
+    "A0000000091010": "Diners Club",
+    "A0000000032010": "Visa Electron",
+    "A0000000043060": "Maestro",
+    "A0000003591010028001": "girocard EMV 6",
+    "A0000000032020" : "V PAY ",
+    "D27600002545430200" : "girocard (ecc)",
+    "D27600002545500200" :"GeldKarte",
+    "D27600002547410100" :"girocard EMV 5",
+    "A000000333010101" : "UnionPay Debit",
+    "A000000333010102" : "UnionPay Credit",
+    "A000000333010103" : "UnionPay Quasi-Credit",
+    "A0000003591010" :"EAPS"
 }
   },
   {
@@ -550,7 +537,14 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "string"
+    "value_format": "string",
+    "mapping":{
+      "393530353630323235302020202020":"9505602250",
+      "343535363030343138323030202020":"455600418200",
+      "453139383730333530302020202020":"E198703500"
+      
+
+    }
   },
   {
     "id": 211,
@@ -606,8 +600,30 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "binary"
-  },
+    "value_format": "taglist",
+    "taglist": [
+    {
+      "tag": "8E",
+      "tech_name": "EMVCO_CVM_LIST",
+      "length": 1
+    },
+    {
+      "tag": "57",
+      "tech_name": "EMVCO_TRACK2_EQUIVALENT_DATA",
+      "length": 1
+    },
+    {
+      "tag": "5F34",
+      "tech_name": "EMVCO_PSEQ",
+      "length": 2
+    },
+    {
+      "tag":"9F08",
+      "tech_name":"EMVCO_APPLICATION_VERSION_NUMBER_ICC",
+      "length":2
+    }
+  ]
+},
   {
     "id": 229,
     "poseidon_tag": "DF40",
@@ -1393,7 +1409,10 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "binary"
+    "value_format": "binary",
+    "mapping":{
+      "4F66666C696E65":"Offline"
+    }
   },
   {
     "id": 356,
@@ -1782,7 +1801,24 @@
     "child_tags": [
       "4A4342"
     ],
-    "value_format": "string"
+    "value_format": "string",
+    "mapping": {
+   "4156532047757473636865696E": "AVS Gutschein",
+    "44696E65727320436C7562": "Diners Club",
+    "416D65726963616E2045787072657373": "American Express",
+    "6769726F63617264": "girocard",
+    "4A4342":"JCB",
+    "4D61657374726F":"Maestro",
+    "4D617374657243617264":"MasterCard",
+    "53455041204C61737473636872696674":"SEPA Lastschrift",
+    "556E696F6E506179204465626974":"UnionPay Debit",
+    "556E696F6E50617920437265646974":"UnionPay Credit",
+    "556E696F6E5061792051437265646974":"UnionPay QCredit",
+    "555049":"UPI",
+    "5649534120656C656374726F6E":"VISA electron",
+    "56495341":"VISA",
+    "56504159":"VPAY"
+  }
   },
   {
     "id": 516,
@@ -1842,52 +1878,74 @@
     ],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "04",
-        "label": null,
-        "bits": [
-          {
-            "bit": 3,
-            "label": "CDA failed",
-            "set": true
+      "bytes": [
+    {
+      "index": 1,
+      "bits": [
+        { "bit": 8, "label": "Offl. DA not performed" },
+        { "bit": 7, "label": "SDA failed" },
+        { "bit": 6, "label": "ICC data missing" },
+        { "bit": 5, "label": "Card on exception list" },
+        { "bit": 4, "label": "DDA failed" },
+        { "bit": 3, "label": "CDA failed" },
+        { "bit": 2, "label": "SDA selected" }
+      ]
+    },
+    {
+      "index": 2,
+      "bits": [
+        { "bit": 8, "label": "Appl Versions differ" },
+        { "bit": 7, "label": "Appl expired" },
+        { "bit": 6, "label": "Appl not effective yet" },
+        { "bit": 5, "label": "Requested service not allowed" },
+        { "bit": 4, "label": "New card" }
+      ]
+    },
+    {
+      "index": 3,
+      "bits": [
+        { "bit": 8, "label": "CV failed" },
+        { "bit": 7, "label": "Unrecognised CVM" },
+        { "bit": 6, "label": "PIN try limit exceeded" },
+        { "bit": 5, "label": "PIN entry required but PP not working" },
+        { "bit": 4, "label": "PIN entry required but PIN not entered" },
+        { "bit": 3, "label": "Online PIN entered" }
+      ]
+    },
+    {
+      "index": 4,
+      "bits": [
+        { "bit": 8, "label": "Floor limit exceeded" },
+        { "bit": 7, "label": "LCOL exceeded" },
+        { "bit": 6, "label": "UCOL exceeded" },
+        { "bit": 5, "label": "Random online" },
+        { "bit": 4, "label": "Merchant forced online" }
+      ]
+    },
+    {
+      "index": 5,
+      "bits": [
+        { "bit": 8, "label": "Default PDOL used" },
+        { "bit": 7, "label": "Issuer auth. failed" },
+        { "bit": 6, "label": "Critical script failed" },
+        { "bit": 5, "label": "Non critical script failed" },
+        { "bit": 4, "label": "Relay Resistance Threshold exceeded" },
+        { "bit": 3, "label": "Relay Resistance Time Limit exceeded" },
+        {
+          "bit": "2-1",
+          "label": "Relay Resistance Protocol",
+          "values": {
+            "00": "not supported",
+            "01": "was not performed",
+            "10": "was performed",
+            "11": "RFU"
           }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "10",
-        "label": null,
-        "bits": [
-          {
-            "bit": 5,
-            "label": "Requested service not allowed",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      },
-      {
-        "index": 4,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      },
-      {
-        "index": 5,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      }
-    ]
-  },
-  {
+        }
+      ]
+    }
+  ]
+},
+{
     "id": 520,
     "poseidon_tag": "DF12",
     "tai_tag": "DF12",
@@ -1900,97 +1958,73 @@
     ],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "CC",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Offl. DA not performed",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "SDA failed",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "DDA failed",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "CDA failed",
-            "set": true
+     "bytes": [
+    {
+      "index": 1,
+      "bits": [
+        { "bit": 8, "label": "Offl. DA not performed" },
+        { "bit": 7, "label": "SDA failed" },
+        { "bit": 6, "label": "ICC data missing" },
+        { "bit": 5, "label": "Card on exception list" },
+        { "bit": 4, "label": "DDA failed" },
+        { "bit": 3, "label": "CDA failed" },
+        { "bit": 2, "label": "SDA selected" }
+      ]
+    },
+    {
+      "index": 2,
+      "bits": [
+        { "bit": 8, "label": "Appl Versions differ" },
+        { "bit": 7, "label": "Appl expired" },
+        { "bit": 6, "label": "Appl not effective yet" },
+        { "bit": 5, "label": "Requested service not allowed" },
+        { "bit": 4, "label": "New card" }
+      ]
+    },
+    {
+      "index": 3,
+      "bits": [
+        { "bit": 8, "label": "CV failed" },
+        { "bit": 7, "label": "Unrecognised CVM" },
+        { "bit": 6, "label": "PIN try limit exceeded" },
+        { "bit": 5, "label": "PIN entry required but PP not working" },
+        { "bit": 4, "label": "PIN entry required but PIN not entered" },
+        { "bit": 3, "label": "Online PIN entered" }
+      ]
+    },
+    {
+      "index": 4,
+      "bits": [
+        { "bit": 8, "label": "Floor limit exceeded" },
+        { "bit": 7, "label": "LCOL exceeded" },
+        { "bit": 6, "label": "UCOL exceeded" },
+        { "bit": 5, "label": "Random online" },
+        { "bit": 4, "label": "Merchant forced online" }
+      ]
+    },
+    {
+      "index": 5,
+      "bits": [
+        { "bit": 8, "label": "Default PDOL used" },
+        { "bit": 7, "label": "Issuer auth. failed" },
+        { "bit": 6, "label": "Critical script failed" },
+        { "bit": 5, "label": "Non critical script failed" },
+        { "bit": 4, "label": "Relay Resistance Threshold exceeded" },
+        { "bit": 3, "label": "Relay Resistance Time Limit exceeded" },
+        {
+          "bit": "2-1",
+          "label": "Relay Resistance Protocol",
+          "values": {
+            "00": "not supported",
+            "01": "was not performed",
+            "10": "was performed",
+            "11": "RFU"
           }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "00",
-        "bits": []
-      },
-      {
-        "index": 3,
-        "hex_value": "FC",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "CV failed",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Unrecognised CVM",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "PIN try limit exceeded",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "PIN entry required but PP not working",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "PIN entry required but PIN not entered",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "Online PIN entered",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 4,
-        "hex_value": "80",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Floor limit exceeded",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 5,
-        "hex_value": "00",
-        "bits": [
-          {
-            "multi_bit": true,
-            "label": "Relay Resistance Protocol: not supported"
-          }
-        ]
-      }
-    ]
-  },
+        }
+      ]
+    }
+  ]
+},
   {
     "id": 521,
     "poseidon_tag": "DF13",
@@ -2004,97 +2038,73 @@
     ],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "CC",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Offl. DA not performed",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "SDA failed",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "DDA failed",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "CDA failed",
-            "set": true
+      "bytes": [
+    {
+      "index": 1,
+      "bits": [
+        { "bit": 8, "label": "Offl. DA not performed" },
+        { "bit": 7, "label": "SDA failed" },
+        { "bit": 6, "label": "ICC data missing" },
+        { "bit": 5, "label": "Card on exception list" },
+        { "bit": 4, "label": "DDA failed" },
+        { "bit": 3, "label": "CDA failed" },
+        { "bit": 2, "label": "SDA selected" }
+      ]
+    },
+    {
+      "index": 2,
+      "bits": [
+        { "bit": 8, "label": "Appl Versions differ" },
+        { "bit": 7, "label": "Appl expired" },
+        { "bit": 6, "label": "Appl not effective yet" },
+        { "bit": 5, "label": "Requested service not allowed" },
+        { "bit": 4, "label": "New card" }
+      ]
+    },
+    {
+      "index": 3,
+      "bits": [
+        { "bit": 8, "label": "CV failed" },
+        { "bit": 7, "label": "Unrecognised CVM" },
+        { "bit": 6, "label": "PIN try limit exceeded" },
+        { "bit": 5, "label": "PIN entry required but PP not working" },
+        { "bit": 4, "label": "PIN entry required but PIN not entered" },
+        { "bit": 3, "label": "Online PIN entered" }
+      ]
+    },
+    {
+      "index": 4,
+      "bits": [
+        { "bit": 8, "label": "Floor limit exceeded" },
+        { "bit": 7, "label": "LCOL exceeded" },
+        { "bit": 6, "label": "UCOL exceeded" },
+        { "bit": 5, "label": "Random online" },
+        { "bit": 4, "label": "Merchant forced online" }
+      ]
+    },
+    {
+      "index": 5,
+      "bits": [
+        { "bit": 8, "label": "Default PDOL used" },
+        { "bit": 7, "label": "Issuer auth. failed" },
+        { "bit": 6, "label": "Critical script failed" },
+        { "bit": 5, "label": "Non critical script failed" },
+        { "bit": 4, "label": "Relay Resistance Threshold exceeded" },
+        { "bit": 3, "label": "Relay Resistance Time Limit exceeded" },
+        {
+          "bit": "2-1",
+          "label": "Relay Resistance Protocol",
+          "values": {
+            "00": "not supported",
+            "01": "was not performed",
+            "10": "was performed",
+            "11": "RFU"
           }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "00",
-        "bits": []
-      },
-      {
-        "index": 3,
-        "hex_value": "FC",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "CV failed",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Unrecognised CVM",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "PIN try limit exceeded",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "PIN entry required but PP not working",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "PIN entry required but PIN not entered",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "Online PIN entered",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 4,
-        "hex_value": "80",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Floor limit exceeded",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 5,
-        "hex_value": "00",
-        "bits": [
-          {
-            "multi_bit": true,
-            "label": "Relay Resistance Protocol: not supported"
-          }
-        ]
-      }
-    ]
-  },
+        }
+      ]
+    }
+  ]
+},
   {
     "id": 522,
     "poseidon_tag": "DF14",
@@ -2251,115 +2261,36 @@
     ],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "FF",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Manual key entry",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Magnetic stripe",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "IC with contacts",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 2,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 1,
-            "label": "RFU",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "40",
-        "label": null,
-        "bits": [
-          {
-            "bit": 7,
-            "label": "Enciphered PIN for online verification",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "FF",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "SDA",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "DDA",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "card capture",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "CDA",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 2,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 1,
-            "label": "RFU",
-            "set": true
-          }
-        ]
-      }
-    ]
-  },
+      "bytes": [
+    {
+      "index": 1,
+      "bits": [
+        { "bit": 8, "label": "Manual key entry" },
+        { "bit": 7, "label": "Magnetic stripe" },
+        { "bit": 6, "label": "IC with contacts" }
+      ]
+    },
+    {
+      "index": 2,
+      "bits": [
+        { "bit": 8, "label": "Plaintext PIN for ICC verification" },
+        { "bit": 7, "label": "Enciphered PIN for online verification" },
+        { "bit": 6, "label": "Signature (paper)" },
+        { "bit": 5, "label": "Enciphered PIN for offline verification" },
+        { "bit": 4, "label": "No CVM required" }
+      ]
+    },
+    {
+      "index": 3,
+      "bits": [
+        { "bit": 8, "label": "SDA" },
+        { "bit": 7, "label": "DDA" },
+        { "bit": 6, "label": "card capture" },
+        { "bit": 4, "label": "CDA" }
+      ]
+    }
+  ]
+},
   {
     "id": 532,
     "poseidon_tag": "DF28",
@@ -2484,35 +2415,41 @@
     "child_tags": [],
     "value_format": "bitmask",
     "bytes": [
-      {
-        "index": 1,
-        "hex_value": "43",
-        "label": null,
-        "bits": [
-          {
-            "bit": 7,
-            "label": "Don't evaluate the PAN",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "Hint: bit is not set, PAN evaluation is required!",
-            "set": true
-          },
-          {
-            "bit": 2,
-            "label": "Show product name during PIN dialogue",
-            "set": true
-          },
-          {
-            "bit": 1,
-            "label": "Print product name on the receipt",
-            "set": true
+    {
+      "index": 1,
+      "bits": [
+        {
+          "bit": 8,
+          "label": "Always use the default application label"
+        },
+        {
+          "bit": 7,
+          "label": "Don't evaluate the PAN"
+        },
+        {
+          "bit": 6,
+          "label": "No language selection by the card holder allowed"
+        },
+        {
+          "bit": 3,
+          "label": "PAN evaluation",
+          "values": {
+            "1": "RFU",
+            "0": "PAN evaluation is required"
           }
-        ]
-      }
-    ]
-  },
+        },
+        {
+          "bit": 2,
+          "label": "Show product name during PIN dialogue"
+        },
+        {
+          "bit": 1,
+          "label": "Print product name on the receipt"
+        }
+      ]
+    }
+  ]
+},
   {
     "id": 534,
     "poseidon_tag": "DF36",

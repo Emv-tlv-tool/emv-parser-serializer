@@ -235,7 +235,6 @@ class App(ctk.CTk):
         self.entry_search.bind("<Return>", self._on_search_return)
         self.entry_search.bind("<KeyRelease>", self._on_search_key)
 
-        # Navigation frame (caché par défaut)
         self._nav_frame = ctk.CTkFrame(inner, fg_color="transparent")
         self._nav_frame.pack(side="left", padx=(2, 0))
         self._nav_frame.pack_forget()
@@ -683,7 +682,7 @@ class App(ctk.CTk):
                             continue
                         label_bit = bit_info.get("label", "")
                         mask = 1 << (bit_num - 1)
-                        # Vérifier si le bit est actif (valeur 1)
+                      
                         if byte_val & mask:
                             bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
                             bit_node = BitmaskPseudoNode(bit_text)
@@ -696,7 +695,7 @@ class App(ctk.CTk):
                 node._bitmask_children = bitmask_children
 
             elif bitmask and isinstance(bitmask, list):
-                # Ancien format (compatibilité)
+               
                 value_bytes = node.value
                 bytes_map = {}
                 for bit in bitmask:
@@ -770,7 +769,7 @@ class App(ctk.CTk):
                         if value_hex in mapping:
                             mapped_text = mapping[value_hex]
                             child_node = BitmaskPseudoNode(
-                                f"•{value_hex} ({mapped_text})",
+                                f"{value_hex} ({mapped_text})",
                                 is_constructed=False,
                             )
                             if not hasattr(node, "_mapped_children"):

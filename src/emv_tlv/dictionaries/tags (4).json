@@ -1752,35 +1752,83 @@
     "parent_tags": [],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "86",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "payment without cashback (including tip and tipable)",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "initial reservation",
-            "set": true
-          },
-          {
-            "bit": 2,
-            "label": "reservation increase",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "00",
-        "bits": []
-      }
-    ]
-  },
+      "bytes": [
+    {
+      "index": 1,
+      "bits": [
+        {
+          "bit": 8,
+          "label": "payment without cashback (including tip and tipable)"
+        },
+        {
+          "bit": 7,
+          "label": "payment with cashback"
+        },
+        {
+          "bit": 6,
+          "label": "cash withdrawal"
+        },
+        {
+          "bit": 5,
+          "label": "refund"
+        },
+        {
+          "bit": 4,
+          "label": "manual storno"
+        },
+        {
+          "bit": 3,
+          "label": "initial reservation"
+        },
+        {
+          "bit": 2,
+          "label": "reservation increase"
+        },
+        {
+          "bit": 1,
+          "label": "booking"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "bits": [
+        {
+          "bit": 8,
+          "label": "RFU"
+        },
+        {
+          "bit": 7,
+          "label": "RFU"
+        },
+        {
+          "bit": 6,
+          "label": "RFU"
+        },
+        {
+          "bit": 5,
+          "label": "RFU"
+        },
+        {
+          "bit": 4,
+          "label": "RFU"
+        },
+        {
+          "bit": 3,
+          "label": "RFU"
+        },
+        {
+          "bit": 2,
+          "label": "RFU"
+        },
+        {
+          "bit": 1,
+          "label": "RFU"
+        }
+      ]
+    }
+  ]
+},
   {
     "id": 513,
     "poseidon_tag": "DF08",
@@ -2204,19 +2252,25 @@
     ],
     "value_format": "bitmask",
     "bytes": [
-      {
-        "index": 1,
-        "hex_value": "01",
-        "bits": [
-          {
-            "bit": 1,
-            "label": "Fallback allowed, denied if application or chip blocked",
-            "set": true
+    {
+      "index": 1,
+      "bits": [
+        {
+          "bit": "value",
+          "label": "Fallback Configuration",
+          "values": {
+            "0x00": "Fallback general denied",
+            "0x01": "Fallback allowed, denied if application or chip blocked",
+            "0x02": "Fallback allowed, denied if application blocked",
+            "0x03": "Fallback allowed, denied if chip blocked",
+            "0x04": "Fallback general allowed",
+            "0x10": "Magnetic stripe only"
           }
-        ]
-      }
-    ]
-  },
+        }
+      ]
+    }
+  ]
+},
   {
     "id": 527,
     "poseidon_tag": "DF20",
@@ -2326,103 +2380,66 @@
     ],
     "child_tags": [],
     "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "FF",
-        "label": "Transaction Type Capability",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Cash",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Goods",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Services",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Cashback",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "Inquiry",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "Transfer",
-            "set": true
-          },
-          {
-            "bit": 2,
-            "label": "Payment",
-            "set": true
-          },
-          {
-            "bit": 1,
-            "label": "Administrative",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "FF",
-        "label": "Transaction Type Capability",
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Cash Deposit",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 2,
-            "label": "RFU",
-            "set": true
-          },
-          {
-            "bit": 1,
-            "label": "RFU",
-            "set": true
-          }
-        ]
-      }
-    ]
-  },
+     "bytes": [
+    {
+      "index": 1,
+      "label": "Transaction Type Capability",
+      "bits": [
+        { "bit": 8, "label": "Cash" },
+        { "bit": 7, "label": "Goods" },
+        { "bit": 6, "label": "Services" },
+        { "bit": 5, "label": "Cashback" },
+        { "bit": 4, "label": "Inquiry" },
+        { "bit": 3, "label": "Transfer" },
+        { "bit": 2, "label": "Payment" },
+        { "bit": 1, "label": "Administrative" }
+      ]
+    },
+    {
+      "index": 2,
+      "label": "Transaction Type Capability",
+      "bits": [
+        { "bit": 8, "label": "Cash Deposit" }
+      ]
+    },
+    {
+      "index": 3,
+      "label": "Terminal Data Input Capability",
+      "bits": [
+        { "bit": 8, "label": "Numeric keys" },
+        { "bit": 7, "label": "Alphabetic and special characters keys" },
+        { "bit": 6, "label": "Command keys" },
+        { "bit": 5, "label": "Function keys" }
+      ]
+    },
+    {
+      "index": 4,
+      "label": "Term. Data Output Capability",
+      "bits": [
+        { "bit": 8, "label": "Print, attendant" },
+        { "bit": 7, "label": "Print, cardholder" },
+        { "bit": 6, "label": "Display, attendant" },
+        { "bit": 5, "label": "Display, cardholder" },
+        { "bit": 2, "label": "Code table 10" },
+        { "bit": 1, "label": "Code table 9" }
+      ]
+    },
+    {
+      "index": 5,
+      "label": "Term. Data Output Capability",
+      "bits": [
+        { "bit": 8, "label": "Code table 8" },
+        { "bit": 7, "label": "Code table 7" },
+        { "bit": 6, "label": "Code table 6" },
+        { "bit": 5, "label": "Code table 5" },
+        { "bit": 4, "label": "Code table 4" },
+        { "bit": 3, "label": "Code table 3" },
+        { "bit": 2, "label": "Code table 2" },
+        { "bit": 1, "label": "Code table 1" }
+      ]
+    }
+  ]
+},
   {
     "id": 533,
     "poseidon_tag": "DF2A",
@@ -3327,350 +3344,8 @@
       "FB",
       "FF60"
     ],
-    "value_format": "bitmask",
-    "bytes": [
-      {
-        "index": 1,
-        "hex_value": "43",
-        "label": null,
-        "bits": [
-          {
-            "bit": 7,
-            "label": "Don't evaluate the PAN",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "Hint: bit is not set, PAN evaluation is required!",
-            "set": true
-          },
-          {
-            "bit": 2,
-            "label": "Show product name during PIN dialogue",
-            "set": true
-          },
-          {
-            "bit": 1,
-            "label": "Print product name on the receipt",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 1,
-        "hex_value": "E0",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Manual key entry",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Magnetic stripe",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "IC with contacts",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "F0",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Plaintext PIN for ICC verification",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "Enciphered PIN for online verification",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Signature (paper)",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Enciphered PIN for offline verification",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "C8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "SDA",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "DDA",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "CDA",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 1,
-        "hex_value": "60",
-        "label": "Transaction Type Capability",
-        "bits": [
-          {
-            "bit": 7,
-            "label": "Goods",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "Services",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "00",
-        "label": "Transaction Type Capability",
-        "bits": []
-      },
-      {
-        "index": 1,
-        "hex_value": "04",
-        "label": null,
-        "bits": [
-          {
-            "bit": 3,
-            "label": "CDA failed",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "10",
-        "label": null,
-        "bits": [
-          {
-            "bit": 5,
-            "label": "Requested service not allowed",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      },
-      {
-        "index": 4,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      },
-      {
-        "index": 5,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      },
-      {
-        "index": 1,
-        "hex_value": "D8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Offl. DA not performed",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "SDA failed",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Card on exception list",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "DDA failed",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "40",
-        "label": null,
-        "bits": [
-          {
-            "bit": 7,
-            "label": "Appl expired",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "04",
-        "label": null,
-        "bits": [
-          {
-            "bit": 3,
-            "label": "Online PIN entered",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 4,
-        "hex_value": "F8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Floor limit exceeded",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "LCOL exceeded",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "UCOL exceeded",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Random online",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "Merchant forced online",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 5,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      },
-      {
-        "index": 1,
-        "hex_value": "DC",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Offl. DA not performed",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "SDA failed",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Card on exception list",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "DDA failed",
-            "set": true
-          },
-          {
-            "bit": 3,
-            "label": "CDA failed",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 2,
-        "hex_value": "40",
-        "label": null,
-        "bits": [
-          {
-            "bit": 7,
-            "label": "Appl expired",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 3,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      },
-      {
-        "index": 4,
-        "hex_value": "F8",
-        "label": null,
-        "bits": [
-          {
-            "bit": 8,
-            "label": "Floor limit exceeded",
-            "set": true
-          },
-          {
-            "bit": 7,
-            "label": "LCOL exceeded",
-            "set": true
-          },
-          {
-            "bit": 6,
-            "label": "UCOL exceeded",
-            "set": true
-          },
-          {
-            "bit": 5,
-            "label": "Random online",
-            "set": true
-          },
-          {
-            "bit": 4,
-            "label": "Merchant forced online",
-            "set": true
-          }
-        ]
-      },
-      {
-        "index": 5,
-        "hex_value": "00",
-        "label": null,
-        "bits": []
-      }
-    ]
-  },
+    "value_format": "bitmask"},
+   
   {
     "id": null,
     "poseidon_tag": "E4",

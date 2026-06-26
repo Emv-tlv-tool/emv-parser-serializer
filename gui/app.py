@@ -3,6 +3,7 @@ import threading
 import queue
 import sys
 import re
+import traceback
 import customtkinter as ctk
 from tkinter import ttk
 import tkinter as tk
@@ -131,14 +132,13 @@ class App(ctk.CTk):
         input_container.rowconfigure(0, weight=1)
         input_container.columnconfigure(0, weight=1)
 
-
         v_scroll = ttk.Scrollbar(input_container, orient="vertical")
         v_scroll.grid(row=0, column=1, sticky="ns")
 
         self.entry_tlv = tk.Text(
             input_container,
             height=4,
-            wrap="word",                  
+            wrap="word",
             font=(MONO_FONT, 13),
             fg=COLORS["text_muted"],
             bg="#F5F5F0",
@@ -147,12 +147,12 @@ class App(ctk.CTk):
             highlightbackground="#1A56DB",
             highlightcolor="#93C5FD",
             insertbackground=COLORS["text"],
-            yscrollcommand=v_scroll.set,    # vertical seulement
+            yscrollcommand=v_scroll.set,
             padx=10, pady=10,
         )
         self.entry_tlv.grid(row=0, column=0, sticky="nsew")
         v_scroll.config(command=self.entry_tlv.yview)
-      
+
         self._placeholder = "Enter your TLV message here..."
         self.entry_tlv.insert("1.0", self._placeholder)
         self.entry_tlv.bind("<FocusIn>",  self._on_entry_focus_in)
@@ -204,7 +204,6 @@ class App(ctk.CTk):
             text_color="#fff", width=130, height=34, corner_radius=7,
         ).pack(side="left", padx=6)
 
-     
         search_card = ctk.CTkFrame(
             bar, fg_color=COLORS["surface"],
             corner_radius=7, border_color=COLORS["border"], border_width=1,
@@ -284,9 +283,7 @@ class App(ctk.CTk):
 
     def _on_search_key(self, event):
         query = self.entry_search.get().strip()
-    
         if not query:
-        # champ vide → tout réinitialiser
             self._clear_search_highlight()
             self._search_results = []
             self._search_idx = 0
@@ -295,7 +292,6 @@ class App(ctk.CTk):
                 self._nav_frame.pack_forget()
             self.entry_search.bind("<Return>", lambda e: self._do_search())
         else:
-        # champ non vide → relancer la recherche live
             self._do_search()
 
     def _clear_search_field(self):
@@ -584,7 +580,7 @@ class App(ctk.CTk):
             node.value = bytes.fromhex(new_val)
             if hasattr(node, "_enhance"):
                 node._enhance()
-            self._tree.item(item, text=self.p(node))
+            self._tree.item(item, text=self._format_node_text(node))
             self._set_status(
                 f"[{node.tag}] modified → {new_val}  |  Click Generate to update the TLV message",
                 "warn",
@@ -626,206 +622,213 @@ class App(ctk.CTk):
             children   = list(getattr(node, "children", []) or [])
             bitmask_ch = list(getattr(node, "_bitmask_children", []) or [])
             dol_ch     = list(getattr(node, "_dol_children", []) or [])
-            mapped_ch  = list(getattr(node, "_mapped_children", []) or [])   # ← ajout
+            mapped_ch  = list(getattr(node, "_mapped_children", []) or [])
             position_ch = list(getattr(node, "_position_children", []) or [])
 
             if children + bitmask_ch + dol_ch + mapped_ch + position_ch:
                 self._populate_tree(children + bitmask_ch + dol_ch + mapped_ch + position_ch, item)
 
-    # ==============================================================
-    #  MÉTHODES MODIFIÉES POUR LE BITMASK (JSON "bytes")
-    # ==============================================================
 
     def _cache_bitmasks(self, nodes):
-        """Récupère la définition du bitmask depuis le Dictionary (tags(4).json)."""
         for node in nodes:
-            metadata = Dictionary.lookup_by_tag(node.tag)
-            if metadata:
-                # Enrichissement avec tech_name et display_name
-                node.tech_name = metadata.get("tech_name", "")
-                node.display_name = node.tech_name or metadata.get("name", node.name)
+            try:
+                metadata = Dictionary.lookup_by_tag(node.tag)
+                if metadata:
+                    node.tech_name = metadata.get("tech_name", "")
+                    node.display_name = node.tech_name or metadata.get("name", node.name)
 
-  #  Ajout de la détection du format "position"
-                if metadata.get("value_format") == "position" or "positions" in metadata:
-                    node._cached_bitmask = {"format": "position", "positions": metadata.get("positions", [])}
-                elif "bytes" in metadata:
-                    node._cached_bitmask = {"bytes": metadata["bytes"]}
-                elif "bitmask" in metadata:
-                    node._cached_bitmask = metadata["bitmask"]
+                    if metadata.get("value_format") == "position" or "positions" in metadata:
+                        node._cached_bitmask = {"format": "position", "positions": metadata.get("positions", [])}
+                    elif "bytes" in metadata:
+                        node._cached_bitmask = {"bytes": metadata["bytes"]}
+                    elif "bitmask" in metadata:
+                        node._cached_bitmask = metadata["bitmask"]
+                    else:
+                        node._cached_bitmask = None
                 else:
+                    node.tech_name = ""
+                    node.display_name = node.name or "Unknown tag"
                     node._cached_bitmask = None
-            else:
+            except Exception as e:
+                print(f"DEBUG: _cache_bitmasks error for {node.tag}: {e}")
+                traceback.print_exc()
                 node.tech_name = ""
                 node.display_name = node.name or "Unknown tag"
-                node._cached_bitmask = getattr(node, "bitmask", None)
+                node._cached_bitmask = None
 
             if node.children:
                 self._cache_bitmasks(node.children)
 
     def _attach_bitmask_nodes(self, nodes):
-        """Crée les nœuds enfants pour afficher les bytes et bits (supporte les deux formats)."""
-        for node in nodes:
+     for node in nodes:
+        try:
             bitmask = getattr(node, "_cached_bitmask", None)
-            if bitmask:
-                # ---- Format "bytes" (nouveau JSON) ----
-                if isinstance(bitmask, dict) and "bytes" in bitmask:
-                    value_bytes = node.value
-                    bitmask_children = []
-                    for byte_info in bitmask["bytes"]:
-                        byte_idx = byte_info.get("index", 1) - 1
+            if bitmask and isinstance(bitmask, dict) and "bytes" in bitmask:
+                value_bytes = node.value
+                bitmask_children = []
+                for byte_info in bitmask["bytes"]:
+                    byte_idx = byte_info.get("index", 1) - 1
+                    if byte_idx < 0 or byte_idx >= len(value_bytes):
+                        continue
+                    byte_val = value_bytes[byte_idx]
+                    label = byte_info.get("label", "")
+                    byte_display = f"Byte {byte_idx + 1} ({byte_val:02X})"
+                    if label:
+                        byte_display += f" — {label}"
+                    byte_node = BitmaskPseudoNode(byte_display, is_constructed=True)
+
+                    for bit_info in byte_info.get("bits", []):
+                        bit_num = bit_info.get("bit", 0)
+                        if bit_num < 1 or bit_num > 8:
+                            continue
+                        label_bit = bit_info.get("label", "")
+                        mask = 1 << (bit_num - 1)
+                        # Vérifier si le bit est actif (valeur 1)
+                        if byte_val & mask:
+                            bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
+                            bit_node = BitmaskPseudoNode(bit_text)
+                            byte_node.children.append(bit_node)
+
+                 
+                    if byte_node.children:
+                        bitmask_children.append(byte_node)
+
+                node._bitmask_children = bitmask_children
+
+            elif bitmask and isinstance(bitmask, list):
+                # Ancien format (compatibilité)
+                value_bytes = node.value
+                bytes_map = {}
+                for bit in bitmask:
+                    byte_idx = bit.get("byte", 0)
+                    if byte_idx not in bytes_map:
                         byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
-                        label = byte_info.get("label", f"Byte {byte_idx + 1}")
-                        byte_node = BitmaskPseudoNode(
-                            f"Byte {byte_idx + 1} ({byte_val:02X})" + (f" — {label}" if label else ""),
-                            is_constructed=True,
-                        )
-                        for bit_info in byte_info.get("bits", []):
-                            bit = bit_info.get("bit", 0)
-                            label_bit = bit_info.get("label", "")
-                            if bit_info.get("set", False):
-                                mask = 1 << (bit - 1)
-                                bit_text = f"Bit {bit} (Mask 0x{mask:02X}, value 0x{byte_val & mask:02X}) → {label_bit}"
-                                byte_node.children.append(BitmaskPseudoNode(bit_text))
-                        bitmask_children.append(byte_node)
-                    node._bitmask_children = bitmask_children
+                        bytes_map[byte_idx] = {"value": byte_val, "bits": []}
+                    if bit.get("set", False):
+                        bytes_map[byte_idx]["bits"].append(bit)
 
-                # ---- Format "bitmask" plat (ancien) ----
-                elif isinstance(bitmask, list):
-                    value_bytes = node.value
-                    bytes_map = {}
-                    for bit in bitmask:
-                        byte_idx = bit.get("byte", 0)
-                        if byte_idx not in bytes_map:
-                            byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
-                            bytes_map[byte_idx] = {"value": byte_val, "bits": []}
-                        if bit.get("set", False):
-                            bytes_map[byte_idx]["bits"].append(bit)
-
-                    bitmask_children = []
-                    for byte_idx in sorted(bytes_map):
-                        byte_data = bytes_map[byte_idx]
-                        byte_node = BitmaskPseudoNode(
-                            f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
-                            is_constructed=True,
-                        )
-                        for bit in byte_data["bits"]:
-                            mask = bit.get("mask", 0)
-                            label = bit.get("name", "")
-                            bit_val = byte_data["value"] & mask if mask else 0
-                            bit_text = (
-                                f"Bit {bit.get('bit', 0)} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}"
-                                if mask else label
-                            )
+                bitmask_children = []
+                for byte_idx in sorted(bytes_map):
+                    byte_data = bytes_map[byte_idx]
+                    byte_node = BitmaskPseudoNode(
+                        f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
+                        is_constructed=True,
+                    )
+                    for bit in byte_data["bits"]:
+                        mask = bit.get("mask", 0)
+                        label = bit.get("name", "")
+                        bit_val = byte_data["value"] & mask if mask else 0
+                        if bit_val:
+                            bit_text = f"Bit {bit.get('bit', 0)} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}" if mask else label
                             byte_node.children.append(BitmaskPseudoNode(bit_text))
+                    if byte_node.children:
                         bitmask_children.append(byte_node)
-                    node._bitmask_children = bitmask_children
+                node._bitmask_children = bitmask_children
 
-            if node.children:
-                self._attach_bitmask_nodes(node.children)
+        except Exception as e:
+            print(f"DEBUG: _attach_bitmask_nodes error for {node.tag}: {e}")
+            traceback.print_exc()
 
-    # ==============================================================
-    #  DOL (Data Object List) — enfants virtuels
-    # ==============================================================
+        if node.children:
+            self._attach_bitmask_nodes(node.children)
 
     def _attach_dol_children(self, nodes):
-        """Ajoute des enfants virtuels pour les tags DOL (Data Object List)."""
         for node in nodes:
-            metadata = Dictionary.lookup_by_tag(node.tag)
-            if metadata and metadata.get("value_format") == "dol":
-                dol_fields = metadata.get("dol_fields", [])
-                if dol_fields:
-                    dol_children = []
-                    for field in dol_fields:
-                        tag = field.get("tag")
-                        tech_name = field.get("tech_name", "")
-                        length = field.get("length", 0)
-                        child_node = BitmaskPseudoNode(
-                            f"[{tag}]  Name: {tech_name}  —  Length: {length}",
-                            is_constructed=False,
-                        )
-                        child_node.tag = tag
-                        child_node.name = tech_name
-                        child_node.length = length
-                        dol_children.append(child_node)
-                    node._dol_children = dol_children
+            try:
+                metadata = Dictionary.lookup_by_tag(node.tag)
+                if metadata and metadata.get("value_format") == "dol":
+                    dol_fields = metadata.get("dol_fields", [])
+                    if dol_fields:
+                        dol_children = []
+                        for field in dol_fields:
+                            tag = field.get("tag")
+                            tech_name = field.get("tech_name", "")
+                            length = field.get("length", 0)
+                            child_node = BitmaskPseudoNode(
+                                f"[{tag}]  Name: {tech_name}  —  Length: {length}",
+                                is_constructed=False,
+                            )
+                            child_node.tag = tag
+                            child_node.name = tech_name
+                            child_node.length = length
+                            dol_children.append(child_node)
+                        node._dol_children = dol_children
+            except Exception as e:
+                print(f"DEBUG: _attach_dol_children error for {node.tag}: {e}")
+                traceback.print_exc()
             if node.children:
                 self._attach_dol_children(node.children)
 
-    # ==============================================================
-    #  MAPPING (type 3 alphanumérique) — enfants virtuels
-    # ==============================================================
-
     def _attach_mapped_children(self, nodes):
-        """
-        Crée un pseudo‑nœud enfant pour les tags qui ont un champ 'mapping'
-        dans le JSON, pour afficher la signification de la valeur hexadécimale.
-        Exemple : 9F06 avec valeur "A00000002501" → "A00000002501 (American Express)"
-        """
         for node in nodes:
-            metadata = Dictionary.lookup_by_tag(node.tag)
-            if metadata and "mapping" in metadata:
-                mapping = metadata["mapping"]
-                if mapping and node.value:
-                    value_hex = node.value.hex().upper()
-                    if value_hex in mapping:
-                        mapped_text = mapping[value_hex]
-                        child_node = BitmaskPseudoNode(
-                            f"•{value_hex} ({mapped_text})",
-                            is_constructed=False
-                        )
-                        if not hasattr(node, "_mapped_children"):
-                            node._mapped_children = []
-                        node._mapped_children.append(child_node)
+            try:
+                metadata = Dictionary.lookup_by_tag(node.tag)
+                if metadata and "mapping" in metadata:
+                    mapping = metadata["mapping"]
+                    if mapping and node.value:
+                        value_hex = node.value.hex().upper()
+                        if value_hex in mapping:
+                            mapped_text = mapping[value_hex]
+                            child_node = BitmaskPseudoNode(
+                                f"•{value_hex} ({mapped_text})",
+                                is_constructed=False,
+                            )
+                            if not hasattr(node, "_mapped_children"):
+                                node._mapped_children = []
+                            node._mapped_children.append(child_node)
+            except Exception as e:
+                print(f"DEBUG: _attach_mapped_children error for {node.tag}: {e}")
+                traceback.print_exc()
             if node.children:
                 self._attach_mapped_children(node.children)
- # ==============================================================
- #    FORMAT POSITIONNEL (DF22, DF25...) 
- # ==============================================================
+
     def _attach_position_children(self, nodes):
-        """Décode dynamiquement tous les tags au format positionnel."""
         for node in nodes:
-            bitmask = getattr(node, "_cached_bitmask", None)
-            if bitmask and isinstance(bitmask, dict) and bitmask.get("format") == "position":
-                positions_config = bitmask.get("positions", [])
-                
-                if isinstance(node.value, bytes):
-                    raw_value = node.value.hex().upper()
-                else:
-                    raw_value = str(node.value).upper()
+            try:
+                bitmask = getattr(node, "_cached_bitmask", None)
+                if bitmask and isinstance(bitmask, dict) and bitmask.get("format") == "position":
+                    positions_config = bitmask.get("positions", [])
+                    if isinstance(node.value, bytes):
+                        raw_value = node.value.hex().upper()
+                    else:
+                        raw_value = str(node.value).upper()
 
-                if raw_value and positions_config:
-                    position_children = []
-                    for index, char in enumerate(raw_value):
-                        position_num = index + 1
-                        val_int = int(char, 16)
+                    if raw_value and positions_config:
+                        position_children = []
+                        for index, char in enumerate(raw_value):
+                            position_num = index + 1
+                            try:
+                                val_int = int(char, 16)
+                            except ValueError:
+                                continue
 
-                        pos_meta = next((p for p in positions_config if p.get("position") == position_num), None)
-                        if pos_meta:
-                            parent_label = pos_meta.get("label", f"Position {position_num}")
-                            values_mapping = pos_meta.get("values", {})
-                        else:
-                            parent_label = "RFU"
-                            values_mapping = {}
+                            pos_meta = next((p for p in positions_config if p.get("position") == position_num), None)
+                            if pos_meta:
+                                parent_label = pos_meta.get("label", f"Position {position_num}")
+                                values_mapping = pos_meta.get("values", {})
+                            else:
+                                parent_label = "RFU"
+                                values_mapping = {}
 
-                        description = values_mapping.get(str(val_int))
-                        if not description:
-                            description = "0" if val_int == 0 else f"Value {val_int}"
+                            description = values_mapping.get(str(val_int))
+                            if not description:
+                                description = "0" if val_int == 0 else f"Value {val_int}"
 
-                        pos_node = BitmaskPseudoNode(
-                            f"Position {position_num} : {parent_label}",
-                            is_constructed=True,
-                        )
-                        child_text = f"{val_int}: {description}"
-                        pos_node.children.append(BitmaskPseudoNode(child_text))
-                        position_children.append(pos_node)
-                        
-                    node._position_children = position_children
+                            pos_node = BitmaskPseudoNode(
+                                f"Position {position_num} : {parent_label}",
+                                is_constructed=True,
+                            )
+                            child_text = f"{val_int}: {description}"
+                            pos_node.children.append(BitmaskPseudoNode(child_text))
+                            position_children.append(pos_node)
 
+                        node._position_children = position_children
+            except Exception as e:
+                print(f"DEBUG: _attach_position_children error for {node.tag}: {e}")
+                traceback.print_exc()
             if node.children:
                 self._attach_position_children(node.children)
-    # ==============================================================
-    #  FIN des modifications bitmask / DOL / Mapping
-    # ==============================================================
+
 
     def _do_parse(self):
         raw = self.entry_tlv.get("1.0", "end").strip()
@@ -836,45 +839,52 @@ class App(ctk.CTk):
         self._do_clear()
         raw_hex = "".join(raw.split()).upper()
 
-        fmt = validate_hex(raw_hex, level="format")
-        if not fmt.valid:
-            self._set_status(f"[FORMAT ERROR] {fmt.errors[0].message}", "error")
-            return
+        try:
+            fmt = validate_hex(raw_hex, level="format")
+            if not fmt.valid:
+                self._set_status(f"[FORMAT ERROR] {fmt.errors[0].message}", "error")
+                return
 
-        struct = validate_hex(fmt.cleaned_hex, level="structure")
-        if not struct.valid:
-            self._set_status(f"[STRUCTURE ERROR] {struct.errors[0].message}", "error")
-            return
+            struct = validate_hex(fmt.cleaned_hex, level="structure")
+            if not struct.valid:
+                self._set_status(f"[STRUCTURE ERROR] {struct.errors[0].message}", "error")
+                return
 
-        self._set_status("Parsing in progress...", "ready")
-        cleaned = fmt.cleaned_hex
+            self._set_status("Parsing in progress...", "ready")
+            self.update_idletasks()
 
-        if len(cleaned) < 4096:
-            try:
-                tree = parse(cleaned, "raw")
-            except Exception:
+            cleaned = fmt.cleaned_hex
+
+            if len(cleaned) < 4096:
                 try:
-                    tree = parse(cleaned, "config")
-                except Exception as e2:
-                    self._set_status(f"Parse error: {e2}", "error")
-                    return
-            self._on_parse_complete(tree)
-        else:
-            self._parse_result_queue = queue.Queue()
-
-            def _bg():
-                try:
-                    t = parse(cleaned, "raw")
+                    tree = parse(cleaned, "raw")
                 except Exception:
                     try:
-                        t = parse(cleaned, "config")
+                        tree = parse(cleaned, "config")
                     except Exception as e2:
-                        self._parse_result_queue.put(("error", str(e2)))
+                        self._set_status(f"Parse error: {e2}", "error")
                         return
-                self._parse_result_queue.put(("ok", t))
+                self._on_parse_complete(tree)
+            else:
+                self._parse_result_queue = queue.Queue()
 
-            threading.Thread(target=_bg, daemon=True).start()
-            self.after(50, self._poll_parse_result)
+                def _bg():
+                    try:
+                        t = parse(cleaned, "raw")
+                    except Exception:
+                        try:
+                            t = parse(cleaned, "config")
+                        except Exception as e2:
+                            self._parse_result_queue.put(("error", str(e2)))
+                            return
+                    self._parse_result_queue.put(("ok", t))
+
+                threading.Thread(target=_bg, daemon=True).start()
+                self.after(50, self._poll_parse_result)
+
+        except Exception as e:
+            traceback.print_exc()
+            self._set_status(f"Unexpected error: {e}", "error")
 
     def _poll_parse_result(self):
         try:
@@ -888,22 +898,27 @@ class App(ctk.CTk):
         self._on_parse_complete(payload)
 
     def _on_parse_complete(self, tree):
-        self._root_nodes = tree
+        try:
+            self._root_nodes = tree
 
-        def count(nodes):
-            n = len(nodes)
-            for node in nodes:
-                n += count(node.children)
-            return n
-        total = count(self._root_nodes)
+            def count(nodes):
+                n = len(nodes)
+                for node in nodes:
+                    n += count(node.children)
+                return n
 
-        self._cache_bitmasks(self._root_nodes)
-        self._attach_bitmask_nodes(self._root_nodes)
-        self._attach_dol_children(self._root_nodes)
-        self._attach_mapped_children(self._root_nodes)   # ← ajout
-        self._attach_position_children(self._root_nodes)
-        self._populate_tree(self._root_nodes)
-        self._set_status(f"Parsed {total} tag(s) successfully", "ok")
+            total = count(self._root_nodes)
+
+            self._cache_bitmasks(self._root_nodes)
+            self._attach_bitmask_nodes(self._root_nodes)
+            self._attach_dol_children(self._root_nodes)
+            self._attach_mapped_children(self._root_nodes)
+            self._attach_position_children(self._root_nodes)
+            self._populate_tree(self._root_nodes)
+            self._set_status(f"Parsed {total} tag(s) successfully", "ok")
+        except Exception as e:
+            traceback.print_exc()
+            self._set_status(f"Error during parsing: {e}", "error")
 
     def _build_statusbar(self):
         bar = ctk.CTkFrame(self, height=42, fg_color=COLORS["bg"], corner_radius=0)

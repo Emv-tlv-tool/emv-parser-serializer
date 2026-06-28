@@ -253,6 +253,12 @@
         "tag": "9B",
         "tech_name": "EMVCO_TRANSACTION_STATUS_INFORMATION__TSI",
         "length": 2
+      },
+      {
+        
+        "tag":"9F34",
+        "tech_name":"EMVCO_CARDHOLDER_VERIFICATION_METHOD_CVM_RESULTS",
+         "length": 3
       }
     ]
   },

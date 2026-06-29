@@ -341,7 +341,6 @@ class App(ctk.CTk):
                 self._nav_frame.pack_forget()
             return
 
-        # Ouvrir tous les parents pour garantir la visibilité
         for item in self._search_results:
             parent = self._tree.parent(item)
             while parent:
@@ -393,7 +392,7 @@ class App(ctk.CTk):
                 bd=0,
                 padx=0, pady=0,
             )
-            # Décalage souhaité avec l'indentation
+           
             x_offset = x + self._tree_indent
             overlay.place(x=x_offset, y=y, width=tag_width, height=h)
             self._highlight_overlays.append(overlay)
@@ -673,103 +672,156 @@ class App(ctk.CTk):
                 self._cache_bitmasks(node.children)
 
     def _attach_bitmask_nodes(self, nodes):
-        for node in nodes:
-            try:
-                bitmask = getattr(node, "_cached_bitmask", None)
-                if bitmask and isinstance(bitmask, dict) and "bytes" in bitmask:
-                    value_bytes = node.value
-                    bitmask_children = []
-                    for byte_info in bitmask["bytes"]:
-                        byte_idx = byte_info.get("index", 1) - 1
-                        if byte_idx < 0 or byte_idx >= len(value_bytes):
+     for node in nodes:
+        try:
+            bitmask = getattr(node, "_cached_bitmask", None)
+            if bitmask and isinstance(bitmask, dict) and "bytes" in bitmask:
+                value_bytes = node.value
+                bitmask_children = []
+                for byte_info in bitmask["bytes"]:
+                    # Convertir index en entier (peut être une chaîne)
+                    try:
+                        byte_idx = int(byte_info.get("index", 1)) - 1
+                    except (ValueError, TypeError):
+                        byte_idx = 0
+                    if byte_idx < 0 or byte_idx >= len(value_bytes):
+                        continue
+                    byte_val = value_bytes[byte_idx]
+                    label = byte_info.get("label", "")
+                    byte_display = f"Byte {byte_idx + 1} ({byte_val:02X})"
+                    if label:
+                        byte_display += f" — {label}"
+                    byte_node = BitmaskPseudoNode(byte_display, is_constructed=True)
+
+                    for bit_info in byte_info.get("bits", []):
+                        # Convertir bit en entier
+                        try:
+                            bit_num = int(bit_info.get("bit", 0))
+                        except (ValueError, TypeError):
                             continue
-                        byte_val = value_bytes[byte_idx]
-                        label = byte_info.get("label", "")
-                        byte_display = f"Byte {byte_idx + 1} ({byte_val:02X})"
-                        if label:
-                            byte_display += f" — {label}"
-                        byte_node = BitmaskPseudoNode(byte_display, is_constructed=True)
+                        if bit_num < 1 or bit_num > 8:
+                            continue
+                        label_bit = bit_info.get("label", "")
+                        mask = 1 << (bit_num - 1)
+                        if byte_val & mask:
+                            bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
+                            bit_node = BitmaskPseudoNode(bit_text)
+                            byte_node.children.append(bit_node)
 
-                        for bit_info in byte_info.get("bits", []):
-                            bit_num = bit_info.get("bit", 0)
-                            if bit_num < 1 or bit_num > 8:
-                                continue
-                            label_bit = bit_info.get("label", "")
-                            mask = 1 << (bit_num - 1)
-                          
-                            if byte_val & mask:
-                                bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
-                                bit_node = BitmaskPseudoNode(bit_text)
-                                byte_node.children.append(bit_node)
+                    if byte_node.children:
+                        bitmask_children.append(byte_node)
 
-                        if byte_node.children:
-                            bitmask_children.append(byte_node)
+                node._bitmask_children = bitmask_children
 
-                    node._bitmask_children = bitmask_children
+            elif bitmask and isinstance(bitmask, list):
+                value_bytes = node.value
+                bytes_map = {}
+                for bit in bitmask:
+                 
+                    try:
+                        byte_idx = int(bit.get("byte", 0))
+                    except (ValueError, TypeError):
+                        continue
+                    if byte_idx not in bytes_map:
+                        byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
+                        bytes_map[byte_idx] = {"value": byte_val, "bits": []}
+                    if bit.get("set", False):
+                        bytes_map[byte_idx]["bits"].append(bit)
 
-                elif bitmask and isinstance(bitmask, list):
-                    value_bytes = node.value
-                    bytes_map = {}
-                    for bit in bitmask:
-                        byte_idx = bit.get("byte", 0)
-                        if byte_idx not in bytes_map:
-                            byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
-                            bytes_map[byte_idx] = {"value": byte_val, "bits": []}
-                        if bit.get("set", False):
-                            bytes_map[byte_idx]["bits"].append(bit)
+                bitmask_children = []
+                for byte_idx in sorted(bytes_map):
+                    byte_data = bytes_map[byte_idx]
+                    byte_node = BitmaskPseudoNode(
+                        f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
+                        is_constructed=True,
+                    )
+                    for bit in byte_data["bits"]:
+                        # Convertir mask en entier
+                        try:
+                            mask = int(bit.get("mask", 0))
+                        except (ValueError, TypeError):
+                            mask = 0
+                        label = bit.get("name", "")
+                        bit_val = byte_data["value"] & mask if mask else 0
+                        if bit_val:
+                            # Convertir bit en entier si présent
+                            bit_num = bit.get("bit", 0)
+                            try:
+                                bit_num = int(bit_num)
+                            except (ValueError, TypeError):
+                                bit_num = 0
+                            bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}" if mask else label
+                            byte_node.children.append(BitmaskPseudoNode(bit_text))
+                    if byte_node.children:
+                        bitmask_children.append(byte_node)
+                node._bitmask_children = bitmask_children
 
-                    bitmask_children = []
-                    for byte_idx in sorted(bytes_map):
-                        byte_data = bytes_map[byte_idx]
-                        byte_node = BitmaskPseudoNode(
-                            f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
-                            is_constructed=True,
-                        )
-                        for bit in byte_data["bits"]:
-                            mask = bit.get("mask", 0)
-                            label = bit.get("name", "")
-                            bit_val = byte_data["value"] & mask if mask else 0
-                            if bit_val:
-                                bit_text = f"Bit {bit.get('bit', 0)} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}" if mask else label
-                                byte_node.children.append(BitmaskPseudoNode(bit_text))
-                        if byte_node.children:
-                            bitmask_children.append(byte_node)
-                    node._bitmask_children = bitmask_children
+        except Exception as e:
+            print(f"DEBUG: _attach_bitmask_nodes error for {node.tag}: {e}")
+            traceback.print_exc()
 
-            except Exception as e:
-                print(f"DEBUG: _attach_bitmask_nodes error for {node.tag}: {e}")
-                traceback.print_exc()
-
-            if node.children:
-                self._attach_bitmask_nodes(node.children)
-
+        if node.children:
+            self._attach_bitmask_nodes(node.children)
     def _attach_dol_children(self, nodes):
-        for node in nodes:
-            try:
-                metadata = Dictionary.lookup_by_tag(node.tag)
-                if metadata and metadata.get("value_format") == "dol":
-                    dol_fields = metadata.get("dol_fields", [])
-                    if dol_fields:
-                        dol_children = []
-                        for field in dol_fields:
-                            tag = field.get("tag")
-                            tech_name = field.get("tech_name", "")
-                            length = field.get("length", 0)
-                            child_node = BitmaskPseudoNode(
-                                f"[{tag}]  Name: {tech_name}  —  Length: {length}",
-                                is_constructed=False,
-                            )
-                            child_node.tag = tag
-                            child_node.name = tech_name
-                            child_node.length = length
-                            dol_children.append(child_node)
-                        node._dol_children = dol_children
-            except Exception as e:
-                print(f"DEBUG: _attach_dol_children error for {node.tag}: {e}")
-                traceback.print_exc()
-            if node.children:
-                self._attach_dol_children(node.children)
+     for node in nodes:
+        try:
+            metadata = Dictionary.lookup_by_tag(node.tag)
+            if metadata and metadata.get("value_format") == "dol" and node.value:
 
+               
+                dol_field_map = {}
+                for f in metadata.get("dol_fields", []):
+                    dol_field_map[f.get("tag", "").upper()] = f
+
+                dol_children = []
+                raw = node.value
+                i = 0
+
+                while i < len(raw):
+                    b = raw[i]
+                    i += 1
+                    if b == 0x00 or b == 0xFF:
+                        continue
+
+                    tag_bytes = bytes([b])
+                    if (b & 0x1F) == 0x1F:
+                        while i < len(raw):
+                            nb = raw[i]
+                            i += 1
+                            tag_bytes += bytes([nb])
+                            if (nb & 0x80) == 0:
+                                break
+
+                    tag_hex = tag_bytes.hex().upper()
+
+                    if i >= len(raw):
+                        break
+                    length = raw[i]
+                    i += 1
+
+             
+                    field_info = dol_field_map.get(tag_hex)
+                    tag_name = field_info.get("tech_name", "") if field_info else ""
+
+                    if tag_name:
+                        text = f"[{tag_hex}]  {tag_name}  —  Length: {length}"
+                    else:
+                        text = f"[{tag_hex}]  —  Length: {length}"
+
+                    child_node        = BitmaskPseudoNode(text, is_constructed=False)
+                    child_node.tag    = tag_hex
+                    child_node.name   = tag_name
+                    child_node.length = length
+                    dol_children.append(child_node)
+
+                node._dol_children = dol_children
+
+        except Exception as e:
+            print(f"DEBUG _attach_dol_children [{node.tag}]: {e}")
+            traceback.print_exc()
+
+        if node.children:
+            self._attach_dol_children(node.children)
     def _attach_mapped_children(self, nodes):
         for node in nodes:
             try:

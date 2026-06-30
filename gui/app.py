@@ -326,7 +326,6 @@ class App(ctk.CTk):
         def walk(parent=""):
             for item in self._tree.get_children(parent):
                 node = self._node_map.get(item)
-                # Inclure les vrais nœuds ET les pseudo-nœuds qui possèdent un tag (ex: DOL)
                 if node and hasattr(node, 'tag') and node.tag:
                     if node.tag.upper() == tag_query:
                         self._search_results.append(item)
@@ -607,40 +606,61 @@ class App(ctk.CTk):
     def _format_node_text(self, node) -> str:
         if isinstance(node, BitmaskPseudoNode):
             return f"  {node.text}"
-        tag       = node.tag
-        name      = getattr(node, "display_name", node.tech_name or node.name or "Unknown tag")
-        length    = node.length
+        tag = node.tag
+        name = getattr(node, "display_name", node.tech_name or node.name or "Unknown tag")
+        length = node.length
         if node.is_constructed:
             return f"[{tag}]  Name: {name}  —  Length: {length}"
         else:
             value_hex = node.value.hex().upper() if node.value else ""
             return f"[{tag}]  Name: {name}  —  Length: {length}  —  Value: {value_hex}"
 
+
+
+    def _attach_ascii_children(self, nodes):
+        for node in nodes:
+            # Vérifier si le tag existe dans le dictionnaire et a value_format == "ascii"
+            metadata = Dictionary.lookup_by_tag(node.tag)
+            if metadata and metadata.get("value_format") == "ascii" and node.value:
+                try:
+                    ascii_text = node.value.decode('ascii', errors='replace')
+                    value_hex = node.value.hex().upper()
+                    child_text = f"{value_hex} ('{ascii_text}')"
+                    child = BitmaskPseudoNode(child_text, is_constructed=False)
+                    if not hasattr(node, "_ascii_children"):
+                        node._ascii_children = []
+                    node._ascii_children.append(child)
+                except Exception:
+                    pass
+            if node.children:
+                self._attach_ascii_children(node.children)
+
     def _populate_tree(self, nodes, parent=""):
-     for node in nodes:
-        text = self._format_node_text(node)
-        if isinstance(node, BitmaskPseudoNode):
-            tags = ("pseudo",)
-        elif not getattr(node, "is_valid_parent", True):
-            # Ne pas colorer en rouge si l'erreur concerne le parent
-            if node.parent_validation_error and "parent" in node.parent_validation_error.lower():
-                tags = ()   # pas de tag spécial (pas de rouge)
+        for node in nodes:
+            text = self._format_node_text(node)
+            if isinstance(node, BitmaskPseudoNode):
+                tags = ("pseudo",)
+            elif not getattr(node, "is_valid_parent", True):
+                if node.parent_validation_error and "parent" in node.parent_validation_error.lower():
+                    tags = ()
+                else:
+                    tags = ("warn",)
             else:
-                tags = ("warn",)
-        else:
-            tags = ()
+                tags = ()
 
-        item = self._tree.insert(parent, "end", text=text, tags=tags, open=True)
-        self._node_map[item] = node
+            item = self._tree.insert(parent, "end", text=text, tags=tags, open=True)
+            self._node_map[item] = node
 
-        children   = list(getattr(node, "children", []) or [])
-        bitmask_ch = list(getattr(node, "_bitmask_children", []) or [])
-        dol_ch     = list(getattr(node, "_dol_children", []) or [])
-        mapped_ch  = list(getattr(node, "_mapped_children", []) or [])
-        position_ch = list(getattr(node, "_position_children", []) or [])
+            children   = list(getattr(node, "children", []) or [])
+            bitmask_ch = list(getattr(node, "_bitmask_children", []) or [])
+            dol_ch     = list(getattr(node, "_dol_children", []) or [])
+            mapped_ch  = list(getattr(node, "_mapped_children", []) or [])
+            position_ch = list(getattr(node, "_position_children", []) or [])
+            ascii_ch   = list(getattr(node, "_ascii_children", []) or [])
 
-        if children + bitmask_ch + dol_ch + mapped_ch + position_ch:
-            self._populate_tree(children + bitmask_ch + dol_ch + mapped_ch + position_ch, item)
+            if children + bitmask_ch + dol_ch + mapped_ch + position_ch + ascii_ch:
+                self._populate_tree(children + bitmask_ch + dol_ch + mapped_ch + position_ch + ascii_ch, item)
+
     def _cache_bitmasks(self, nodes):
         for node in nodes:
             try:
@@ -672,156 +692,149 @@ class App(ctk.CTk):
                 self._cache_bitmasks(node.children)
 
     def _attach_bitmask_nodes(self, nodes):
-     for node in nodes:
-        try:
-            bitmask = getattr(node, "_cached_bitmask", None)
-            if bitmask and isinstance(bitmask, dict) and "bytes" in bitmask:
-                value_bytes = node.value
-                bitmask_children = []
-                for byte_info in bitmask["bytes"]:
-                    # Convertir index en entier (peut être une chaîne)
-                    try:
-                        byte_idx = int(byte_info.get("index", 1)) - 1
-                    except (ValueError, TypeError):
-                        byte_idx = 0
-                    if byte_idx < 0 or byte_idx >= len(value_bytes):
-                        continue
-                    byte_val = value_bytes[byte_idx]
-                    label = byte_info.get("label", "")
-                    byte_display = f"Byte {byte_idx + 1} ({byte_val:02X})"
-                    if label:
-                        byte_display += f" — {label}"
-                    byte_node = BitmaskPseudoNode(byte_display, is_constructed=True)
-
-                    for bit_info in byte_info.get("bits", []):
-                        # Convertir bit en entier
+        for node in nodes:
+            try:
+                bitmask = getattr(node, "_cached_bitmask", None)
+                if bitmask and isinstance(bitmask, dict) and "bytes" in bitmask:
+                    value_bytes = node.value
+                    bitmask_children = []
+                    for byte_info in bitmask["bytes"]:
                         try:
-                            bit_num = int(bit_info.get("bit", 0))
+                            byte_idx = int(byte_info.get("index", 1)) - 1
                         except (ValueError, TypeError):
+                            byte_idx = 0
+                        if byte_idx < 0 or byte_idx >= len(value_bytes):
                             continue
-                        if bit_num < 1 or bit_num > 8:
-                            continue
-                        label_bit = bit_info.get("label", "")
-                        mask = 1 << (bit_num - 1)
-                        if byte_val & mask:
-                            bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
-                            bit_node = BitmaskPseudoNode(bit_text)
-                            byte_node.children.append(bit_node)
+                        byte_val = value_bytes[byte_idx]
+                        label = byte_info.get("label", "")
+                        byte_display = f"Byte {byte_idx + 1} ({byte_val:02X})"
+                        if label:
+                            byte_display += f" — {label}"
+                        byte_node = BitmaskPseudoNode(byte_display, is_constructed=True)
 
-                    if byte_node.children:
-                        bitmask_children.append(byte_node)
-
-                node._bitmask_children = bitmask_children
-
-            elif bitmask and isinstance(bitmask, list):
-                value_bytes = node.value
-                bytes_map = {}
-                for bit in bitmask:
-                 
-                    try:
-                        byte_idx = int(bit.get("byte", 0))
-                    except (ValueError, TypeError):
-                        continue
-                    if byte_idx not in bytes_map:
-                        byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
-                        bytes_map[byte_idx] = {"value": byte_val, "bits": []}
-                    if bit.get("set", False):
-                        bytes_map[byte_idx]["bits"].append(bit)
-
-                bitmask_children = []
-                for byte_idx in sorted(bytes_map):
-                    byte_data = bytes_map[byte_idx]
-                    byte_node = BitmaskPseudoNode(
-                        f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
-                        is_constructed=True,
-                    )
-                    for bit in byte_data["bits"]:
-                        # Convertir mask en entier
-                        try:
-                            mask = int(bit.get("mask", 0))
-                        except (ValueError, TypeError):
-                            mask = 0
-                        label = bit.get("name", "")
-                        bit_val = byte_data["value"] & mask if mask else 0
-                        if bit_val:
-                            # Convertir bit en entier si présent
-                            bit_num = bit.get("bit", 0)
+                        for bit_info in byte_info.get("bits", []):
                             try:
-                                bit_num = int(bit_num)
+                                bit_num = int(bit_info.get("bit", 0))
                             except (ValueError, TypeError):
-                                bit_num = 0
-                            bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}" if mask else label
-                            byte_node.children.append(BitmaskPseudoNode(bit_text))
-                    if byte_node.children:
-                        bitmask_children.append(byte_node)
-                node._bitmask_children = bitmask_children
+                                continue
+                            if bit_num < 1 or bit_num > 8:
+                                continue
+                            label_bit = bit_info.get("label", "")
+                            mask = 1 << (bit_num - 1)
+                            if byte_val & mask:
+                                bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
+                                bit_node = BitmaskPseudoNode(bit_text)
+                                byte_node.children.append(bit_node)
 
-        except Exception as e:
-            print(f"DEBUG: _attach_bitmask_nodes error for {node.tag}: {e}")
-            traceback.print_exc()
+                        if byte_node.children:
+                            bitmask_children.append(byte_node)
 
-        if node.children:
-            self._attach_bitmask_nodes(node.children)
+                    node._bitmask_children = bitmask_children
+
+                elif bitmask and isinstance(bitmask, list):
+                    value_bytes = node.value
+                    bytes_map = {}
+                    for bit in bitmask:
+                        try:
+                            byte_idx = int(bit.get("byte", 0))
+                        except (ValueError, TypeError):
+                            continue
+                        if byte_idx not in bytes_map:
+                            byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
+                            bytes_map[byte_idx] = {"value": byte_val, "bits": []}
+                        if bit.get("set", False):
+                            bytes_map[byte_idx]["bits"].append(bit)
+
+                    bitmask_children = []
+                    for byte_idx in sorted(bytes_map):
+                        byte_data = bytes_map[byte_idx]
+                        byte_node = BitmaskPseudoNode(
+                            f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
+                            is_constructed=True,
+                        )
+                        for bit in byte_data["bits"]:
+                            try:
+                                mask = int(bit.get("mask", 0))
+                            except (ValueError, TypeError):
+                                mask = 0
+                            label = bit.get("name", "")
+                            bit_val = byte_data["value"] & mask if mask else 0
+                            if bit_val:
+                                try:
+                                    bit_num = int(bit.get("bit", 0))
+                                except (ValueError, TypeError):
+                                    bit_num = 0
+                                bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}" if mask else label
+                                byte_node.children.append(BitmaskPseudoNode(bit_text))
+                        if byte_node.children:
+                            bitmask_children.append(byte_node)
+                    node._bitmask_children = bitmask_children
+
+            except Exception as e:
+                print(f"DEBUG: _attach_bitmask_nodes error for {node.tag}: {e}")
+                traceback.print_exc()
+
+            if node.children:
+                self._attach_bitmask_nodes(node.children)
+
     def _attach_dol_children(self, nodes):
-     for node in nodes:
-        try:
-            metadata = Dictionary.lookup_by_tag(node.tag)
-            if metadata and metadata.get("value_format") == "dol" and node.value:
+        for node in nodes:
+            try:
+                metadata = Dictionary.lookup_by_tag(node.tag)
+                if metadata and metadata.get("value_format") == "dol" and node.value:
+                    dol_field_map = {}
+                    for f in metadata.get("dol_fields", []):
+                        dol_field_map[f.get("tag", "").upper()] = f
 
-               
-                dol_field_map = {}
-                for f in metadata.get("dol_fields", []):
-                    dol_field_map[f.get("tag", "").upper()] = f
+                    dol_children = []
+                    raw = node.value
+                    i = 0
 
-                dol_children = []
-                raw = node.value
-                i = 0
+                    while i < len(raw):
+                        b = raw[i]
+                        i += 1
+                        if b == 0x00 or b == 0xFF:
+                            continue
 
-                while i < len(raw):
-                    b = raw[i]
-                    i += 1
-                    if b == 0x00 or b == 0xFF:
-                        continue
+                        tag_bytes = bytes([b])
+                        if (b & 0x1F) == 0x1F:
+                            while i < len(raw):
+                                nb = raw[i]
+                                i += 1
+                                tag_bytes += bytes([nb])
+                                if (nb & 0x80) == 0:
+                                    break
 
-                    tag_bytes = bytes([b])
-                    if (b & 0x1F) == 0x1F:
-                        while i < len(raw):
-                            nb = raw[i]
-                            i += 1
-                            tag_bytes += bytes([nb])
-                            if (nb & 0x80) == 0:
-                                break
+                        tag_hex = tag_bytes.hex().upper()
 
-                    tag_hex = tag_bytes.hex().upper()
+                        if i >= len(raw):
+                            break
+                        length = raw[i]
+                        i += 1
 
-                    if i >= len(raw):
-                        break
-                    length = raw[i]
-                    i += 1
+                        field_info = dol_field_map.get(tag_hex)
+                        tag_name = field_info.get("tech_name", "") if field_info else ""
 
-             
-                    field_info = dol_field_map.get(tag_hex)
-                    tag_name = field_info.get("tech_name", "") if field_info else ""
+                        if tag_name:
+                            text = f"[{tag_hex}]  {tag_name}  —  Length: {length}"
+                        else:
+                            text = f"[{tag_hex}]  —  Length: {length}"
 
-                    if tag_name:
-                        text = f"[{tag_hex}]  {tag_name}  —  Length: {length}"
-                    else:
-                        text = f"[{tag_hex}]  —  Length: {length}"
+                        child_node        = BitmaskPseudoNode(text, is_constructed=False)
+                        child_node.tag    = tag_hex
+                        child_node.name   = tag_name
+                        child_node.length = length
+                        dol_children.append(child_node)
 
-                    child_node        = BitmaskPseudoNode(text, is_constructed=False)
-                    child_node.tag    = tag_hex
-                    child_node.name   = tag_name
-                    child_node.length = length
-                    dol_children.append(child_node)
+                    node._dol_children = dol_children
 
-                node._dol_children = dol_children
+            except Exception as e:
+                print(f"DEBUG _attach_dol_children [{node.tag}]: {e}")
+                traceback.print_exc()
 
-        except Exception as e:
-            print(f"DEBUG _attach_dol_children [{node.tag}]: {e}")
-            traceback.print_exc()
+            if node.children:
+                self._attach_dol_children(node.children)
 
-        if node.children:
-            self._attach_dol_children(node.children)
     def _attach_mapped_children(self, nodes):
         for node in nodes:
             try:
@@ -833,7 +846,7 @@ class App(ctk.CTk):
                         if value_hex in mapping:
                             mapped_text = mapping[value_hex]
                             child_node = BitmaskPseudoNode(
-                                f"{value_hex} ({mapped_text})",   # point supprimé
+                                f"{value_hex} ({mapped_text})",
                                 is_constructed=False,
                             )
                             if not hasattr(node, "_mapped_children"):
@@ -976,6 +989,7 @@ class App(ctk.CTk):
             self._attach_dol_children(self._root_nodes)
             self._attach_mapped_children(self._root_nodes)
             self._attach_position_children(self._root_nodes)
+            self._attach_ascii_children(self._root_nodes)
             self._populate_tree(self._root_nodes)
             self._set_status(f"Parsed {total} tag(s) successfully", "ok")
         except Exception as e:

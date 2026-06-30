@@ -543,14 +543,8 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "string",
-    "mapping":{
-      "393530353630323235302020202020":"9505602250",
-      "343535363030343138323030202020":"455600418200",
-      "453139383730333530302020202020":"E198703500"
-      
+    "value_format": "ascii"
 
-    }
   },
   {
     "id": 211,
@@ -1381,7 +1375,7 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "binary"
+    "value_format": "ascii"
   },
   {
     "id": 352,
@@ -1423,7 +1417,7 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "binary"
+    "value_format":"ascii"
   },
   {
     "id": 355,
@@ -1437,10 +1431,8 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "binary",
-    "mapping":{
-      "4F66666C696E65":"Offline"
-    }
+    "value_format": "ascii"
+   
   },
   {
     "id": 356,
@@ -1454,7 +1446,7 @@
       "E2"
     ],
     "child_tags": [],
-    "value_format": "binary"
+    "value_format": "ascii"
   },
   {
     "id": 357,
@@ -1877,24 +1869,7 @@
     "child_tags": [
       "4A4342"
     ],
-    "value_format": "string",
-    "mapping": {
-   "4156532047757473636865696E": "AVS Gutschein",
-    "44696E65727320436C7562": "Diners Club",
-    "416D65726963616E2045787072657373": "American Express",
-    "6769726F63617264": "girocard",
-    "4A4342":"JCB",
-    "4D61657374726F":"Maestro",
-    "4D617374657243617264":"MasterCard",
-    "53455041204C61737473636872696674":"SEPA Lastschrift",
-    "556E696F6E506179204465626974":"UnionPay Debit",
-    "556E696F6E50617920437265646974":"UnionPay Credit",
-    "556E696F6E5061792051437265646974":"UnionPay QCredit",
-    "555049":"UPI",
-    "5649534120656C656374726F6E":"VISA electron",
-    "56495341":"VISA",
-    "56504159":"VPAY"
-  }
+    "value_format": "ascii"
   },
   {
     "id": 516,
@@ -3464,7 +3439,7 @@
 	  "FF60"
 	],
     "child_tags": [],
-    "value_format": "binary"
+    "value_format": "ascii"
   },
   {
     "id": null,

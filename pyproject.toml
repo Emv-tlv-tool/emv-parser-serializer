@@ -17,5 +17,38 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "black>=26.5.1",
+    "pyinstaller>=6.21.0",
     "pytest>=9.0.3",
+    "ruff>=0.15.20",
 ]
+
+[tool]
+[tool.black]
+line-length=100
+target-version = ["py312"]
+extend-exclude = '''
+/(
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "ARG"]
+ignore = ["E501", "N802", "N803", "N806", "N815", "N816"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ARG"]
+"gui/*" = ["ARG"]

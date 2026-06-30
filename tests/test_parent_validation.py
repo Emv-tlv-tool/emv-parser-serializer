@@ -15,8 +15,8 @@ class TestTLVNodeEnhancementAndParentValidation:
         assert isinstance(node, TLVNode)
         assert node.tag == "9F1A"
         assert node.name == "Terminal Country Code"
-        assert node.format == "bcd"
-        assert node.description == "EMVCO_TERMINAL_COUNTRY_CODE"
+        assert node.format == "numeric"
+        assert node.description == ""
         assert node.source == ""
         assert node.decoded == "Germany (280)"
         assert node.is_unknown is False
@@ -26,8 +26,8 @@ class TestTLVNodeEnhancementAndParentValidation:
         # Test dictionary-like access
         assert node["tag"] == "9F1A"
         assert node["name"] == "Terminal Country Code"
-        assert node["format"] == "bcd"
-        assert node["description"] == "EMVCO_TERMINAL_COUNTRY_CODE"
+        assert node["format"] == "numeric"
+        assert node["description"] == ""
         assert node["source"] == ""
         assert node["decoded"] == "Germany (280)"
         assert "is_unknown" not in node

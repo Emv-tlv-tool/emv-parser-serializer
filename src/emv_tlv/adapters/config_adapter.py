@@ -25,8 +25,8 @@ CA Keys (E1) contains:
 - Checksum (DF03): Key checksum
 """
 
-from emv_tlv.core.tlv_parser import TLVParser
 from emv_tlv.core.tlv_node import TLVNode
+from emv_tlv.core.tlv_parser import TLVParser
 
 
 class ConfigAdapter:
@@ -177,9 +177,7 @@ class ConfigAdapter:
             if node.tag == tag:
                 results.append(node)
             if node.is_constructed:
-                child_results = ConfigAdapter._find_all_templates(
-                    node.children, tag
-                )
+                child_results = ConfigAdapter._find_all_templates(node.children, tag)
                 results.extend(child_results)
 
         return results

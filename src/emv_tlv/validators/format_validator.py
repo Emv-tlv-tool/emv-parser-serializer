@@ -9,22 +9,23 @@ Checks:
 """
 
 import re
-from emv_tlv.validators.types import ValidationResult, ValidationError
+
+from emv_tlv.validators.types import ValidationError, ValidationResult
 
 
 class FormatValidator:
     """Validates hex string format."""
 
     # Characters to strip from hex input
-    _STRIP_CHARS = re.compile(r'[\s\-:.,;]')
+    _STRIP_CHARS = re.compile(r"[\s\-:.,;]")
 
     # Valid hex character pattern
-    _HEX_PATTERN = re.compile(r'^[0-9A-Fa-f]*$')
+    _HEX_PATTERN = re.compile(r"^[0-9A-Fa-f]*$")
 
     @staticmethod
     def clean_hex(data: str) -> str:
         """Strip formatting characters from a hex string."""
-        return FormatValidator._STRIP_CHARS.sub('', data)
+        return FormatValidator._STRIP_CHARS.sub("", data)
 
     @staticmethod
     def validate(data: str) -> ValidationResult:
@@ -43,12 +44,14 @@ class FormatValidator:
         # Check empty input
         stripped = data.strip()
         if not stripped:
-            errors.append(ValidationError(
-                code="EMPTY_INPUT",
-                message="Input is empty or contains only whitespace",
-                position=0,
-                severity="error",
-            ))
+            errors.append(
+                ValidationError(
+                    code="EMPTY_INPUT",
+                    message="Input is empty or contains only whitespace",
+                    position=0,
+                    severity="error",
+                )
+            )
             return ValidationResult(valid=False, errors=errors, cleaned_hex=None)
 
         # Clean the hex string
@@ -62,27 +65,31 @@ class FormatValidator:
         if not FormatValidator._HEX_PATTERN.match(cleaned):
             # Find the first invalid character position in cleaned string
             for i, c in enumerate(cleaned):
-                if c not in '0123456789ABCDEFabcdef':
+                if c not in "0123456789ABCDEFabcdef":
                     # Map position back to original string
                     pos = FormatValidator._find_original_position(stripped, cleaned, i)
-                    errors.append(ValidationError(
-                        code="INVALID_HEX_CHAR",
-                        message=f"Invalid hex character '{c}' at position {pos}",
-                        position=pos,
-                        severity="error",
-                    ))
+                    errors.append(
+                        ValidationError(
+                            code="INVALID_HEX_CHAR",
+                            message=f"Invalid hex character '{c}' at position {pos}",
+                            position=pos,
+                            severity="error",
+                        )
+                    )
                     break  # Report first invalid character
             return ValidationResult(valid=False, errors=errors, cleaned_hex=None)
 
         # Check for odd length
         if len(cleaned) % 2 != 0:
-            errors.append(ValidationError(
-                code="ODD_LENGTH",
-                message=f"Hex string has odd length ({len(cleaned)} characters); "
-                        f"TLV requires byte pairs (even length)",
-                position=len(cleaned),
-                severity="error",
-            ))
+            errors.append(
+                ValidationError(
+                    code="ODD_LENGTH",
+                    message=f"Hex string has odd length ({len(cleaned)} characters); "
+                    f"TLV requires byte pairs (even length)",
+                    position=len(cleaned),
+                    severity="error",
+                )
+            )
             return ValidationResult(valid=False, errors=errors, cleaned_hex=cleaned)
 
         # Success
@@ -101,12 +108,12 @@ class FormatValidator:
         )
 
     @staticmethod
-    def _find_original_position(raw: str, cleaned: str, cleaned_pos: int) -> int:
+    def _find_original_position(raw: str, _cleaned: str, cleaned_pos: int) -> int:
         """Map a position in the cleaned string back to the original string."""
         raw_idx = 0
         clean_idx = 0
         while raw_idx < len(raw) and clean_idx <= cleaned_pos:
-            if raw[raw_idx] in ' \t\n\r\-:.,;':
+            if raw[raw_idx] in " \t\n\r\\-:.,;":
                 raw_idx += 1
                 continue
             if clean_idx == cleaned_pos:

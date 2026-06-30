@@ -203,16 +203,16 @@ class TLVNode(dict):
 
     def _enhance(self) -> None:
         """Fetch metadata, decode value and bitmask."""
-        from emv_tlv.dictionaries import Dictionary
-        from emv_tlv.decoders.value_decoder import ValueDecoder
         from emv_tlv.decoders.bitmask_decoder import BitmaskDecoder
+        from emv_tlv.decoders.value_decoder import ValueDecoder
+        from emv_tlv.dictionaries import Dictionary
 
         metadata = Dictionary.lookup_by_tag(self.tag)
         if metadata:
             self["name"] = metadata.get("name", "")
             self["tech_name"] = metadata.get("tech_name", "")  # ← ici
             self["description"] = metadata.get("description", "")
-            self["format"] = metadata.get("format", "")
+            self["format"] = metadata.get("value_format") or metadata.get("format", "")
             self["source"] = metadata.get("source", "")
         else:
             self["is_unknown"] = True
@@ -224,7 +224,8 @@ class TLVNode(dict):
                 decoded = self._value_bytes.hex().upper()
             self["decoded"] = decoded
 
-            if metadata and metadata.get("format") == "bitmask":
+            fmt = metadata.get("value_format") or metadata.get("format", "") if metadata else ""
+            if fmt == "bitmask":
                 self["bitmask"] = BitmaskDecoder.decode_bitmask(self.tag, self._value_bytes)
 
         self.validate_parent()
@@ -304,6 +305,5 @@ class TLVNode(dict):
 
     def __repr__(self) -> str:
         return (
-            f"TLVNode(tag={self.tag}, length={self.length}, "
-            f"constructed={self.is_constructed})"
+            f"TLVNode(tag={self.tag}, length={self.length}, " f"constructed={self.is_constructed})"
         )

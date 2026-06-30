@@ -9,6 +9,7 @@ build/
 *.egg
 .ruff_cache/
 *.pyc
+emv-parser.spec
 
 # Virtual environment
 .venv/

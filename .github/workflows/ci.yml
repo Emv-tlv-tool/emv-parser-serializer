@@ -1,0 +1,32 @@
+name: CI pipeline
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+    lint-and-test:
+        runs-on: ubuntu
+        strategy:
+            matrix:
+                python-version: ["3.12","3.13"]
+        steps:
+            - uses: actions/checkout@v5
+            - name: install uv
+              uses: astral-sh/setup-uv@v5
+              with:
+                python-version: ${{matrix.python-version}}
+                enable-cache: true
+            - name: install dependencies
+              run: uv sync --frozen
+            - name: lint
+              run: make lint
+            - name: format
+              run: make format
+            - name: test
+              run: make test
+
+
+    

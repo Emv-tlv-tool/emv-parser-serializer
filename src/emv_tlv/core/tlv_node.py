@@ -212,7 +212,7 @@ class TLVNode(dict):
             self["name"] = metadata.get("name", "")
             self["tech_name"] = metadata.get("tech_name", "")  # ← ici
             self["description"] = metadata.get("description", "")
-            self["format"] = metadata.get("format", "")
+            self["format"] = metadata.get("value_format") or metadata.get("format", "")
             self["source"] = metadata.get("source", "")
         else:
             self["is_unknown"] = True
@@ -224,7 +224,8 @@ class TLVNode(dict):
                 decoded = self._value_bytes.hex().upper()
             self["decoded"] = decoded
 
-            if metadata and metadata.get("format") == "bitmask":
+            fmt = metadata.get("value_format") or metadata.get("format", "") if metadata else ""
+            if fmt == "bitmask":
                 self["bitmask"] = BitmaskDecoder.decode_bitmask(self.tag, self._value_bytes)
 
         self.validate_parent()

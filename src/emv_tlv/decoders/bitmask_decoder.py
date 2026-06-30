@@ -238,8 +238,28 @@ class BitmaskDecoder:
                                 "set": byte_value != 0,
                             })
                         else:
-                            bit = bit_def.get("bit", 0)
-                            mask = 1 << (bit - 1) if bit > 0 else 0
+                            bit_raw = bit_def.get("bit", 0)
+                            # Handle string values like "2-1" (multi-bit range) or "value"
+                            try:
+                                bit = int(bit_raw)
+                            except (ValueError, TypeError):
+                                bit = 0
+                            # For multi-bit ranges like "2-1", treat as multi-bit field
+                            if isinstance(bit_raw, str) and "-" in bit_raw:
+                                # Multi-bit field: show as set if any of the bits are set
+                                try:
+                                    parts = bit_raw.split("-")
+                                    high = int(parts[0])
+                                    low = int(parts[1])
+                                    multi_mask = 0
+                                    for b in range(low, high + 1):
+                                        multi_mask |= (1 << (b - 1))
+                                    mask = multi_mask
+                                    bit = high  # Use highest bit for display
+                                except (ValueError, IndexError):
+                                    mask = 0
+                            else:
+                                mask = 1 << (bit - 1) if bit > 0 else 0
                             results.append({
                                 "byte": byte_index,
                                 "bit": bit,

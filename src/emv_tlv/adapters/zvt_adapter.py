@@ -77,11 +77,13 @@ class ZVTAdapter:
             bmp_value = data[offset : offset + bmp_length]
             offset += bmp_length
 
-            bmp_fields.append({
-                "tag": f"{bmp_tag:02X}",
-                "length": bmp_length,
-                "value": bmp_value,
-            })
+            bmp_fields.append(
+                {
+                    "tag": f"{bmp_tag:02X}",
+                    "length": bmp_length,
+                    "value": bmp_value,
+                }
+            )
 
         return {
             "ctrl": ctrl,
@@ -141,11 +143,13 @@ class ZVTAdapter:
         if payload_length <= 0xFE:
             length_bytes = bytes([payload_length])
         else:
-            length_bytes = bytes([
-                0xFF,
-                (payload_length >> 8) & 0xFF,
-                payload_length & 0xFF,
-            ])
+            length_bytes = bytes(
+                [
+                    0xFF,
+                    (payload_length >> 8) & 0xFF,
+                    payload_length & 0xFF,
+                ]
+            )
         parts.append(length_bytes)
 
         # BMP fields

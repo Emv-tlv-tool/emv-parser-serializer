@@ -16,7 +16,7 @@ with open(os.path.join(_dict_dir, JSON_FILE), encoding="utf-8") as f:
 # Indexation par "poseidon_tag" (prioritaire) ou "tai_tag"
 _all_tags = {}
 for entry in _tags_list:
-    tag = entry.get("poseidon_tag") 
+    tag = entry.get("poseidon_tag")
     if tag:
         _all_tags[tag] = entry
 
@@ -57,7 +57,7 @@ class Dictionary:
                 "description": metadata.get("description", ""),
                 "format": metadata.get("value_format") or metadata.get("format", ""),
                 "source": metadata.get("source", ""),
-                "bytes": metadata.get("bytes"),          # pour les bitmasks
-                "bitmask": metadata.get("bitmask"),      # ancien format
+                "bytes": metadata.get("bytes"),  # pour les bitmasks
+                "bitmask": metadata.get("bitmask"),  # ancien format
             }
         return node

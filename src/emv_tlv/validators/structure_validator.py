@@ -9,7 +9,7 @@ Parses the hex data as BER-TLV and validates:
 - Padding bytes (0x00, 0xFF) are properly handled
 """
 
-from emv_tlv.validators.types import ValidationResult, ValidationError
+from emv_tlv.validators.types import ValidationError, ValidationResult
 
 
 class StructureValidator:
@@ -32,16 +32,18 @@ class StructureValidator:
         try:
             data_bytes = bytes.fromhex(data)
         except ValueError as e:
-            errors.append(ValidationError(
-                code="INVALID_HEX",
-                message=f"Invalid hex data: {e}",
-                position=0,
-                severity="error",
-            ))
+            errors.append(
+                ValidationError(
+                    code="INVALID_HEX",
+                    message=f"Invalid hex data: {e}",
+                    position=0,
+                    severity="error",
+                )
+            )
             return ValidationResult(valid=False, errors=errors)
 
         byte_offset = 0  # byte position
-        hex_offset = 0   # hex char position
+        hex_offset = 0  # hex char position
         nodes = []
         padding_count = 0
 
@@ -54,20 +56,22 @@ class StructureValidator:
                 continue
 
             # Try to parse a node
-            node, byte_offset, hex_offset, node_errors = (
-                StructureValidator._parse_node(data_bytes, byte_offset, hex_offset, 0)
+            node, byte_offset, hex_offset, node_errors = StructureValidator._parse_node(
+                data_bytes, byte_offset, hex_offset, 0
             )
             errors.extend(node_errors)
             if node:
                 nodes.append(node)
 
         if padding_count > 0:
-            warnings.append(ValidationError(
-                code="PADDING_BYTES",
-                message=f"Found {padding_count} padding byte(s) (0x00/0xFF) skipped in data",
-                position=0,
-                severity="warning",
-            ))
+            warnings.append(
+                ValidationError(
+                    code="PADDING_BYTES",
+                    message=f"Found {padding_count} padding byte(s) (0x00/0xFF) skipped in data",
+                    position=0,
+                    severity="warning",
+                )
+            )
 
         tag_count = sum(1 for _ in StructureValidator._count_all(nodes))
         leaf_count = sum(1 for _ in StructureValidator._count_leaves(nodes))
@@ -84,7 +88,7 @@ class StructureValidator:
         # Separate warnings from errors
         real_errors = [e for e in errors if e.severity == "error"]
         real_warnings = [e for e in errors if e.severity == "warning"]
-        
+
         return ValidationResult(
             valid=len(real_errors) == 0,
             errors=real_errors,
@@ -110,12 +114,14 @@ class StructureValidator:
 
         # --- Parse tag ---
         if byte_offset >= len(data_bytes):
-            errors.append(ValidationError(
-                code="TRUNCATED_TAG",
-                message=f"Buffer truncated at byte {byte_offset}: cannot read tag",
-                position=hex_offset,
-                severity="error",
-            ))
+            errors.append(
+                ValidationError(
+                    code="TRUNCATED_TAG",
+                    message=f"Buffer truncated at byte {byte_offset}: cannot read tag",
+                    position=hex_offset,
+                    severity="error",
+                )
+            )
             return None, byte_offset, hex_offset, errors
 
         first_byte = data_bytes[byte_offset]
@@ -135,12 +141,14 @@ class StructureValidator:
 
         # --- Parse length ---
         if byte_offset >= len(data_bytes):
-            errors.append(ValidationError(
-                code="TRUNCATED_LENGTH",
-                message=f"Buffer truncated at byte {byte_offset}: cannot read length for tag {tag}",
-                position=hex_offset,
-                severity="error",
-            ))
+            errors.append(
+                ValidationError(
+                    code="TRUNCATED_LENGTH",
+                    message=f"Buffer truncated at byte {byte_offset}: cannot read length for tag {tag}",
+                    position=hex_offset,
+                    severity="error",
+                )
+            )
             return None, byte_offset, hex_offset, errors
 
         length, length_bytes, length_errors = StructureValidator._parse_length(
@@ -155,18 +163,18 @@ class StructureValidator:
 
         # --- Check value bounds ---
         if byte_offset + length > len(data_bytes):
-            errors.append(ValidationError(
-                code="TRUNCATED_VALUE",
-                message=f"Tag {tag} at byte {first_tag_hex_offset // 2}: "
-                        f"value length {length} extends beyond buffer "
-                        f"({byte_offset + length} > {len(data_bytes)})",
-                position=first_tag_hex_offset,
-                severity="error",
-            ))
+            errors.append(
+                ValidationError(
+                    code="TRUNCATED_VALUE",
+                    message=f"Tag {tag} at byte {first_tag_hex_offset // 2}: "
+                    f"value length {length} extends beyond buffer "
+                    f"({byte_offset + length} > {len(data_bytes)})",
+                    position=first_tag_hex_offset,
+                    severity="error",
+                )
+            )
             return None, byte_offset, hex_offset, errors
 
-        # --- Extract value ---
-        value_bytes = data_bytes[byte_offset: byte_offset + length]
         children = []
 
         # --- Recursively parse children for constructed nodes ---
@@ -221,15 +229,17 @@ class StructureValidator:
                 if (next_byte & 0x80) == 0:
                     break
             else:
-                errors.append(ValidationError(
-                    code="TRUNCATED_TAG",
-                    message=f"Multi-byte tag incomplete at byte {byte_offset}",
-                    position=hex_offset,
-                    severity="error",
-                ))
+                errors.append(
+                    ValidationError(
+                        code="TRUNCATED_TAG",
+                        message=f"Multi-byte tag incomplete at byte {byte_offset}",
+                        position=hex_offset,
+                        severity="error",
+                    )
+                )
                 return None, 0, errors
 
-            tag = data_bytes[byte_offset: byte_offset + tag_length].hex().upper()
+            tag = data_bytes[byte_offset : byte_offset + tag_length].hex().upper()
             return tag, tag_length, errors
         else:
             tag = f"{first_byte:02X}"
@@ -249,62 +259,74 @@ class StructureValidator:
             return first_byte, 1, errors
         elif first_byte == 0x81:
             if byte_offset + 1 >= len(data_bytes):
-                errors.append(ValidationError(
-                    code="TRUNCATED_LENGTH",
-                    message=f"Length byte 0x81 requires 1 more byte at position {byte_offset}",
-                    position=hex_offset,
-                    severity="error",
-                ))
+                errors.append(
+                    ValidationError(
+                        code="TRUNCATED_LENGTH",
+                        message=f"Length byte 0x81 requires 1 more byte at position {byte_offset}",
+                        position=hex_offset,
+                        severity="error",
+                    )
+                )
                 return None, 0, errors
             length = data_bytes[byte_offset + 1]
             if length <= 0x7F:
-                errors.append(ValidationError(
-                    code="LONG_FORM_LENGTH",
-                    message=f"Length {length} at byte {byte_offset} uses long form unnecessarily",
-                    position=hex_offset,
-                    severity="warning",
-                ))
+                errors.append(
+                    ValidationError(
+                        code="LONG_FORM_LENGTH",
+                        message=f"Length {length} at byte {byte_offset} uses long form unnecessarily",
+                        position=hex_offset,
+                        severity="warning",
+                    )
+                )
             return length, 2, errors
         elif first_byte == 0x82:
             if byte_offset + 2 >= len(data_bytes):
-                errors.append(ValidationError(
-                    code="TRUNCATED_LENGTH",
-                    message=f"Length byte 0x82 requires 2 more bytes at position {byte_offset}",
-                    position=hex_offset,
-                    severity="error",
-                ))
+                errors.append(
+                    ValidationError(
+                        code="TRUNCATED_LENGTH",
+                        message=f"Length byte 0x82 requires 2 more bytes at position {byte_offset}",
+                        position=hex_offset,
+                        severity="error",
+                    )
+                )
                 return None, 0, errors
             length = (data_bytes[byte_offset + 1] << 8) | data_bytes[byte_offset + 2]
             if length <= 0x7F:
-                errors.append(ValidationError(
-                    code="LONG_FORM_LENGTH",
-                    message=f"Length {length} at byte {byte_offset} uses long form unnecessarily",
-                    position=hex_offset,
-                    severity="warning",
-                ))
+                errors.append(
+                    ValidationError(
+                        code="LONG_FORM_LENGTH",
+                        message=f"Length {length} at byte {byte_offset} uses long form unnecessarily",
+                        position=hex_offset,
+                        severity="warning",
+                    )
+                )
             return length, 3, errors
         elif 0x83 <= first_byte <= 0xFE:
             num_bytes = first_byte - 0x80
             if byte_offset + num_bytes >= len(data_bytes):
-                errors.append(ValidationError(
-                    code="TRUNCATED_LENGTH",
-                    message=f"ZKA extended length (0x{first_byte:02X}) at byte {byte_offset} "
-                            f"requires {num_bytes} more bytes",
-                    position=hex_offset,
-                    severity="error",
-                ))
+                errors.append(
+                    ValidationError(
+                        code="TRUNCATED_LENGTH",
+                        message=f"ZKA extended length (0x{first_byte:02X}) at byte {byte_offset} "
+                        f"requires {num_bytes} more bytes",
+                        position=hex_offset,
+                        severity="error",
+                    )
+                )
                 return None, 0, errors
             length = 0
             for i in range(num_bytes):
                 length = (length << 8) | data_bytes[byte_offset + 1 + i]
             return length, 1 + num_bytes, errors
         else:
-            errors.append(ValidationError(
-                code="INVALID_LENGTH_ENCODING",
-                message=f"Invalid length prefix 0x{first_byte:02X} at byte {byte_offset}",
-                position=hex_offset,
-                severity="error",
-            ))
+            errors.append(
+                ValidationError(
+                    code="INVALID_LENGTH_ENCODING",
+                    message=f"Invalid length prefix 0x{first_byte:02X} at byte {byte_offset}",
+                    position=hex_offset,
+                    severity="error",
+                )
+            )
             return None, 0, errors
 
     @staticmethod

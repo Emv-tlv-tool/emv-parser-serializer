@@ -1,45 +1,47 @@
 import os
-import threading
 import queue
-import sys
 import re
-import traceback
-import customtkinter as ctk
-from tkinter import ttk
+import sys
+import threading
 import tkinter as tk
 import tkinter.font as tkfont
+import traceback
+from tkinter import ttk
+
+import customtkinter as ctk
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
-from emv_tlv import parse, serialize, validate_hex, Dictionary, TLVNode
+from emv_tlv import Dictionary, TLVNode, parse, serialize, validate_hex
 
 
 def hex_bytes_to_decimals(value_hex: str) -> str:
     if not value_hex or len(value_hex) % 2 != 0:
         return ""
-    bytes_list = [str(int(value_hex[i:i+2], 16)) for i in range(0, len(value_hex), 2)]
+    bytes_list = [str(int(value_hex[i : i + 2], 16)) for i in range(0, len(value_hex), 2)]
     return " ".join(bytes_list)
 
-UI_FONT   = "helvetica"
+
+UI_FONT = "helvetica"
 MONO_FONT = "courier"
 FONT_SIZE_TREE = 14
 
 COLORS = {
-    "bg":           "#0047AB",
-    "surface":      "#FFFFFF",
-    "border":       "#D6D8E0",
-    "accent":       "#0047AB",
+    "bg": "#0047AB",
+    "surface": "#FFFFFF",
+    "border": "#D6D8E0",
+    "accent": "#0047AB",
     "accent_hover": "#003A8C",
-    "text":         "#1A1F2E",
-    "text_muted":   "#5B6278",
-    "danger":       "#C0392B",
-    "success":      "#1A7A4A",
-    "hover":        "#EDF0F7",
-    "select":       "#D0DCF5",
-    "header_bg":    "#0047AB",
-    "header_sub":   "#93C5FD",
-    "input_bg":     "#003A8C",
-    "warn":         "#D97706",
+    "text": "#1A1F2E",
+    "text_muted": "#5B6278",
+    "danger": "#C0392B",
+    "success": "#1A7A4A",
+    "hover": "#EDF0F7",
+    "select": "#D0DCF5",
+    "header_bg": "#0047AB",
+    "header_sub": "#93C5FD",
+    "input_bg": "#003A8C",
+    "warn": "#D97706",
 }
 
 
@@ -75,23 +77,23 @@ class App(ctk.CTk):
         self.geometry("1200x800")
         self.configure(fg_color=COLORS["bg"])
 
-        self._root_nodes         = []
-        self._node_map           = {}
-        self._edit_entry         = None
-        self._edit_frame         = None
-        self._search_results     = []
-        self._search_idx         = 0
+        self._root_nodes = []
+        self._node_map = {}
+        self._edit_entry = None
+        self._edit_frame = None
+        self._search_results = []
+        self._search_idx = 0
         self._highlight_overlays = []
-        self._tree_indent        = 28
+        self._tree_indent = 28
 
         self._build_header()
         self._build_input_area()
         self._build_buttons()
         self._build_tree_zone()
         self._build_statusbar()
-        self.bind("<Control-p>",       lambda e: self._do_parse())
+        self.bind("<Control-p>", lambda e: self._do_parse())
         self.bind("<Control-e>", lambda e: self._do_clear())
-        self.bind("<Control-g>",       lambda e: self._do_generate())
+        self.bind("<Control-g>", lambda e: self._do_generate())
 
         self.protocol("WM_DELETE_WINDOW", self._immediate_close)
 
@@ -109,20 +111,26 @@ class App(ctk.CTk):
         left.pack(side="left", padx=24, pady=10)
 
         ctk.CTkLabel(
-            left, text="EMV TLV Parser",
+            left,
+            text="EMV TLV Parser",
             font=ctk.CTkFont(UI_FONT, 22, "bold"),
             text_color="#FFFFFF",
         ).pack(anchor="w")
 
     def _build_input_area(self):
         card = ctk.CTkFrame(
-            self, fg_color=COLORS["surface"],
-            corner_radius=8, border_color="#1A56DB", border_width=1,
+            self,
+            fg_color=COLORS["surface"],
+            corner_radius=8,
+            border_color="#1A56DB",
+            border_width=1,
         )
         card.pack(fill="x", padx=15, pady=(16, 8))
 
         ctk.CTkLabel(
-            card, text="Message TLV (hex) :", anchor="w",
+            card,
+            text="Message TLV (hex) :",
+            anchor="w",
             font=ctk.CTkFont(UI_FONT, 17, "bold"),
             text_color=COLORS["bg"],
         ).pack(fill="x", padx=20, pady=(14, 6))
@@ -142,23 +150,25 @@ class App(ctk.CTk):
             font=(MONO_FONT, 13),
             fg=COLORS["text_muted"],
             bg="#F5F5F0",
-            bd=0, relief="flat",
+            bd=0,
+            relief="flat",
             highlightthickness=2,
             highlightbackground="#1A56DB",
             highlightcolor="#93C5FD",
             insertbackground=COLORS["text"],
             yscrollcommand=v_scroll.set,
-            padx=10, pady=10,
+            padx=10,
+            pady=10,
         )
         self.entry_tlv.grid(row=0, column=0, sticky="nsew")
         v_scroll.config(command=self.entry_tlv.yview)
 
         self._placeholder = "Enter your TLV message here..."
         self.entry_tlv.insert("1.0", self._placeholder)
-        self.entry_tlv.bind("<FocusIn>",  self._on_entry_focus_in)
+        self.entry_tlv.bind("<FocusIn>", self._on_entry_focus_in)
         self.entry_tlv.bind("<FocusOut>", self._on_entry_focus_out)
-        self.entry_tlv.bind("<Key>",      self._on_entry_key)
-        self.entry_tlv.bind("<Return>",   lambda e: (self._do_parse(), "break"))
+        self.entry_tlv.bind("<Key>", self._on_entry_key)
+        self.entry_tlv.bind("<Return>", lambda e: (self._do_parse(), "break"))
 
     def _on_entry_focus_in(self, event):
         if self.entry_tlv.get("1.0", "end-1c") == self._placeholder:
@@ -182,32 +192,54 @@ class App(ctk.CTk):
         bar.pack_propagate(False)
 
         ctk.CTkButton(
-            bar, text="Parse", command=self._do_parse,
+            bar,
+            text="Parse",
+            command=self._do_parse,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            fg_color="#800020", hover_color="#5C0015",
-            text_color="#fff", width=110, height=34, corner_radius=7,
+            fg_color="#800020",
+            hover_color="#5C0015",
+            text_color="#fff",
+            width=110,
+            height=34,
+            corner_radius=7,
         ).pack(side="left", padx=(0, 6))
 
         ctk.CTkButton(
-            bar, text="Clear", command=self._do_clear,
+            bar,
+            text="Clear",
+            command=self._do_clear,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            fg_color=COLORS["surface"], border_color=COLORS["border"],
-            border_width=1, hover_color=COLORS["hover"],
+            fg_color=COLORS["surface"],
+            border_color=COLORS["border"],
+            border_width=1,
+            hover_color=COLORS["hover"],
             text_color=COLORS["text_muted"],
-            width=100, height=34, corner_radius=7,
+            width=100,
+            height=34,
+            corner_radius=7,
         ).pack(side="left", padx=6)
 
         ctk.CTkButton(
-            bar, text="Generate", command=self._do_generate,
+            bar,
+            text="Generate",
+            command=self._do_generate,
             font=ctk.CTkFont(UI_FONT, 12, "bold"),
-            fg_color=COLORS["success"], hover_color="#145C38",
-            text_color="#fff", width=130, height=34, corner_radius=7,
+            fg_color=COLORS["success"],
+            hover_color="#145C38",
+            text_color="#fff",
+            width=130,
+            height=34,
+            corner_radius=7,
         ).pack(side="left", padx=6)
 
         search_card = ctk.CTkFrame(
-            bar, fg_color=COLORS["surface"],
-            corner_radius=7, border_color=COLORS["border"], border_width=1,
-            height=34, width=340,
+            bar,
+            fg_color=COLORS["surface"],
+            corner_radius=7,
+            border_color=COLORS["border"],
+            border_width=1,
+            height=34,
+            width=340,
         )
         search_card.pack(side="right", padx=(0, 15))
         search_card.pack_propagate(False)
@@ -216,7 +248,8 @@ class App(ctk.CTk):
         inner.pack(fill="both", expand=True, padx=8)
 
         ctk.CTkLabel(
-            inner, text="🔍",
+            inner,
+            text="🔍",
             font=ctk.CTkFont(UI_FONT, 12),
             text_color=COLORS["text_muted"],
             width=18,
@@ -240,36 +273,54 @@ class App(ctk.CTk):
         self._nav_frame.pack_forget()
 
         self._lbl_search_count = ctk.CTkLabel(
-            self._nav_frame, text="",
+            self._nav_frame,
+            text="",
             font=ctk.CTkFont(UI_FONT, 11, "bold"),
             text_color=COLORS["accent"],
             width=36,
         )
         self._lbl_search_count.pack(side="left", padx=(2, 2))
 
-        ctk.CTkFrame(self._nav_frame, width=1, height=18, fg_color=COLORS["border"]).pack(side="left", padx=4)
+        ctk.CTkFrame(self._nav_frame, width=1, height=18, fg_color=COLORS["border"]).pack(
+            side="left", padx=4
+        )
 
         ctk.CTkButton(
-            self._nav_frame, text="▲", width=22, height=22,
+            self._nav_frame,
+            text="▲",
+            width=22,
+            height=22,
             font=ctk.CTkFont(UI_FONT, 10),
-            fg_color="transparent", hover_color=COLORS["hover"],
-            text_color=COLORS["text_muted"], corner_radius=4,
+            fg_color="transparent",
+            hover_color=COLORS["hover"],
+            text_color=COLORS["text_muted"],
+            corner_radius=4,
             command=self._prev_result,
         ).pack(side="left", padx=1)
 
         ctk.CTkButton(
-            self._nav_frame, text="▼", width=22, height=22,
+            self._nav_frame,
+            text="▼",
+            width=22,
+            height=22,
             font=ctk.CTkFont(UI_FONT, 10),
-            fg_color="transparent", hover_color=COLORS["hover"],
-            text_color=COLORS["text_muted"], corner_radius=4,
+            fg_color="transparent",
+            hover_color=COLORS["hover"],
+            text_color=COLORS["text_muted"],
+            corner_radius=4,
             command=self._next_result,
         ).pack(side="left", padx=1)
 
         ctk.CTkButton(
-            self._nav_frame, text="✕", width=22, height=22,
+            self._nav_frame,
+            text="✕",
+            width=22,
+            height=22,
             font=ctk.CTkFont(UI_FONT, 11),
-            fg_color="transparent", hover_color=COLORS["hover"],
-            text_color=COLORS["text_muted"], corner_radius=4,
+            fg_color="transparent",
+            hover_color=COLORS["hover"],
+            text_color=COLORS["text_muted"],
+            corner_radius=4,
             command=self._clear_search_field,
         ).pack(side="left", padx=(1, 0))
 
@@ -327,9 +378,8 @@ class App(ctk.CTk):
             for item in self._tree.get_children(parent):
                 node = self._node_map.get(item)
                 # Inclure les vrais nœuds ET les pseudo-nœuds qui possèdent un tag (ex: DOL)
-                if node and hasattr(node, 'tag') and node.tag:
-                    if node.tag.upper() == tag_query:
-                        self._search_results.append(item)
+                if node and hasattr(node, "tag") and node.tag and node.tag.upper() == tag_query:
+                    self._search_results.append(item)
                 walk(item)
 
         walk()
@@ -390,9 +440,10 @@ class App(ctk.CTk):
                 anchor="w",
                 justify="left",
                 bd=0,
-                padx=0, pady=0,
+                padx=0,
+                pady=0,
             )
-           
+
             x_offset = x + self._tree_indent
             overlay.place(x=x_offset, y=y, width=tag_width, height=h)
             self._highlight_overlays.append(overlay)
@@ -411,9 +462,7 @@ class App(ctk.CTk):
         self._tree.see(item)
         self.after(60, self._draw_search_highlights)
         self._update_search_count()
-        self._set_status(
-            f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok"
-        )
+        self._set_status(f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok")
 
     def _next_result(self):
         if not self._search_results:
@@ -424,9 +473,7 @@ class App(ctk.CTk):
         self._tree.see(item)
         self.after(60, self._draw_search_highlights)
         self._update_search_count()
-        self._set_status(
-            f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok"
-        )
+        self._set_status(f"Occurrence {self._search_idx + 1}/{len(self._search_results)}", "ok")
 
     def _clear_search_highlight(self):
         self._clear_highlight_overlays()
@@ -446,31 +493,37 @@ class App(ctk.CTk):
         style = ttk.Style()
         style.theme_use("clam")
 
-        style.configure("EMV.Treeview",
+        style.configure(
+            "EMV.Treeview",
             background=COLORS["surface"],
             foreground=COLORS["text"],
             rowheight=40,
             font=(MONO_FONT, FONT_SIZE_TREE),
             fieldbackground=COLORS["surface"],
-            borderwidth=0, relief="flat",
+            borderwidth=0,
+            relief="flat",
             indent=28,
         )
-        style.map("EMV.Treeview",
+        style.map(
+            "EMV.Treeview",
             background=[("selected", COLORS["select"])],
             foreground=[("selected", COLORS["text"])],
         )
         style.configure("EMV.Treeview", arrowsize=13)
 
         self._tree = ttk.Treeview(
-            container, style="EMV.Treeview",
-            show="tree", selectmode="browse",
+            container,
+            style="EMV.Treeview",
+            show="tree",
+            selectmode="browse",
         )
         self._tree.column("#0", width=2000, minwidth=800, stretch=False)
 
-        vsb = ttk.Scrollbar(container, orient="vertical",   command=self._on_vscroll)
+        vsb = ttk.Scrollbar(container, orient="vertical", command=self._on_vscroll)
         hsb = ttk.Scrollbar(container, orient="horizontal", command=self._on_hscroll)
-        self._tree.configure(yscrollcommand=self._on_yscroll_event,
-                             xscrollcommand=self._on_xscroll_event)
+        self._tree.configure(
+            yscrollcommand=self._on_yscroll_event, xscrollcommand=self._on_xscroll_event
+        )
         self._vsb = vsb
         self._hsb = hsb
 
@@ -478,14 +531,16 @@ class App(ctk.CTk):
         vsb.grid(row=0, column=1, sticky="ns")
         hsb.grid(row=1, column=0, sticky="ew")
 
-        self._tree.tag_configure("warn",   foreground=COLORS["danger"],
-                                 font=(MONO_FONT, FONT_SIZE_TREE))
-        self._tree.tag_configure("pseudo", foreground=COLORS["text_muted"],
-                                 font=(MONO_FONT, FONT_SIZE_TREE))
+        self._tree.tag_configure(
+            "warn", foreground=COLORS["danger"], font=(MONO_FONT, FONT_SIZE_TREE)
+        )
+        self._tree.tag_configure(
+            "pseudo", foreground=COLORS["text_muted"], font=(MONO_FONT, FONT_SIZE_TREE)
+        )
 
         self._tree.bind("<<TreeviewSelect>>", self._on_tree_select)
-        self._tree.bind("<Double-1>",         self._on_double_click)
-        self._tree.bind("<<TreeviewOpen>>",  lambda e: self.after(50, self._draw_search_highlights))
+        self._tree.bind("<Double-1>", self._on_double_click)
+        self._tree.bind("<<TreeviewOpen>>", lambda e: self.after(50, self._draw_search_highlights))
         self._tree.bind("<<TreeviewClose>>", lambda e: self.after(50, self._draw_search_highlights))
 
         self._tree_indent = 28
@@ -547,24 +602,25 @@ class App(ctk.CTk):
             return
         x, y, w, h = bbox
 
-        full_text    = self._tree.item(item, "text")
-        marker       = "Value: "
-        idx          = full_text.find(marker)
-        prefix_text  = full_text[: idx + len(marker)] if idx != -1 else full_text
-        tree_font    = tkfont.Font(font=(MONO_FONT, FONT_SIZE_TREE))
+        full_text = self._tree.item(item, "text")
+        marker = "Value: "
+        idx = full_text.find(marker)
+        prefix_text = full_text[: idx + len(marker)] if idx != -1 else full_text
+        tree_font = tkfont.Font(font=(MONO_FONT, FONT_SIZE_TREE))
         prefix_width = tree_font.measure(prefix_text)
-        offset_x     = prefix_width + 4
-        entry_width  = max(w - offset_x - 6, 160)
+        offset_x = prefix_width + 4
+        entry_width = max(w - offset_x - 6, 160)
 
         self._edit_frame = tk.Frame(self._tree, bg=COLORS["accent"], bd=1)
-        self._edit_frame.place(x=x + offset_x, y=y + 1,
-                               width=entry_width, height=h - 2)
+        self._edit_frame.place(x=x + offset_x, y=y + 1, width=entry_width, height=h - 2)
 
         self._edit_entry = tk.Entry(
             self._edit_frame,
             font=(MONO_FONT, FONT_SIZE_TREE),
-            fg=COLORS["text"], bg=COLORS["surface"],
-            bd=0, relief="flat",
+            fg=COLORS["text"],
+            bg=COLORS["surface"],
+            bd=0,
+            relief="flat",
             insertbackground=COLORS["text"],
             selectbackground=COLORS["accent"],
             selectforeground="#FFFFFF",
@@ -574,8 +630,8 @@ class App(ctk.CTk):
         self._edit_entry.select_range(0, "end")
         self._edit_entry.focus_set()
 
-        self._edit_entry.bind("<Return>",   lambda e: self._commit_edit(item, node))
-        self._edit_entry.bind("<Escape>",   lambda e: self._cancel_edit())
+        self._edit_entry.bind("<Return>", lambda e: self._commit_edit(item, node))
+        self._edit_entry.bind("<Escape>", lambda e: self._cancel_edit())
         self._edit_entry.bind("<FocusOut>", lambda e: self._commit_edit(item, node))
 
     def _commit_edit(self, item, node):
@@ -607,9 +663,9 @@ class App(ctk.CTk):
     def _format_node_text(self, node) -> str:
         if isinstance(node, BitmaskPseudoNode):
             return f"  {node.text}"
-        tag       = node.tag
-        name      = getattr(node, "display_name", node.tech_name or node.name or "Unknown tag")
-        length    = node.length
+        tag = node.tag
+        name = getattr(node, "display_name", node.tech_name or node.name or "Unknown tag")
+        length = node.length
         if node.is_constructed:
             return f"[{tag}]  Name: {name}  —  Length: {length}"
         else:
@@ -617,30 +673,34 @@ class App(ctk.CTk):
             return f"[{tag}]  Name: {name}  —  Length: {length}  —  Value: {value_hex}"
 
     def _populate_tree(self, nodes, parent=""):
-     for node in nodes:
-        text = self._format_node_text(node)
-        if isinstance(node, BitmaskPseudoNode):
-            tags = ("pseudo",)
-        elif not getattr(node, "is_valid_parent", True):
-            # Ne pas colorer en rouge si l'erreur concerne le parent
-            if node.parent_validation_error and "parent" in node.parent_validation_error.lower():
-                tags = ()   # pas de tag spécial (pas de rouge)
+        for node in nodes:
+            text = self._format_node_text(node)
+            if isinstance(node, BitmaskPseudoNode):
+                tags = ("pseudo",)
+            elif not getattr(node, "is_valid_parent", True):
+                # Ne pas colorer en rouge si l'erreur concerne le parent
+                if (
+                    node.parent_validation_error
+                    and "parent" in node.parent_validation_error.lower()
+                ):
+                    tags = ()  # pas de tag spécial (pas de rouge)
+                else:
+                    tags = ("warn",)
             else:
-                tags = ("warn",)
-        else:
-            tags = ()
+                tags = ()
 
-        item = self._tree.insert(parent, "end", text=text, tags=tags, open=True)
-        self._node_map[item] = node
+            item = self._tree.insert(parent, "end", text=text, tags=tags, open=True)
+            self._node_map[item] = node
 
-        children   = list(getattr(node, "children", []) or [])
-        bitmask_ch = list(getattr(node, "_bitmask_children", []) or [])
-        dol_ch     = list(getattr(node, "_dol_children", []) or [])
-        mapped_ch  = list(getattr(node, "_mapped_children", []) or [])
-        position_ch = list(getattr(node, "_position_children", []) or [])
+            children = list(getattr(node, "children", []) or [])
+            bitmask_ch = list(getattr(node, "_bitmask_children", []) or [])
+            dol_ch = list(getattr(node, "_dol_children", []) or [])
+            mapped_ch = list(getattr(node, "_mapped_children", []) or [])
+            position_ch = list(getattr(node, "_position_children", []) or [])
 
-        if children + bitmask_ch + dol_ch + mapped_ch + position_ch:
-            self._populate_tree(children + bitmask_ch + dol_ch + mapped_ch + position_ch, item)
+            if children + bitmask_ch + dol_ch + mapped_ch + position_ch:
+                self._populate_tree(children + bitmask_ch + dol_ch + mapped_ch + position_ch, item)
+
     def _cache_bitmasks(self, nodes):
         for node in nodes:
             try:
@@ -650,7 +710,10 @@ class App(ctk.CTk):
                     node.display_name = node.tech_name or metadata.get("name", node.name)
 
                     if metadata.get("value_format") == "position" or "positions" in metadata:
-                        node._cached_bitmask = {"format": "position", "positions": metadata.get("positions", [])}
+                        node._cached_bitmask = {
+                            "format": "position",
+                            "positions": metadata.get("positions", []),
+                        }
                     elif "bytes" in metadata:
                         node._cached_bitmask = {"bytes": metadata["bytes"]}
                     elif "bitmask" in metadata:
@@ -672,156 +735,160 @@ class App(ctk.CTk):
                 self._cache_bitmasks(node.children)
 
     def _attach_bitmask_nodes(self, nodes):
-     for node in nodes:
-        try:
-            bitmask = getattr(node, "_cached_bitmask", None)
-            if bitmask and isinstance(bitmask, dict) and "bytes" in bitmask:
-                value_bytes = node.value
-                bitmask_children = []
-                for byte_info in bitmask["bytes"]:
-                    # Convertir index en entier (peut être une chaîne)
-                    try:
-                        byte_idx = int(byte_info.get("index", 1)) - 1
-                    except (ValueError, TypeError):
-                        byte_idx = 0
-                    if byte_idx < 0 or byte_idx >= len(value_bytes):
-                        continue
-                    byte_val = value_bytes[byte_idx]
-                    label = byte_info.get("label", "")
-                    byte_display = f"Byte {byte_idx + 1} ({byte_val:02X})"
-                    if label:
-                        byte_display += f" — {label}"
-                    byte_node = BitmaskPseudoNode(byte_display, is_constructed=True)
-
-                    for bit_info in byte_info.get("bits", []):
-                        # Convertir bit en entier
+        for node in nodes:
+            try:
+                bitmask = getattr(node, "_cached_bitmask", None)
+                if bitmask and isinstance(bitmask, dict) and "bytes" in bitmask:
+                    value_bytes = node.value
+                    bitmask_children = []
+                    for byte_info in bitmask["bytes"]:
+                        # Convertir index en entier (peut être une chaîne)
                         try:
-                            bit_num = int(bit_info.get("bit", 0))
+                            byte_idx = int(byte_info.get("index", 1)) - 1
                         except (ValueError, TypeError):
+                            byte_idx = 0
+                        if byte_idx < 0 or byte_idx >= len(value_bytes):
                             continue
-                        if bit_num < 1 or bit_num > 8:
-                            continue
-                        label_bit = bit_info.get("label", "")
-                        mask = 1 << (bit_num - 1)
-                        if byte_val & mask:
-                            bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
-                            bit_node = BitmaskPseudoNode(bit_text)
-                            byte_node.children.append(bit_node)
+                        byte_val = value_bytes[byte_idx]
+                        label = byte_info.get("label", "")
+                        byte_display = f"Byte {byte_idx + 1} ({byte_val:02X})"
+                        if label:
+                            byte_display += f" — {label}"
+                        byte_node = BitmaskPseudoNode(byte_display, is_constructed=True)
 
-                    if byte_node.children:
-                        bitmask_children.append(byte_node)
-
-                node._bitmask_children = bitmask_children
-
-            elif bitmask and isinstance(bitmask, list):
-                value_bytes = node.value
-                bytes_map = {}
-                for bit in bitmask:
-                 
-                    try:
-                        byte_idx = int(bit.get("byte", 0))
-                    except (ValueError, TypeError):
-                        continue
-                    if byte_idx not in bytes_map:
-                        byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
-                        bytes_map[byte_idx] = {"value": byte_val, "bits": []}
-                    if bit.get("set", False):
-                        bytes_map[byte_idx]["bits"].append(bit)
-
-                bitmask_children = []
-                for byte_idx in sorted(bytes_map):
-                    byte_data = bytes_map[byte_idx]
-                    byte_node = BitmaskPseudoNode(
-                        f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
-                        is_constructed=True,
-                    )
-                    for bit in byte_data["bits"]:
-                        # Convertir mask en entier
-                        try:
-                            mask = int(bit.get("mask", 0))
-                        except (ValueError, TypeError):
-                            mask = 0
-                        label = bit.get("name", "")
-                        bit_val = byte_data["value"] & mask if mask else 0
-                        if bit_val:
-                            # Convertir bit en entier si présent
-                            bit_num = bit.get("bit", 0)
+                        for bit_info in byte_info.get("bits", []):
+                            # Convertir bit en entier
                             try:
-                                bit_num = int(bit_num)
+                                bit_num = int(bit_info.get("bit", 0))
                             except (ValueError, TypeError):
-                                bit_num = 0
-                            bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}" if mask else label
-                            byte_node.children.append(BitmaskPseudoNode(bit_text))
-                    if byte_node.children:
-                        bitmask_children.append(byte_node)
-                node._bitmask_children = bitmask_children
+                                continue
+                            if bit_num < 1 or bit_num > 8:
+                                continue
+                            label_bit = bit_info.get("label", "")
+                            mask = 1 << (bit_num - 1)
+                            if byte_val & mask:
+                                bit_text = f"Bit {bit_num} (Mask 0x{mask:02X}) → {label_bit}"
+                                bit_node = BitmaskPseudoNode(bit_text)
+                                byte_node.children.append(bit_node)
 
-        except Exception as e:
-            print(f"DEBUG: _attach_bitmask_nodes error for {node.tag}: {e}")
-            traceback.print_exc()
+                        if byte_node.children:
+                            bitmask_children.append(byte_node)
 
-        if node.children:
-            self._attach_bitmask_nodes(node.children)
+                    node._bitmask_children = bitmask_children
+
+                elif bitmask and isinstance(bitmask, list):
+                    value_bytes = node.value
+                    bytes_map = {}
+                    for bit in bitmask:
+
+                        try:
+                            byte_idx = int(bit.get("byte", 0))
+                        except (ValueError, TypeError):
+                            continue
+                        if byte_idx not in bytes_map:
+                            byte_val = value_bytes[byte_idx] if byte_idx < len(value_bytes) else 0
+                            bytes_map[byte_idx] = {"value": byte_val, "bits": []}
+                        if bit.get("set", False):
+                            bytes_map[byte_idx]["bits"].append(bit)
+
+                    bitmask_children = []
+                    for byte_idx in sorted(bytes_map):
+                        byte_data = bytes_map[byte_idx]
+                        byte_node = BitmaskPseudoNode(
+                            f"Byte {byte_idx + 1} ({byte_data['value']:02X})",
+                            is_constructed=True,
+                        )
+                        for bit in byte_data["bits"]:
+                            # Convertir mask en entier
+                            try:
+                                mask = int(bit.get("mask", 0))
+                            except (ValueError, TypeError):
+                                mask = 0
+                            label = bit.get("name", "")
+                            bit_val = byte_data["value"] & mask if mask else 0
+                            if bit_val:
+                                # Convertir bit en entier si présent
+                                bit_num = bit.get("bit", 0)
+                                try:
+                                    bit_num = int(bit_num)
+                                except (ValueError, TypeError):
+                                    bit_num = 0
+                                bit_text = (
+                                    f"Bit {bit_num} (Mask 0x{mask:02X}, value 0x{bit_val:02X}) → {label}"
+                                    if mask
+                                    else label
+                                )
+                                byte_node.children.append(BitmaskPseudoNode(bit_text))
+                        if byte_node.children:
+                            bitmask_children.append(byte_node)
+                    node._bitmask_children = bitmask_children
+
+            except Exception as e:
+                print(f"DEBUG: _attach_bitmask_nodes error for {node.tag}: {e}")
+                traceback.print_exc()
+
+            if node.children:
+                self._attach_bitmask_nodes(node.children)
+
     def _attach_dol_children(self, nodes):
-     for node in nodes:
-        try:
-            metadata = Dictionary.lookup_by_tag(node.tag)
-            if metadata and metadata.get("value_format") == "dol" and node.value:
+        for node in nodes:
+            try:
+                metadata = Dictionary.lookup_by_tag(node.tag)
+                if metadata and metadata.get("value_format") == "dol" and node.value:
 
-               
-                dol_field_map = {}
-                for f in metadata.get("dol_fields", []):
-                    dol_field_map[f.get("tag", "").upper()] = f
+                    dol_field_map = {}
+                    for f in metadata.get("dol_fields", []):
+                        dol_field_map[f.get("tag", "").upper()] = f
 
-                dol_children = []
-                raw = node.value
-                i = 0
+                    dol_children = []
+                    raw = node.value
+                    i = 0
 
-                while i < len(raw):
-                    b = raw[i]
-                    i += 1
-                    if b == 0x00 or b == 0xFF:
-                        continue
+                    while i < len(raw):
+                        b = raw[i]
+                        i += 1
+                        if b == 0x00 or b == 0xFF:
+                            continue
 
-                    tag_bytes = bytes([b])
-                    if (b & 0x1F) == 0x1F:
-                        while i < len(raw):
-                            nb = raw[i]
-                            i += 1
-                            tag_bytes += bytes([nb])
-                            if (nb & 0x80) == 0:
-                                break
+                        tag_bytes = bytes([b])
+                        if (b & 0x1F) == 0x1F:
+                            while i < len(raw):
+                                nb = raw[i]
+                                i += 1
+                                tag_bytes += bytes([nb])
+                                if (nb & 0x80) == 0:
+                                    break
 
-                    tag_hex = tag_bytes.hex().upper()
+                        tag_hex = tag_bytes.hex().upper()
 
-                    if i >= len(raw):
-                        break
-                    length = raw[i]
-                    i += 1
+                        if i >= len(raw):
+                            break
+                        length = raw[i]
+                        i += 1
 
-             
-                    field_info = dol_field_map.get(tag_hex)
-                    tag_name = field_info.get("tech_name", "") if field_info else ""
+                        field_info = dol_field_map.get(tag_hex)
+                        tag_name = field_info.get("tech_name", "") if field_info else ""
 
-                    if tag_name:
-                        text = f"[{tag_hex}]  {tag_name}  —  Length: {length}"
-                    else:
-                        text = f"[{tag_hex}]  —  Length: {length}"
+                        if tag_name:
+                            text = f"[{tag_hex}]  {tag_name}  —  Length: {length}"
+                        else:
+                            text = f"[{tag_hex}]  —  Length: {length}"
 
-                    child_node        = BitmaskPseudoNode(text, is_constructed=False)
-                    child_node.tag    = tag_hex
-                    child_node.name   = tag_name
-                    child_node.length = length
-                    dol_children.append(child_node)
+                        child_node = BitmaskPseudoNode(text, is_constructed=False)
+                        child_node.tag = tag_hex
+                        child_node.name = tag_name
+                        child_node.length = length
+                        dol_children.append(child_node)
 
-                node._dol_children = dol_children
+                    node._dol_children = dol_children
 
-        except Exception as e:
-            print(f"DEBUG _attach_dol_children [{node.tag}]: {e}")
-            traceback.print_exc()
+            except Exception as e:
+                print(f"DEBUG _attach_dol_children [{node.tag}]: {e}")
+                traceback.print_exc()
 
-        if node.children:
-            self._attach_dol_children(node.children)
+            if node.children:
+                self._attach_dol_children(node.children)
+
     def _attach_mapped_children(self, nodes):
         for node in nodes:
             try:
@@ -833,7 +900,7 @@ class App(ctk.CTk):
                         if value_hex in mapping:
                             mapped_text = mapping[value_hex]
                             child_node = BitmaskPseudoNode(
-                                f"{value_hex} ({mapped_text})",   # point supprimé
+                                f"{value_hex} ({mapped_text})",  # point supprimé
                                 is_constructed=False,
                             )
                             if not hasattr(node, "_mapped_children"):
@@ -865,7 +932,10 @@ class App(ctk.CTk):
                             except ValueError:
                                 continue
 
-                            pos_meta = next((p for p in positions_config if p.get("position") == position_num), None)
+                            pos_meta = next(
+                                (p for p in positions_config if p.get("position") == position_num),
+                                None,
+                            )
                             if pos_meta:
                                 parent_label = pos_meta.get("label", f"Position {position_num}")
                                 values_mapping = pos_meta.get("values", {})
@@ -991,7 +1061,10 @@ class App(ctk.CTk):
         left.pack(side="left", fill="y", padx=20)
 
         self._status_dot = ctk.CTkFrame(
-            left, width=8, height=8, corner_radius=4,
+            left,
+            width=8,
+            height=8,
+            corner_radius=4,
             fg_color="#93C5FD",
         )
         self._status_dot.pack(side="left", padx=(0, 10), pady=17)
@@ -1008,9 +1081,9 @@ class App(ctk.CTk):
     def _set_status(self, msg: str, level: str = "ready"):
         palette = {
             "ready": "#93C5FD",
-            "ok":    "#6EE7B7",
+            "ok": "#6EE7B7",
             "error": "#FCA5A5",
-            "warn":  "#FCD34D",
+            "warn": "#FCD34D",
         }
         color = palette.get(level, "#93C5FD")
         self._lbl_status.configure(text=msg, text_color=color)

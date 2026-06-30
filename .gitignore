@@ -7,6 +7,8 @@ __pycache__/
 dist/
 build/
 *.egg
+.ruff_cache/
+*.pyc
 
 # Virtual environment
 .venv/

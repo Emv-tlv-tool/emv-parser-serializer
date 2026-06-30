@@ -89,6 +89,33 @@ _CURRENCY_CODES: dict[str, str] = {
 }
 
 
+# AID (Application Identifier) to network name mapping
+_AID_MAPPING: dict[str, str] = {
+    "A0000000031010": "Visa",
+    "A0000000032010": "Visa Debit",
+    "A0000000033010": "Visa Electron",
+    "A0000000041010": "MasterCard",
+    "A0000000042010": "MasterCard Debit",
+    "A0000000043010": "MasterCard Prepaid",
+    "A0000000043060": "Maestro",
+    "A0000000046000": "Maestro",
+    "A0000000250100": "American Express",
+    "A0000000250101": "American Express",
+    "A0000000651010": "Diners Club",
+    "A0000003241010": "JCB",
+    "A0000002281010": "Bancontact",
+    "A0000002771010": "Visa (UK)",
+    "A0000001523010": "PostFinance",
+    "A0000001541010": "PostFinance",
+    "D2760000660111": "Girocard (ZKA)",
+    "D2760000660112": "Girocard (ZKA)",
+    "D2760000660133": "Girocard (ZKA)",
+    "D2760000660144": "Girocard (ZKA)",
+    "D2760000660155": "Girocard (ZKA)",
+    "D2760000660166": "Girocard (ZKA)",
+    "E0": "ZKA Terminal Config",
+}
+
 
 # CVM (Cardholder Verification Method) types
 _CVM_TYPES: dict[int, str] = {
@@ -132,8 +159,8 @@ class ValueDecoder:
             "9F1A": ValueDecoder._decode_country_code,
             "5F28": ValueDecoder._decode_country_code,
             "49": ValueDecoder._decode_currency_code,
-            "9F06": ValueDecoder._decode_aid,      # ← AJOUT
-            "4F": ValueDecoder._decode_aid,        # ← AJOUT (si utilisé)
+            "9F06": ValueDecoder._decode_aid,  # ← AJOUT
+            "4F": ValueDecoder._decode_aid,  # ← AJOUT (si utilisé)
         }
 
         decoder = decoders.get(tag)
@@ -215,9 +242,7 @@ class ValueDecoder:
         cvm_type = value[0]
         cvm_result = value[2]
 
-        type_name = _CVM_TYPES.get(
-            cvm_type, f"Unknown CVM ({cvm_type:02X})"
-        )
+        type_name = _CVM_TYPES.get(cvm_type, f"Unknown CVM ({cvm_type:02X})")
 
         result_text = {
             0x00: "successful",

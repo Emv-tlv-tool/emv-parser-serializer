@@ -78,9 +78,7 @@ class TLVSerializer:
             # 3-byte form: 0x82 prefix + 2-byte big-endian length
             return bytes([0x82, (length >> 8) & 0xFF, length & 0xFF])
         else:
-            raise ValueError(
-                f"Length {length} exceeds maximum supported value (65535)"
-            )
+            raise ValueError(f"Length {length} exceeds maximum supported value (65535)")
 
     @staticmethod
     def _serialize_value(node: TLVNode) -> bytes:
@@ -106,7 +104,7 @@ class TLVSerializer:
             val = None
             if isinstance(node, dict):
                 val = node.get("value")
-            
+
             if val is None:
                 val = getattr(node, "value", b"")
 
@@ -121,10 +119,7 @@ class TLVSerializer:
                 if isinstance(node, dict)
                 else getattr(node, "children", [])
             )
-            child_buffers = [
-                bytes.fromhex(TLVSerializer.serialize(child))
-                for child in children
-            ]
+            child_buffers = [bytes.fromhex(TLVSerializer.serialize(child)) for child in children]
             return b"".join(child_buffers)
 
     @staticmethod
@@ -140,7 +135,5 @@ class TLVSerializer:
         Returns:
             Uppercase hex string
         """
-        buffers = [
-            bytes.fromhex(TLVSerializer.serialize(node)) for node in nodes
-        ]
+        buffers = [bytes.fromhex(TLVSerializer.serialize(node)) for node in nodes]
         return b"".join(buffers).hex().upper()

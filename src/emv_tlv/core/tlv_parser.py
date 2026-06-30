@@ -141,9 +141,7 @@ class TLVParser:
         return tag, tag_length
 
     @staticmethod
-    def _parse_length(
-        data: bytes, offset: int, lenient: bool = True
-    ) -> tuple[int, int]:
+    def _parse_length(data: bytes, offset: int, lenient: bool = True) -> tuple[int, int]:
         """
         Parse length bytes from buffer.
 
@@ -194,8 +192,7 @@ class TLVParser:
 
             if offset + num_bytes + 1 > len(data):
                 raise ValueError(
-                    f"Buffer overrun: cannot read ZKA extended length "
-                    f"({num_bytes} bytes)"
+                    f"Buffer overrun: cannot read ZKA extended length " f"({num_bytes} bytes)"
                 )
 
             # Read length as big-endian
@@ -205,6 +202,4 @@ class TLVParser:
             return length, 1 + num_bytes
 
         else:
-            raise ValueError(
-                f"Invalid length encoding: 0x{first_byte:02x}"
-            )
+            raise ValueError(f"Invalid length encoding: 0x{first_byte:02x}")

@@ -9,6 +9,7 @@ Decodes tags where each bit represents a specific flag or option:
 
 Returns list of {byte, mask, name, set} dicts.
 """
+
 from emv_tlv.dictionaries import Dictionary
 
 # TVR (Terminal Verification Results) - Tag 95, 5 bytes
@@ -225,18 +226,20 @@ class BitmaskDecoder:
                     byte_index = byte_def.get("index", 1) - 1  # 1-based to 0-based
                     if byte_index >= len(value):
                         continue
-                    
+
                     byte_value = value[byte_index]
-                    
+
                     for bit_def in byte_def.get("bits", []):
                         if "multi_bit" in bit_def and bit_def["multi_bit"]:
-                            results.append({
-                                "byte": byte_index,
-                                "bit": 0,
-                                "mask": 0x00,
-                                "name": bit_def.get("label", ""),
-                                "set": byte_value != 0,
-                            })
+                            results.append(
+                                {
+                                    "byte": byte_index,
+                                    "bit": 0,
+                                    "mask": 0x00,
+                                    "name": bit_def.get("label", ""),
+                                    "set": byte_value != 0,
+                                }
+                            )
                         else:
                             bit_raw = bit_def.get("bit", 0)
                             # Handle string values like "2-1" (multi-bit range) or "value"
@@ -253,20 +256,22 @@ class BitmaskDecoder:
                                     low = int(parts[1])
                                     multi_mask = 0
                                     for b in range(low, high + 1):
-                                        multi_mask |= (1 << (b - 1))
+                                        multi_mask |= 1 << (b - 1)
                                     mask = multi_mask
                                     bit = high  # Use highest bit for display
                                 except (ValueError, IndexError):
                                     mask = 0
                             else:
                                 mask = 1 << (bit - 1) if bit > 0 else 0
-                            results.append({
-                                "byte": byte_index,
-                                "bit": bit,
-                                "mask": mask,
-                                "name": bit_def.get("label", ""),
-                                "set": bool(byte_value & mask),
-                            })
+                            results.append(
+                                {
+                                    "byte": byte_index,
+                                    "bit": bit,
+                                    "mask": mask,
+                                    "name": bit_def.get("label", ""),
+                                    "set": bool(byte_value & mask),
+                                }
+                            )
                 if results:
                     return results
 
@@ -284,22 +289,22 @@ class BitmaskDecoder:
                 mask = bit_def["mask"]
                 # Calculate bit number from mask (e.g. 0x80 -> bit 8)
                 bit = mask.bit_length() if mask > 0 else 0
-                results.append({
-                    "byte": byte_index,
-                    "bit": bit,
-                    "mask": mask,
-                    "name": bit_def["name"],
-                    "set": bool(byte_value & mask),
-                })
+                results.append(
+                    {
+                        "byte": byte_index,
+                        "bit": bit,
+                        "mask": mask,
+                        "name": bit_def["name"],
+                        "set": bool(byte_value & mask),
+                    }
+                )
 
         return results
 
     @staticmethod
     def get_set_bits(tag: str, value: bytes) -> list[dict]:
         """Get only set bits from a bitmask."""
-        return [
-            b for b in BitmaskDecoder.decode_bitmask(tag, value) if b["set"]
-        ]
+        return [b for b in BitmaskDecoder.decode_bitmask(tag, value) if b["set"]]
 
     @staticmethod
     def get_definition(tag: str) -> list | None:

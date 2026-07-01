@@ -18,52 +18,21 @@ from emv_tlv.core.tlv_node import TLVNode
 
 
 class TLVParser:
-    """Parser for BER-TLV encoded data."""
+    
 
     @staticmethod
     def parse(data: bytes) -> list[TLVNode]:
-        """
-        Parse a buffer containing TLV-encoded data.
-
-        Args:
-            data: Raw TLV data bytes
-
-        Returns:
-            List of parsed TLVNode objects
-
-        Raises:
-            ValueError: If data is malformed or truncated
-        """
-        nodes: list[TLVNode] = []
-        offset = 0
-
-        while offset < len(data):
-            # Skip padding bytes (0x00 and 0xFF)
-            if data[offset] in (0x00, 0xFF):
-                offset += 1
-                continue
-
-            node, next_offset = TLVParser._parse_node(data, offset)
-            nodes.append(node)
-            offset = next_offset
-
-        return nodes
-
+     nodes = []
+     offset = 0
+     while offset < len(data):
+       
+        node, next_offset = TLVParser._parse_node(data, offset)
+        nodes.append(node)
+        offset = next_offset
+     return nodes
     @staticmethod
     def _parse_node(data: bytes, offset: int) -> tuple[TLVNode, int]:
-        """
-        Parse a single TLV node from buffer starting at offset.
-
-        Args:
-            data: Source buffer
-            offset: Starting position
-
-        Returns:
-            Tuple of (TLVNode, next_offset)
-
-        Raises:
-            ValueError: If insufficient bytes available
-        """
+       
         # Save first byte for constructed detection
         first_tag_byte = data[offset]
 

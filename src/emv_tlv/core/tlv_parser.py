@@ -1,38 +1,47 @@
-"""
-TLVParser - Parses BER-TLV encoded data into TLVNode tree structure.
-
-BER-TLV (Basic Encoding Rules - Tag Length Value) is the encoding format
-used in EMV smart card transactions.
-
-Structure:
-- Tag: 1 or 2 bytes (lower 5 bits = 0x1F means 2-byte tag)
-- Length: 1-3 bytes (0x81/0x82 prefix for multi-byte)
-- Value: Raw data bytes or nested TLV (for constructed tags)
-
-Primitive vs Constructed:
-- Bit 6 of first tag byte = 1 -> Constructed (has children)
-- Bit 6 of first tag byte = 0 -> Primitive (raw data)
-"""
-
 from emv_tlv.core.tlv_node import TLVNode
 
 
 class TLVParser:
-    
+    """Parser for BER-TLV encoded data."""
 
+   
     @staticmethod
     def parse(data: bytes) -> list[TLVNode]:
+     """
+        Parse a buffer containing TLV-encoded data.
+
+        Args:
+            data: Raw TLV data bytes
+
+        Returns:
+            List of parsed TLVNode objects
+
+        Raises:
+            ValueError: If data is malformed or truncated
+     """
      nodes = []
      offset = 0
      while offset < len(data):
-       
+        # Ne pas sauter 0x00 ni 0xFF !
         node, next_offset = TLVParser._parse_node(data, offset)
         nodes.append(node)
         offset = next_offset
-     return nodes
+     return nodes 
     @staticmethod
     def _parse_node(data: bytes, offset: int) -> tuple[TLVNode, int]:
-       
+        """
+        Parse a single TLV node from buffer starting at offset.
+
+        Args:
+            data: Source buffer
+            offset: Starting position
+
+        Returns:
+            Tuple of (TLVNode, next_offset)
+
+        Raises:
+            ValueError: If insufficient bytes available
+        """
         # Save first byte for constructed detection
         first_tag_byte = data[offset]
 

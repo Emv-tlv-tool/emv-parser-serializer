@@ -8,7 +8,7 @@ on:
 
 jobs:
     lint-and-test:
-        runs-on: ubuntu-22.04
+        runs-on: windows-latest
         strategy:
             matrix:
                 python-version: ["3.12"]
@@ -27,6 +27,19 @@ jobs:
               run: make format
             - name: test
               run: make test
+            
+            - name: build executable with PyInstaller
+              run: >
+                 uv run pyinstaller --onefile --windowed
+                 --name "EMV-TLV-Parser"
+                 --add-data "src/emv_tlv/dictionaries;emv_tlv/dictionaries"
+                 --path src gui/app.py
+            - name: upload executable
+              uses: actions/upload-artifact@v4
+              with:
+                 name: EMV-TLV-Parser
+                 path: dist/EMV-TLV-Parser.exe
+            
 
 
     

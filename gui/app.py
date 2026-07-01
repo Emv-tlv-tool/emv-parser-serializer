@@ -85,6 +85,8 @@ class App(ctk.CTk):
         self._search_idx = 0
         self._highlight_overlays = []
         self._tree_indent = 28
+        self._search_query = ""
+        self._hidden_texts = {}
 
         self._build_header()
         self._build_input_area()
@@ -349,6 +351,7 @@ class App(ctk.CTk):
         self._clear_search_highlight()
         self._search_results = []
         self._search_idx = 0
+        self._search_query = ""
         self._lbl_search_count.configure(text="")
         if self._nav_frame.winfo_ismapped():
             self._nav_frame.pack_forget()
@@ -361,11 +364,11 @@ class App(ctk.CTk):
                 text=f"{self._search_idx + 1}/{len(self._search_results)}"
             )
         else:
-            self._lbl_search_count.configure(text="")
+            self._lbl_search_count.configure(text="0/0")
 
     def _do_search(self):
-        tag_query = self.entry_search.get().strip().upper()
-        if not tag_query:
+        query = self.entry_search.get().strip()
+        if not query:
             return
         if not self._node_map:
             self._set_status("Parse a TLV message first", "error")
@@ -373,24 +376,33 @@ class App(ctk.CTk):
 
         self._clear_search_highlight()
         self._search_results = []
+        self._search_query = query
+
+        upper_q = query.upper()
 
         def walk(parent=""):
             for item in self._tree.get_children(parent):
                 node = self._node_map.get(item)
-                if node and hasattr(node, "tag") and node.tag and node.tag.upper() == tag_query:
-
-                    self._search_results.append(item)
+                if node is not None:
+                    text = self._format_node_text(node)
+                    if upper_q in text.upper():
+                        self._search_results.append(item)
                 walk(item)
 
         walk()
 
+        # Si aucun résultat, afficher 0/0 et garder le panneau visible
         if not self._search_results:
-            self._set_status(f"Tag [{tag_query}] not found", "error")
-            self._lbl_search_count.configure(text="")
-            if self._nav_frame.winfo_ismapped():
-                self._nav_frame.pack_forget()
+            self._set_status(f"'{query}' not found", "error")
+            self._lbl_search_count.configure(text="0/0")
+            if not self._nav_frame.winfo_ismapped():
+                self._nav_frame.pack(side="left", padx=(2, 0))
+            self._search_idx = 0
+            self._clear_highlight_overlays()
+            self._tree.selection_remove(self._tree.selection())
             return
 
+        # Ouvrir les parents
         for item in self._search_results:
             parent = self._tree.parent(item)
             while parent:
@@ -408,15 +420,16 @@ class App(ctk.CTk):
         self._update_search_count()
 
         n = len(self._search_results)
-        self._set_status(f"{n} occurrence(s) of [{tag_query}]  —  Press Enter to navigate", "ok")
+        self._set_status(f"{n} occurrence(s) of '{query}'  —  Press Enter to navigate", "ok")
         self.entry_search.bind("<Return>", self._on_search_return)
 
     def _draw_search_highlights(self):
-        if not self._search_results:
+        if not self._search_results or not self._search_query:
             return
 
         self._clear_highlight_overlays()
-        tree_font = tkfont.Font(font=(MONO_FONT, FONT_SIZE_TREE))
+        query = self._search_query
+        upper_q = query.upper()
 
         for item in self._search_results:
             bbox = self._tree.bbox(item, column="#0")
@@ -425,33 +438,63 @@ class App(ctk.CTk):
             x, y, w, h = bbox
 
             full_text = self._tree.item(item, "text")
-            m = re.match(r"^(\s*\[[0-9A-Fa-f]+\])", full_text)
-            if not m:
+            upper_text = full_text.upper()
+            idx = upper_text.find(upper_q)
+            if idx == -1:
                 continue
-            tag_text = m.group(1)
-            tag_width = tree_font.measure(tag_text)
 
-            overlay = tk.Label(
+            prefix = full_text[:idx]
+            matched = full_text[idx:idx + len(query)]
+            suffix = full_text[idx + len(query):]
+
+            # Gérer le cas où le mot est déjà encadré par des crochets
+            if prefix.endswith("[") and suffix.startswith("]"):
+                prefix = prefix[:-1]
+                matched = "[" + matched + "]"
+                suffix = suffix[1:]
+
+            if item not in self._hidden_texts:
+                self._hidden_texts[item] = full_text
+            self._tree.item(item, text="")
+
+            overlay = tk.Text(
                 self._tree,
-                text=tag_text,
                 font=(MONO_FONT, FONT_SIZE_TREE),
-                bg="#FDE68A",
-                fg="#800020",
-                anchor="w",
-                justify="left",
+                bg=COLORS["surface"],
                 bd=0,
+                relief="flat",
+                highlightthickness=0,
+                wrap="none",
+                height=1,
                 padx=0,
                 pady=0,
+                cursor="arrow",
             )
+            overlay.insert("1.0", prefix + matched + suffix)
 
-            x_offset = x + self._tree_indent
-            overlay.place(x=x_offset, y=y, width=tag_width, height=h)
+            start_idx = f"1.{len(prefix)}"
+            end_idx = f"1.{len(prefix) + len(matched)}"
+            overlay.tag_add("hl", start_idx, end_idx)
+            overlay.tag_configure("hl", background="#FDE68A", foreground="#800020")
+            overlay.tag_add("normal", "1.0", start_idx)
+            overlay.tag_add("normal", end_idx, "end")
+            overlay.tag_configure("normal", foreground=COLORS["text"])
+
+            overlay.configure(state="disabled")
+            overlay.place(x=x + self._tree_indent, y=y, width=w - self._tree_indent, height=h)
             self._highlight_overlays.append(overlay)
 
     def _clear_highlight_overlays(self):
         for ov in self._highlight_overlays:
             ov.destroy()
         self._highlight_overlays = []
+
+        for item, original_text in self._hidden_texts.items():
+            try:
+                self._tree.item(item, text=original_text)
+            except Exception:
+                pass
+        self._hidden_texts.clear()
 
     def _prev_result(self):
         if not self._search_results:
@@ -674,7 +717,6 @@ class App(ctk.CTk):
 
     def _attach_ascii_children(self, nodes):
         for node in nodes:
-            # Vérifier si le tag existe dans le dictionnaire et a value_format == "ascii"
             metadata = Dictionary.lookup_by_tag(node.tag)
             if metadata and metadata.get("value_format") == "ascii" and node.value:
                 try:
@@ -1108,6 +1150,7 @@ class App(ctk.CTk):
         self._clear_search_highlight()
         self._search_results = []
         self._search_idx = 0
+        self._search_query = ""
         self._tree.delete(*self._tree.get_children())
         self._node_map.clear()
         self._root_nodes = []

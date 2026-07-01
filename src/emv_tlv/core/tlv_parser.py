@@ -21,7 +21,11 @@ class TLVParser:
         nodes = []
         offset = 0
         while offset < len(data):
-            # Ne pas sauter 0x00 ni 0xFF !
+            # Skip padding bytes (0x00 and 0xFF)
+            while offset < len(data) and data[offset] in (0x00, 0xFF):
+                offset += 1
+            if offset >= len(data):
+                break
             node, next_offset = TLVParser._parse_node(data, offset)
             nodes.append(node)
             offset = next_offset

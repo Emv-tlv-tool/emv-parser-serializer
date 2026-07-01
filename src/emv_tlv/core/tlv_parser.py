@@ -4,10 +4,9 @@ from emv_tlv.core.tlv_node import TLVNode
 class TLVParser:
     """Parser for BER-TLV encoded data."""
 
-   
     @staticmethod
     def parse(data: bytes) -> list[TLVNode]:
-     """
+        """
         Parse a buffer containing TLV-encoded data.
 
         Args:
@@ -18,15 +17,16 @@ class TLVParser:
 
         Raises:
             ValueError: If data is malformed or truncated
-     """
-     nodes = []
-     offset = 0
-     while offset < len(data):
-        # Ne pas sauter 0x00 ni 0xFF !
-        node, next_offset = TLVParser._parse_node(data, offset)
-        nodes.append(node)
-        offset = next_offset
-     return nodes 
+        """
+        nodes = []
+        offset = 0
+        while offset < len(data):
+            # Ne pas sauter 0x00 ni 0xFF !
+            node, next_offset = TLVParser._parse_node(data, offset)
+            nodes.append(node)
+            offset = next_offset
+        return nodes
+
     @staticmethod
     def _parse_node(data: bytes, offset: int) -> tuple[TLVNode, int]:
         """
